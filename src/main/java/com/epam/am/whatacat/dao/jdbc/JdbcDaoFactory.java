@@ -7,6 +7,7 @@ import com.epam.am.whatacat.db.ConnectionPool;
 import com.epam.am.whatacat.db.ConnectionPoolException;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class JdbcDaoFactory extends DaoFactory {
     private Connection connection;
@@ -22,6 +23,35 @@ public class JdbcDaoFactory extends DaoFactory {
     @Override
     public void release() {
         ConnectionPool.getInstance().releaseConnection(connection);
+    }
+
+    @Override
+    public void startTransaction() throws DaoException {
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void commitTransaction() throws DaoException {
+        try {
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void rollbackTransaction() throws DaoException {
+        try {
+            connection.rollback();
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override

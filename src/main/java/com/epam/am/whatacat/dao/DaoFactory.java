@@ -14,7 +14,13 @@ public abstract class DaoFactory {
 
     public void release() {
 
-    };
+    }
 
-    public abstract UserDao getUserDao();
+    public abstract void startTransaction() throws DaoException;
+
+    public abstract void commitTransaction() throws DaoException;
+
+    public abstract void rollbackTransaction() throws DaoException;
+
+    public abstract UserDao getUserDao() throws DaoException;
 }
