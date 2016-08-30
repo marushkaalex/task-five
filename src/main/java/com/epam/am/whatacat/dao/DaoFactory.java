@@ -1,6 +1,6 @@
 package com.epam.am.whatacat.dao;
 
-public abstract class DaoFactory {
+public abstract class DaoFactory implements AutoCloseable {
     public static DaoFactory getFactory() throws DaoException {
         try {
             // TODO get class name from properties
@@ -12,7 +12,12 @@ public abstract class DaoFactory {
         }
     }
 
-    public void release() {
+    @Override
+    public void close() throws DaoException {
+        release();
+    }
+
+    public void release() throws DaoException {
 
     }
 
@@ -23,4 +28,6 @@ public abstract class DaoFactory {
     public abstract void rollbackTransaction() throws DaoException;
 
     public abstract UserDao getUserDao() throws DaoException;
+
+    public abstract PostDao getPostDao() throws DaoException;
 }

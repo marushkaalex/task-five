@@ -8,19 +8,18 @@ public class Post extends BaseModel {
     public static final int TYPE_PHOTO = 2;
     public static final int TYPE_VIDEO = 3;
 
-    private User author;
+    private long authorId;
     private int type;
     private String content;
     private Date publicationDate;
     private long rating;
-    private List<Comment> commentList;
 
-    public User getAuthor() {
-        return author;
+    public long getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setAuthorId(long authorId) {
+        this.authorId = authorId;
     }
 
     public int getType() {
@@ -53,13 +52,5 @@ public class Post extends BaseModel {
 
     public void setRating(long rating) {
         this.rating = rating;
-    }
-
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
     }
 }
