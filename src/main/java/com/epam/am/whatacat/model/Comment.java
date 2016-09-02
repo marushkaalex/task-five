@@ -7,6 +7,15 @@ public class Comment extends BaseModel {
     private Long parentId;
     private Date publicationDate;
     private String text;
+    private long authorId;
+
+    public long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(long authorId) {
+        this.authorId = authorId;
+    }
 
     public User getAuthor() {
         return author;
