@@ -4,7 +4,7 @@ public abstract class DaoFactory implements AutoCloseable {
     public static DaoFactory getFactory() throws DaoException {
         try {
             // TODO get class name from properties
-            String className = "com.epam.am.pool.dao.jdbc.JdbcDaoFactory";
+            String className = "com.epam.am.whatacat.dao.jdbc.JdbcDaoFactory";
             Class<?> factoryClass = Class.forName(className);
             return ((DaoFactory) factoryClass.newInstance());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {

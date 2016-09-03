@@ -1,13 +1,33 @@
 package com.epam.am.whatacat.model;
 
+import java.util.Date;
+
 public class User extends BaseModel {
     private String email;
     private String nickname;
+    private String hashedPassword;
     private Role role;
     private Gender gender;
     private long rating;
     private String avatarUrl;
+    private Date registrationDate;
     private PaginatedList<Post> postList;
+
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
 
     public Role getRole() {
         return role;

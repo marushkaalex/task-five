@@ -16,6 +16,13 @@ public class FormValidatorFactory {
                 new FormValidator()
                         .addFieldValidator("email", new NonEmptyFieldValidator("login.error.email"))
         );
+
+        validatorMap.put(
+                "register",
+                new FormValidator()
+                        // TODO: 03.09.2016 user proper validator
+                        .addFieldValidator("nickname", new NonEmptyFieldValidator("register.error.nickname"))
+        );
     }
 
     public FormValidator getValidator(String formName) {

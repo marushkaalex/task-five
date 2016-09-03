@@ -16,6 +16,12 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
         columnMap.add(new AbstractMap.SimpleEntry<>("id", BaseModel::getId));
         columnMap.add(new AbstractMap.SimpleEntry<>("email", User::getEmail));
         columnMap.add(new AbstractMap.SimpleEntry<>("nickname", User::getNickname));
+        columnMap.add(new AbstractMap.SimpleEntry<>("password", User::getHashedPassword));
+        columnMap.add(new AbstractMap.SimpleEntry<>("role_id", i -> i.getRole().getId()));
+        columnMap.add(new AbstractMap.SimpleEntry<>("gender", i -> i.getGender().getKey()));
+        columnMap.add(new AbstractMap.SimpleEntry<>("rating", User::getRating));
+        columnMap.add(new AbstractMap.SimpleEntry<>("avatar", User::getAvatarUrl));
+        columnMap.add(new AbstractMap.SimpleEntry<>("date", i -> new java.sql.Date(i.getRegistrationDate().getTime())));
     }
 
     public JdbcUserDao(Connection connection) {
@@ -29,7 +35,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
 
     @Override
     public User bindData(ResultSet resultSet) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -39,6 +45,16 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
 
     @Override
     public List<User> getAll(long limit, long offset) throws DaoException {
-        return null;
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isNicknameFree(String nickname) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isEmailFree(String email) {
+        throw new UnsupportedOperationException();
     }
 }
