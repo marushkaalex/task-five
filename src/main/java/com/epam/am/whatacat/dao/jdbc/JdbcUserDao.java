@@ -1,5 +1,6 @@
 package com.epam.am.whatacat.dao.jdbc;
 
+import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.UserDao;
 import com.epam.am.whatacat.model.BaseModel;
 import com.epam.am.whatacat.model.User;
@@ -34,5 +35,10 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     @Override
     protected List<Map.Entry<String, FieldGetter<User>>> getColumns() {
         return columnMap;
+    }
+
+    @Override
+    public List<User> getAll(long limit, long offset) throws DaoException {
+        return null;
     }
 }

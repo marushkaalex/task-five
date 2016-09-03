@@ -66,5 +66,11 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
         return null;
     }
 
+    @Override
+    public List<T> getAll(long limit, long offset) throws DaoException {
+
+        return null;
+    }
+
     protected abstract List<Map.Entry<String, FieldGetter<T>>> getColumns();
 }

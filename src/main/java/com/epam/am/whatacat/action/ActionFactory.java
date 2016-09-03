@@ -13,6 +13,7 @@ public class ActionFactory {
         actionMap = new HashMap<>();
         actionMap.put("GET/login", new ShowPageAction("login"));
         actionMap.put("POST/login", new LoginAction());
+        actionMap.put("GET/register", new ShowPageAction("register"));
     }
 
     public Action getAction(String actionName) {
