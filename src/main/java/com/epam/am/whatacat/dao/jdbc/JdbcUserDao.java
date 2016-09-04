@@ -51,8 +51,19 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     }
 
     @Override
-    public boolean isNicknameFree(String nickname) {
-        throw new UnsupportedOperationException();
+    public boolean isNicknameFree(String nickname) throws DaoException {
+        try {
+            PreparedStatement preparedStatement =
+                    getConnection().prepareStatement(getSelectQuery() + " WHERE nickname=?");
+
+            preparedStatement.setString(1, nickname);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            boolean res = resultSet.next();
+            resultSet.close();
+            return !res;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override

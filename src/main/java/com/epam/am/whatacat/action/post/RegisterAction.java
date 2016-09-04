@@ -44,8 +44,10 @@ public class RegisterAction implements Action {
                 errorList.add("register.error.email-already-in-use");
             }
 
-            // TODO: 04.09.2016 chick if nickname free
             String nickname = request.getParameter("nickname");
+            if (!userService.isNicknameFree(nickname)) {
+                errorList.add("register.error.nickname-already-in-use");
+            }
             String password = request.getParameter("password");
 
             if (!errorList.isEmpty()) {
@@ -64,7 +66,7 @@ public class RegisterAction implements Action {
             request.getSession().setAttribute("user", user);
 
             log.info("User {} <{}> has been registered", nickname, email);
-            return new ActionResult("index", true);
+            return new ActionResult("", true);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }

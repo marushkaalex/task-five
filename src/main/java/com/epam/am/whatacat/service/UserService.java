@@ -45,6 +45,15 @@ public class UserService extends BaseService {
         }
     }
 
+    public boolean isNicknameFree(String nickname) throws ServiceException {
+        try {
+            UserDao userDao = daoFactory.getUserDao();
+            return userDao.isNicknameFree(nickname);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     private String hashPassword(String password) throws ServiceException {
         try {
             byte[] salt = new byte[16];

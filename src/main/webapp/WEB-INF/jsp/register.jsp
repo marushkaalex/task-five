@@ -8,9 +8,9 @@
 </head>
 <body>
 <form method="post">
-    <input name="email" placeholder="<fmt:message key="regigister.hint.email"/>"/><br/>
-    <input name="nickname" placeholder="<fmt:message key="regigister.hint.nickname"/>"/><br/>
-    <input name="password" type="password" placeholder="<fmt:message key="regigister.hint.password"/>"><br/>
+    <input name="email" placeholder="<fmt:message key="register.hint.email"/>" value="${param.email}"/><br/>
+    <input name="nickname" placeholder="<fmt:message key="register.hint.nickname"/>" value="${param.nickname}"/><br/>
+    <input name="password" type="password" placeholder="<fmt:message key="register.hint.password"/>"><br/>
     <input type="submit"/>
 </form>
     <%--<fmt:message key="${login.error.email}"/><br><br>--%>
