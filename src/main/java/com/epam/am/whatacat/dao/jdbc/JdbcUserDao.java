@@ -6,7 +6,9 @@ import com.epam.am.whatacat.model.BaseModel;
 import com.epam.am.whatacat.model.User;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
@@ -54,7 +56,38 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     }
 
     @Override
-    public boolean isEmailFree(String email) {
-        throw new UnsupportedOperationException();
+    public boolean isEmailFree(String email) throws DaoException {
+        try {
+            PreparedStatement preparedStatement =
+                    getConnection().prepareStatement(getSelectQuery() + " WHERE email=?");
+
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            boolean res = resultSet.next();
+            resultSet.close();
+            return !res;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public User findByEmailAndPassword(String email, String password) throws DaoException{
+        try {
+            PreparedStatement preparedStatement =
+                    getConnection().prepareStatement(getSelectQuery() + " WHERE email=? AND password=?");
+
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            User user = null;
+            if (resultSet.next()) {
+                user = bindData(resultSet);
+            }
+            resultSet.close();
+            return user;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 }

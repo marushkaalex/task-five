@@ -20,7 +20,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     public abstract T bindData(ResultSet resultSet);
 
     @Override
-    public void save(T model) throws DaoException {
+    public T save(T model) throws DaoException {
         try {
             if (model.getId() == null) {
                 // TODO
@@ -48,8 +48,11 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 if (generatedKeys.next()) {
                     model.setId(generatedKeys.getLong(1));
                 }
+                generatedKeys.close();
+                return model;
             } else {
                 // TODO
+                throw new UnsupportedOperationException("User update is not currently implemented");
             }
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -63,7 +66,33 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
 
     @Override
     public T findById(Long id) throws DaoException {
-        return null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQuery() + " WHERE id=?;");
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return bindData(resultSet);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    protected String getSelectQuery() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        List<Map.Entry<String, FieldGetter<T>>> columns = getColumns();
+        for (Map.Entry<String, FieldGetter<T>> entry : columns) {
+            sb.append(entry.getKey()).append(',');
+        }
+        if (!columns.isEmpty()) {
+            sb.setLength(sb.length() - 1); // remove trailing ','
+        }
+        sb.append(" FROM ").append(getTableName());
+
+        return sb.toString();
     }
 
     @Override
@@ -73,4 +102,8 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     }
 
     protected abstract List<Map.Entry<String, FieldGetter<T>>> getColumns();
+
+    protected Connection getConnection() {
+        return connection;
+    }
 }

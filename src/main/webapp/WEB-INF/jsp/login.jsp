@@ -7,7 +7,6 @@
     <title>Whatacat</title>
 </head>
 <body>
-Currently logged in with '${sessionScope.login}' <br>
 <form method="post">
     <input name="email"/><br/>
     <input name="password" type="password"><br/>

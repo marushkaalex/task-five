@@ -1,15 +1,17 @@
 package com.epam.am.whatacat.service;
 
 import com.epam.am.whatacat.dao.DaoException;
-import com.epam.am.whatacat.dao.DaoFactory;
 import com.epam.am.whatacat.dao.PostDao;
 import com.epam.am.whatacat.dao.UserDao;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.User;
 
-public class PostService {
+public class PostService extends BaseService {
+    public PostService() throws ServiceException {
+    }
+
     public User getPostAuthor(long authorId) throws ServiceException {
-        try (DaoFactory daoFactory = DaoFactory.getFactory()){
+        try {
             UserDao userDao = daoFactory.getUserDao();
             User user = userDao.findById(authorId);
             return user;
@@ -19,7 +21,7 @@ public class PostService {
     }
 
     public Post findById(long postId) throws ServiceException {
-        try (DaoFactory daoFactory = DaoFactory.getFactory()) {
+        try {
             PostDao postDao = daoFactory.getPostDao();
             Post post = postDao.findById(postId);
             return post;

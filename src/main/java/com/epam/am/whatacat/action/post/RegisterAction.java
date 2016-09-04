@@ -38,9 +38,20 @@ public class RegisterAction implements Action {
                 return new ActionResult("register");
             }
 
+            UserService userService = new UserService();
             String email = request.getParameter("email");
+            if (!userService.isEmailFree(email)) {
+                errorList.add("register.error.email-already-in-use");
+            }
+
+            // TODO: 04.09.2016 chick if nickname free
             String nickname = request.getParameter("nickname");
             String password = request.getParameter("password");
+
+            if (!errorList.isEmpty()) {
+                request.setAttribute("errorList", errorList);
+                return new ActionResult("register");
+            }
 
             User user = new User();
             user.setEmail(email);
@@ -48,29 +59,14 @@ public class RegisterAction implements Action {
             user.setGender(Gender.UNDEFINED);
             user.setRole(Role.USER);
             user.setRegistrationDate(new Date());
-            user.setHashedPassword(hashPassword(password));
 
-            UserService userService = new UserService();
-            userService.register(user);
+            user = userService.register(user, password);
+            request.getSession().setAttribute("user", user);
 
             log.info("User {} <{}> has been registered", nickname, email);
             return new ActionResult("index", true);
         } catch (ServiceException e) {
             throw new ActionException(e);
-        }
-    }
-
-    private String hashPassword(String password) {
-        try {
-            byte[] salt = new byte[16];
-            new Random().nextBytes(salt);
-            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-            SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            byte[] hash = f.generateSecret(spec).getEncoded();
-            Base64.Encoder enc = Base64.getEncoder();
-            return enc.encodeToString(hash);
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException ignored) {
-            return null;
         }
     }
 }
