@@ -6,6 +6,8 @@ import com.epam.am.whatacat.dao.UserDao;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.User;
 
+import java.util.Date;
+
 public class PostService extends BaseService {
     public PostService() throws ServiceException {
     }
@@ -27,6 +29,21 @@ public class PostService extends BaseService {
             return post;
         } catch (DaoException e) {
             throw new ServiceException("Error while finding post", e);
+        }
+    }
+
+    public Post createPost(int type, String title, String content, long authorId) throws ServiceException {
+        try {
+            PostDao postDao = daoFactory.getPostDao();
+            Post post = new Post();
+            post.setTitle(title);
+            post.setAuthorId(authorId);
+            post.setContent(content);
+            post.setPublicationDate(new Date());
+            post.setType(type);
+            return postDao.save(post);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
         }
     }
 }

@@ -8,6 +8,7 @@ public class Post extends BaseModel {
     public static final int TYPE_PHOTO = 2;
     public static final int TYPE_VIDEO = 3;
 
+    private String title;
     private int type;
     private String content;
     private Date publicationDate;
@@ -15,6 +16,14 @@ public class Post extends BaseModel {
     private long authorId;
     private User author;
     private PaginatedList<Comment> commentList;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public PaginatedList<Comment> getCommentList() {
         return commentList;

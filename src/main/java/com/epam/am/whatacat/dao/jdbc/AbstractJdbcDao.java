@@ -17,7 +17,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
 
     public abstract String getTableName();
 
-    public abstract T bindData(ResultSet resultSet);
+    public abstract T bindData(ResultSet resultSet) throws DaoException;
 
     @Override
     public T save(T model) throws DaoException {

@@ -12,6 +12,7 @@ Var: ${test}
 <c:choose>
     <c:when test="${sessionScope.user != null}">
         Welcome, ${sessionScope.user.nickname}!<br>
+        <a href="create-post">Create post</a>
         <a href="logout">Log out</a>
     </c:when>
     <c:otherwise>

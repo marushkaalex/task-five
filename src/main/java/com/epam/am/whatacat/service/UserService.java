@@ -56,8 +56,7 @@ public class UserService extends BaseService {
 
     private String hashPassword(String password) throws ServiceException {
         try {
-            byte[] salt = new byte[16];
-            new Random().nextBytes(salt);
+            byte[] salt = new byte[]{-76, 123, -56, -17, 21, -114, -91, 1, 73, 60, 95, -65, -23, 112, -98, 16};
             KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
             SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             byte[] hash = f.generateSecret(spec).getEncoded();

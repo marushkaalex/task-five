@@ -2,6 +2,7 @@ package com.epam.am.whatacat.action;
 
 import com.epam.am.whatacat.action.get.LogoutAction;
 import com.epam.am.whatacat.action.get.ShowPageAction;
+import com.epam.am.whatacat.action.post.CreatePostAction;
 import com.epam.am.whatacat.action.post.LoginAction;
 import com.epam.am.whatacat.action.post.RegisterAction;
 
@@ -20,6 +21,8 @@ public class ActionFactory {
         actionMap.put("GET/register", new ShowPageAction("register"));
         actionMap.put("POST/register", new RegisterAction());
         actionMap.put("GET/logout", new LogoutAction());
+        actionMap.put("GET/create-post", new ShowPageAction("create-post"));
+        actionMap.put("POST/create-post", new CreatePostAction());
     }
 
     public Action getAction(String actionName) {

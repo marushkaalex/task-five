@@ -36,7 +36,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     }
 
     @Override
-    public User bindData(ResultSet resultSet) {
+    public User bindData(ResultSet resultSet) throws DaoException {
         throw new UnsupportedOperationException();
     }
 

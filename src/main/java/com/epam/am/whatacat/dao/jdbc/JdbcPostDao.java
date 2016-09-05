@@ -15,6 +15,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
 
     static {
         columnList.add(new AbstractMap.SimpleEntry<>("id", Post::getId));
+        columnList.add(new AbstractMap.SimpleEntry<>("title", Post::getTitle));
         columnList.add(new AbstractMap.SimpleEntry<>("type", Post::getType));
         columnList.add(new AbstractMap.SimpleEntry<>("content", Post::getContent));
         columnList.add(new AbstractMap.SimpleEntry<>("date", post -> new java.sql.Date(post.getPublicationDate().getTime())));

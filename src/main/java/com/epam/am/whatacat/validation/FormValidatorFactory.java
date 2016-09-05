@@ -20,13 +20,17 @@ public class FormValidatorFactory {
         validatorMap.put(
                 "register",
                 new FormValidator()
-                        // TODO: 03.09.2016 user proper validator
+                        // TODO: 03.09.2016 use proper validator
                         .addFieldValidator("nickname", new NonEmptyFieldValidator("register.error.nickname"))
         );
-    }
 
-    public FormValidator getValidator(String formName) {
-        return validatorMap.get(formName);
+        validatorMap.put(
+                "post",
+                new FormValidator()
+                        // TODO: 05.09.2016 use proper validator
+                        .addFieldValidator("title", new NonEmptyFieldValidator("post.error.title.empty"))
+                        .addFieldValidator("content", new NonEmptyFieldValidator("post.error.content.empty"))
+        );
     }
 
     public static void init() {
@@ -35,5 +39,9 @@ public class FormValidatorFactory {
 
     public static FormValidatorFactory getInstance() {
         return instance;
+    }
+
+    public FormValidator getValidator(String formName) {
+        return validatorMap.get(formName);
     }
 }

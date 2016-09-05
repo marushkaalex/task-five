@@ -8,11 +8,10 @@
 </head>
 <body>
 <form method="post">
-    <input name="email"/><br/>
-    <input name="password" type="password"><br/>
+    <input name="title"/><br/>
+    <input name="content"/><br/>
     <input type="submit"/>
-</form><br>
-<a href="register">Register</a>
+</form>
     <%--<fmt:message key="${login.error.email}"/><br><br>--%>
 <c:forEach var="error" items="${errorList}">
     <c:out value="${error}"/><br>

@@ -23,3 +23,16 @@ CREATE TABLE PUBLIC.user
 );
 CREATE UNIQUE INDEX "user_email_uindex" ON PUBLIC.user (email);
 CREATE UNIQUE INDEX "user_nickname_uindex" ON PUBLIC.user (nickname);
+
+CREATE TABLE PUBLIC.post
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    type TINYINT,
+    content VARCHAR(10000) NOT NULL,
+    column_5 INT,
+    date DATE,
+    rating INT,
+    author_id INT,
+    CONSTRAINT post_USER_ID_fk FOREIGN KEY (author_id) REFERENCES USER (ID)
+);
