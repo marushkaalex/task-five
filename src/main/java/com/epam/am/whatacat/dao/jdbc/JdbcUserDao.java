@@ -3,6 +3,8 @@ package com.epam.am.whatacat.dao.jdbc;
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.UserDao;
 import com.epam.am.whatacat.model.BaseModel;
+import com.epam.am.whatacat.model.Gender;
+import com.epam.am.whatacat.model.Role;
 import com.epam.am.whatacat.model.User;
 
 import java.sql.Connection;
@@ -15,15 +17,16 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     private static final List<Map.Entry<String, FieldGetter<User>>> columnMap = new ArrayList<>();
 
     static {
-        columnMap.add(new AbstractMap.SimpleEntry<>("id", BaseModel::getId));
-        columnMap.add(new AbstractMap.SimpleEntry<>("email", User::getEmail));
-        columnMap.add(new AbstractMap.SimpleEntry<>("nickname", User::getNickname));
-        columnMap.add(new AbstractMap.SimpleEntry<>("password", User::getHashedPassword));
-        columnMap.add(new AbstractMap.SimpleEntry<>("role_id", i -> i.getRole().getId()));
-        columnMap.add(new AbstractMap.SimpleEntry<>("gender", i -> i.getGender().getKey()));
-        columnMap.add(new AbstractMap.SimpleEntry<>("rating", User::getRating));
-        columnMap.add(new AbstractMap.SimpleEntry<>("avatar", User::getAvatarUrl));
-        columnMap.add(new AbstractMap.SimpleEntry<>("date", i -> new java.sql.Date(i.getRegistrationDate().getTime())));
+        columnMap.add(new AbstractMap.SimpleEntry<>("user.id", BaseModel::getId));
+        columnMap.add(new AbstractMap.SimpleEntry<>("user.email", User::getEmail));
+        columnMap.add(new AbstractMap.SimpleEntry<>("user.nickname", User::getNickname));
+        columnMap.add(new AbstractMap.SimpleEntry<>("user.password", User::getHashedPassword));
+        columnMap.add(new AbstractMap.SimpleEntry<>("user.role_id", i -> i.getRole().getId()));
+        columnMap.add(new AbstractMap.SimpleEntry<>("user.gender", i -> i.getGender().getKey()));
+        columnMap.add(new AbstractMap.SimpleEntry<>("user.rating", User::getRating));
+        columnMap.add(new AbstractMap.SimpleEntry<>("user.avatar", User::getAvatarUrl));
+        columnMap.add(new AbstractMap.SimpleEntry<>("user.date", i -> new java.sql.Date(i.getRegistrationDate().getTime())));
+        columnMap.add(new AbstractMap.SimpleEntry<>("role.name", null));
     }
 
     public JdbcUserDao(Connection connection) {
@@ -32,12 +35,25 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
 
     @Override
     public String getTableName() {
-        return "user";
+        return "user, role";
     }
 
     @Override
     public User bindData(ResultSet resultSet) throws DaoException {
-        throw new UnsupportedOperationException();
+        try {
+            User user = new User();
+            user.setId(resultSet.getLong("user.id"));
+            user.setEmail(resultSet.getString("user.email"));
+            user.setNickname(resultSet.getString("user.nickname"));
+            user.setRole(Role.valueOf(resultSet.getString("role.name")));
+            user.setGender(Gender.of(resultSet.getString("user.gender").charAt(0)));
+            user.setRating(resultSet.getLong("user.rating"));
+            user.setAvatarUrl(resultSet.getString("user.avatar"));
+            user.setRegistrationDate(new Date(resultSet.getDate("user.date").getTime()));
+            return user;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override

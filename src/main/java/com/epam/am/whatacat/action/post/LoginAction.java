@@ -37,13 +37,13 @@ public class LoginAction implements Action {
                 request.getSession().setAttribute("user", user);
             }
 
-            String referer = request.getHeader("Referer");
-            if (referer != null) {
-                String[] split = referer.split("/do/");
-                if (split.length > 1) {
-                    return new ActionResult(split[1], true);
-                }
-            }
+//            String referer = request.getHeader("Referer");
+//            if (referer != null) {
+//                String[] split = referer.split("/do/");
+//                if (split.length > 1) {
+//                    return new ActionResult(split[1], true);
+//                }
+//            }
             return new ActionResult("index", true);
         } catch (ServiceException e) {
             throw new ActionException(e);

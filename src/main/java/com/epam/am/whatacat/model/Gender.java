@@ -11,4 +11,14 @@ public enum Gender {
     public char getKey() {
         return key;
     }
+
+    public static Gender of(char key) {
+        for (Gender gender : values()) {
+            if (gender.key == key) {
+                return gender;
+            }
+        }
+
+        throw new IllegalArgumentException();
+    }
 }

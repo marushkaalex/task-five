@@ -29,6 +29,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 StringBuilder valuesSb = new StringBuilder();
                 List<Map.Entry<String, FieldGetter<T>>> columns = getColumns();
                 for (Map.Entry<String, FieldGetter<T>> entry : columns) {
+                    if (entry.getValue() == null) continue;
                     columnsSb.append(entry.getKey()).append(',');
                     valuesSb.append("?,");
                 }
