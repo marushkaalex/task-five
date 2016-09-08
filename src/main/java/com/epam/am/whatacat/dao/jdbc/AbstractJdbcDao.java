@@ -5,6 +5,7 @@ import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.model.BaseModel;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -97,8 +98,21 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
 
     @Override
     public List<T> getAll(long limit, long offset) throws DaoException {
-
-        return null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQuery() + " LIMIT ? OFFSET ?");
+            preparedStatement.setLong(1, limit);
+            preparedStatement.setLong(2, offset);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<T> resultList = new ArrayList<>();
+            while (resultSet.next()) {
+                T t = bindData(resultSet);
+                resultList.add(t);
+            }
+            resultSet.close();
+            return resultList;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     protected abstract List<Map.Entry<String, FieldGetter<T>>> getColumns();

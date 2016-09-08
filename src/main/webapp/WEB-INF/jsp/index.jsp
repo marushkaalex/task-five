@@ -20,5 +20,9 @@ Var: ${test}
         <a href="register">Register</a>
     </c:otherwise>
 </c:choose>
+<c:forEach items="${postList}" var="item">
+    <h3>${item.title}</h3>
+    <p>${item.content}</p>
+</c:forEach>
 </body>
 </html>

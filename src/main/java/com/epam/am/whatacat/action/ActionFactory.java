@@ -1,5 +1,6 @@
 package com.epam.am.whatacat.action;
 
+import com.epam.am.whatacat.action.get.IndexAction;
 import com.epam.am.whatacat.action.get.LogoutAction;
 import com.epam.am.whatacat.action.get.ShowPageAction;
 import com.epam.am.whatacat.action.post.CreatePostAction;
@@ -15,7 +16,7 @@ public class ActionFactory {
     public ActionFactory() {
         actionMap = new HashMap<>();
 //        actionMap.put("GET/index", new ShowPageAction("login"));
-        actionMap.put("GET/", new ShowPageAction("index"));
+        actionMap.put("GET/", new IndexAction());
         actionMap.put("GET/login", new ShowPageAction("login"));
         actionMap.put("POST/login", new LoginAction());
         actionMap.put("GET/register", new ShowPageAction("register"));

@@ -7,6 +7,7 @@ import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.User;
 
 import java.util.Date;
+import java.util.List;
 
 public class PostService extends BaseService {
     public PostService() throws ServiceException {
@@ -42,6 +43,15 @@ public class PostService extends BaseService {
             post.setPublicationDate(new Date());
             post.setType(type);
             return postDao.save(post);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<Post> getPostList(long limit, long offset) throws ServiceException {
+        try {
+            PostDao postDao = daoFactory.getPostDao();
+            return postDao.getAll(limit, offset);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
