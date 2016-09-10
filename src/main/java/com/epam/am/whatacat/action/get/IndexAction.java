@@ -21,8 +21,7 @@ public class IndexAction extends ShowPageAction {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        try {
-            PostService postService = new PostService();
+        try (PostService postService = new PostService()){
             String page = request.getParameter("page");
             int pageNumber = page == null || page.isEmpty() ? 0 : Integer.parseInt(page);
             List<Post> postList = postService.getPostList(POSTS_PER_PAGE, POSTS_PER_PAGE * pageNumber);
@@ -30,7 +29,7 @@ public class IndexAction extends ShowPageAction {
             paginatedList.setPage(pageNumber);
             request.setAttribute("postList", paginatedList);
             return super.execute(request, response);
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             throw new ActionException(e);
         }
     }

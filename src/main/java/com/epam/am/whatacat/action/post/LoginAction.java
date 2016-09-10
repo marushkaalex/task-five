@@ -16,18 +16,17 @@ import java.util.List;
 public class LoginAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        try {
-            FormValidator validator = FormValidatorFactory.getInstance().getValidator("login");
-            List<String> errorList = validator.validate(request.getParameterMap());
-            if (!errorList.isEmpty()) {
-                request.setAttribute("errorList", errorList);
-                return new ActionResult("login");
-            }
+        FormValidator validator = FormValidatorFactory.getInstance().getValidator("login");
+        List<String> errorList = validator.validate(request.getParameterMap());
+        if (!errorList.isEmpty()) {
+            request.setAttribute("errorList", errorList);
+            return new ActionResult("login");
+        }
 
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
 
-            UserService userService = new UserService();
+        try (UserService userService = new UserService()) {
             User user = userService.logIn(email, password);
             if (user == null) {
                 errorList.add("login.error.user-not-found");

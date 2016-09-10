@@ -17,18 +17,18 @@ import java.util.List;
 public class CreatePostAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        try {
-            // TODO: 05.09.2016 post validation
-            FormValidator validator = FormValidatorFactory.getInstance().getValidator("post");
-            List<String> errorList = validator.validate(request.getParameterMap());
-            if (!errorList.isEmpty()) {
-                request.setAttribute("errorList", errorList);
-                return new ActionResult("create-post");
-            }
+        // TODO: 05.09.2016 post validation
+        FormValidator validator = FormValidatorFactory.getInstance().getValidator("post");
+        List<String> errorList = validator.validate(request.getParameterMap());
+        if (!errorList.isEmpty()) {
+            request.setAttribute("errorList", errorList);
+            return new ActionResult("create-post");
+        }
 
-            String title = request.getParameter("title");
-            String content = request.getParameter("content");
-            PostService postService = new PostService();
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+
+        try (PostService postService = new PostService()) {
             // TODO: 05.09.2016 get type
             User user = (User) request.getSession().getAttribute("user");
             Post post = postService.createPost(Post.TYPE_TEXT, title, content, user.getId());

@@ -13,32 +13,24 @@ import com.epam.am.whatacat.validation.FormValidatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 public class RegisterAction implements Action {
     private static final Logger log = LoggerFactory.getLogger(RegisterAction.class);
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        try {
-            FormValidator validator = FormValidatorFactory.getInstance().getValidator("register");
-            List<String> errorList = validator.validate(request.getParameterMap());
-            if (!errorList.isEmpty()) {
-                request.setAttribute("errorList", errorList);
-                return new ActionResult("register");
-            }
+        FormValidator validator = FormValidatorFactory.getInstance().getValidator("register");
+        List<String> errorList = validator.validate(request.getParameterMap());
+        if (!errorList.isEmpty()) {
+            request.setAttribute("errorList", errorList);
+            return new ActionResult("register");
+        }
 
-            UserService userService = new UserService();
+        try (UserService userService = new UserService()) {
             String email = request.getParameter("email");
             if (!userService.isEmailFree(email)) {
                 errorList.add("register.error.email-already-in-use");
