@@ -14,7 +14,7 @@ public class ForwardFilter implements Filter {
         if (req instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) req;
             String requestURI = httpRequest.getRequestURI();
-            if (requestURI.startsWith("/static")) {
+            if (requestURI.startsWith("/static") || requestURI.startsWith("/webjars")) {
                 chain.doFilter(req, resp);
             } else {
                 req.getRequestDispatcher("/do" + requestURI).forward(req, resp);
