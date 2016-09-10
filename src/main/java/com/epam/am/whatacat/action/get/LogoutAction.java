@@ -11,6 +11,6 @@ public class LogoutAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         request.getSession().invalidate();
-        return new ActionResult("index", true);
+        return new ActionResult("/", true);
     }
 }

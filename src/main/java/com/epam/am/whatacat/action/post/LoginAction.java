@@ -44,7 +44,7 @@ public class LoginAction implements Action {
 //                    return new ActionResult(split[1], true);
 //                }
 //            }
-            return new ActionResult("index", true);
+            return new ActionResult("/", true);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }

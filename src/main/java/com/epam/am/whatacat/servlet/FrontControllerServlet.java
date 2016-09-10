@@ -45,7 +45,7 @@ public class FrontControllerServlet extends HttpServlet {
 
     private void processResult(HttpServletRequest req, HttpServletResponse resp, ActionResult result) throws IOException, ServletException {
         if (result.isRedirect()) {
-            String path = req.getContextPath() + "/do/" + result.getView();
+            String path = req.getContextPath() + result.getView();
             resp.sendRedirect(path);
         } else {
             String path = "/WEB-INF/jsp/" + result.getView() + ".jsp";
