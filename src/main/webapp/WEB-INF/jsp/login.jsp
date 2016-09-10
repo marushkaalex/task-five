@@ -1,7 +1,8 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib  prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setBundle basename="i18n"/>
+<%--<fmt:setLocale value="$Э--%>
 <html>
 <head>
     <title>Whatacat</title>
@@ -16,6 +17,7 @@
     <%--<fmt:message key="${login.error.email}"/><br><br>--%>
 <c:forEach var="error" items="${errorList}">
     <c:out value="${error}"/><br>
+    <fmt:message key="${error}" />
 </c:forEach>
 </body>
 </html>
