@@ -5,11 +5,9 @@ import com.epam.am.whatacat.dao.PostDao;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.PostRating;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     private static final List<Map.Entry<String, FieldGetter<Post>>> columnList = new ArrayList<>();
@@ -59,7 +57,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 preparedStatement.setLong(1, postRating.getPostId());
                 preparedStatement.setLong(2, postRating.getUserId());
                 preparedStatement.setInt(3, postRating.getRatingDelta());
-                preparedStatement.setDate(4, new java.sql.Date(postRating.getDate().getTime()));
+                preparedStatement.setDate(4, new java.sql.Date(new Date().getTime()));
                 preparedStatement.execute();
 
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -72,11 +70,44 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 preparedStatement.setLong(1, postRating.getPostId());
                 preparedStatement.setLong(2, postRating.getUserId());
                 preparedStatement.setInt(3, postRating.getRatingDelta());
-                preparedStatement.setDate(4, new java.sql.Date(postRating.getDate().getTime()));
+                preparedStatement.setDate(4, new java.sql.Date(new Date().getTime()));
                 preparedStatement.setLong(5, postRating.getId());
 
                 preparedStatement.execute();
             }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    throw new DaoException(e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public PostRating getRating(long postId, long userId) throws DaoException {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = getConnection().prepareStatement("SELECT id, delta, date_ FROM post_rating WHERE post_id=? AND user_id=?");
+            preparedStatement.setLong(1, postId);
+            preparedStatement.setLong(2, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            PostRating rating = new PostRating();
+            if (resultSet.next()) {
+                rating.setId(resultSet.getLong("id"));
+                rating.setPostId(postId);
+                rating.setUserId(userId);
+                rating.setRatingDelta(resultSet.getInt("delta"));
+                java.sql.Date date_ = resultSet.getDate("date_");
+                rating.setDate(new Date(date_.getTime()));
+            }
+
+            return rating;
         } catch (SQLException e) {
             throw new DaoException(e);
         } finally {

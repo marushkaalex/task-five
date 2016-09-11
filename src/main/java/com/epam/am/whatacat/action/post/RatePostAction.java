@@ -22,7 +22,7 @@ public class RatePostAction implements Action {
         long postId = Long.parseLong(request.getParameter("post_id"));
         User user = (User) request.getSession().getAttribute("user");
         long userId = user.getId();
-        int ratingDelta = Integer.parseInt("delta");
+        int ratingDelta = Integer.parseInt(request.getParameter("delta"));
         // TODO: 11.09.2016 check user permissions
         PostRating postRating = new PostRating();
         postRating.setId(id);

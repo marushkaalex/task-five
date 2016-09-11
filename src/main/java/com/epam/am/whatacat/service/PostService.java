@@ -58,6 +58,20 @@ public class PostService extends BaseService {
         }
     }
 
+    public List<Post> getPostListWithRating(long userId, long limit, long offset) throws ServiceException {
+        try {
+            PostDao postDao = daoFactory.getPostDao();
+            List<Post> postList = postDao.getAll(limit, offset);
+            for (Post post : postList) {
+                // TODO: 11.09.2016 use only one SQL query
+                post.setUserPostRating(postDao.getRating(post.getId(), userId));
+            }
+            return postList;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     // TODO: 11.09.2016 check user permissions
     public void rate(PostRating postRating) throws ServiceException {
         try {
