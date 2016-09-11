@@ -10,6 +10,8 @@
     <link href="<c:url value="/webjars/bootstrap/3.3.7/css/bootstrap.css"/>" rel="stylesheet">
 </head>
 <body>
-<jsp:doBody/>
+<div class="container">
+    <jsp:doBody/>
+</div>
 </body>
 </html>

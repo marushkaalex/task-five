@@ -4,21 +4,36 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <my:base>
     <fmt:setBundle basename="i18n"/>
-    Message: <fmt:message key="test"/><br>
-    Var: ${test}
-    <c:choose>
-        <c:when test="${sessionScope.user != null}">
-            Welcome, ${sessionScope.user.nickname}!<br>
-            <a href="create-post">Create post</a>
-            <a href="logout">Log out</a>
-        </c:when>
-        <c:otherwise>
-            <a href="login">Log in</a><br>
-            <a href="register">Register</a>
-        </c:otherwise>
-    </c:choose>
-    <c:forEach items="${postList}" var="item">
-        <h3>${item.title}</h3>
-        <p>${item.content}</p>
-    </c:forEach>
+    <div class="row">
+        <div class="col-md-8">
+            <c:forEach items="${postList}" var="item">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <button type="button" class="btn btn-default btn-xs">+</button>
+                            ${item.rating}
+                        <button type="button" class="btn btn-default btn-xs">-</button>
+                            ${item.title}
+                    </div>
+                    <div class="panel-body">
+                    ${item.content}
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
+        <div class="col-md-4">
+            Message: <fmt:message key="test"/><br>
+            Var: ${test}
+            <c:choose>
+                <c:when test="${sessionScope.user != null}">
+                    Welcome, ${sessionScope.user.nickname}!<br>
+                    <a href="create-post">Create post</a>
+                    <a href="logout">Log out</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="login">Log in</a><br>
+                    <a href="register">Register</a>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
 </my:base>
