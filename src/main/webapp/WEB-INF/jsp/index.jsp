@@ -9,13 +9,23 @@
             <c:forEach items="${postList}" var="item">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <button type="button" class="btn btn-default btn-xs">+</button>
+                        <form method="post" action="rate-post">
+                            <input type="hidden" name="id" value="${item.userPostRating.id}">
+                            <input type="hidden" name="post_id" value="${item.id}">
+                            <input type="hidden" name="delta" value="1">
+                            <button type="submit" class="btn btn-default btn-xs">+</button>
+                        </form>
                             ${item.rating}
-                        <button type="button" class="btn btn-default btn-xs">-</button>
+                        <form method="post" action="rate-post">
+                            <input type="hidden" name="id" value="${item.userPostRating.id}">
+                            <input type="hidden" name="post_id" value="${item.id}">
+                            <input type="hidden" name="delta" value="-1">
+                            <button type="submit" class="btn btn-default btn-xs">-</button>
+                        </form>
                             ${item.title}
                     </div>
                     <div class="panel-body">
-                    ${item.content}
+                            ${item.content}
                     </div>
                 </div>
             </c:forEach>

@@ -37,12 +37,14 @@ CREATE TABLE PUBLIC.post
     CONSTRAINT post_USER_ID_fk FOREIGN KEY (author_id) REFERENCES USER (ID)
 );
 
-CREATE TABLE PUBLIC.post_rating
+CREATE TABLE PUBLIC.table_name
 (
     id INT AUTO_INCREMENT PRIMARY KEY,
     post_id INT,
     user_id INT,
     delta SMALLINT,
-    CONSTRAINT post_rating_POST_ID_fk FOREIGN KEY (post_id) REFERENCES POST (ID),
-    CONSTRAINT post_rating_USER_ID_fk FOREIGN KEY (user_id) REFERENCES USER (ID)
+    date_ DATE,
+    CONSTRAINT table_name_POST_ID_fk FOREIGN KEY (post_id) REFERENCES POST (ID),
+    CONSTRAINT table_name_USER_ID_fk FOREIGN KEY (user_id) REFERENCES USER (ID)
 );
+CREATE UNIQUE INDEX "table_name_post_id_user_id_uindex" ON PUBLIC.table_name (post_id, user_id);

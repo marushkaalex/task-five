@@ -49,7 +49,6 @@ public class PostService extends BaseService {
         }
     }
 
-
     public List<Post> getPostList(long limit, long offset) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -59,6 +58,7 @@ public class PostService extends BaseService {
         }
     }
 
+    // TODO: 11.09.2016 check user permissions
     public void rate(PostRating postRating) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();

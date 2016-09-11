@@ -55,10 +55,11 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
         PreparedStatement preparedStatement = null;
         try {
             if (postRating.getId() == null) {
-                preparedStatement = getConnection().prepareStatement("INSERT INTO post_rating(post_id, user_id, delta) VALUES(?, ?, ?)");
+                preparedStatement = getConnection().prepareStatement("INSERT INTO post_rating(post_id, user_id, delta, date_) VALUES(?, ?, ?, ?)");
                 preparedStatement.setLong(1, postRating.getPostId());
                 preparedStatement.setLong(2, postRating.getUserId());
                 preparedStatement.setInt(3, postRating.getRatingDelta());
+                preparedStatement.setDate(4, new java.sql.Date(postRating.getDate().getTime()));
                 preparedStatement.execute();
 
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -67,11 +68,12 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 }
                 generatedKeys.close();
             } else {
-                preparedStatement = getConnection().prepareStatement("UPDATE post_rating SET post_id=?, user_id=?, delta=? WHERE id=?");
+                preparedStatement = getConnection().prepareStatement("UPDATE post_rating SET post_id=?, user_id=?, delta=?, date_=? WHERE id=?");
                 preparedStatement.setLong(1, postRating.getPostId());
                 preparedStatement.setLong(2, postRating.getUserId());
                 preparedStatement.setInt(3, postRating.getRatingDelta());
-                preparedStatement.setLong(4, postRating.getId());
+                preparedStatement.setDate(4, new java.sql.Date(postRating.getDate().getTime()));
+                preparedStatement.setLong(5, postRating.getId());
 
                 preparedStatement.execute();
             }
