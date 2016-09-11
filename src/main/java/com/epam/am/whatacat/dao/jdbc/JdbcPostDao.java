@@ -3,8 +3,10 @@ package com.epam.am.whatacat.dao.jdbc;
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.PostDao;
 import com.epam.am.whatacat.model.Post;
+import com.epam.am.whatacat.model.PostRating;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -45,6 +47,44 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             return res;
         } catch (SQLException e) {
             throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void rate(PostRating postRating) throws DaoException {
+        PreparedStatement preparedStatement = null;
+        try {
+            if (postRating.getId() == null) {
+                preparedStatement = getConnection().prepareStatement("INSERT INTO post_rating(post_id, user_id, delta) VALUES(?, ?, ?)");
+                preparedStatement.setLong(1, postRating.getPostId());
+                preparedStatement.setLong(2, postRating.getUserId());
+                preparedStatement.setInt(3, postRating.getRatingDelta());
+                preparedStatement.execute();
+
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    postRating.setId(generatedKeys.getLong(1));
+                }
+                generatedKeys.close();
+            } else {
+                preparedStatement = getConnection().prepareStatement("UPDATE post_rating SET post_id=?, user_id=?, delta=? WHERE id=?");
+                preparedStatement.setLong(1, postRating.getPostId());
+                preparedStatement.setLong(2, postRating.getUserId());
+                preparedStatement.setInt(3, postRating.getRatingDelta());
+                preparedStatement.setLong(4, postRating.getId());
+
+                preparedStatement.execute();
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    throw new DaoException(e);
+                }
+            }
         }
     }
 

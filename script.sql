@@ -36,3 +36,13 @@ CREATE TABLE PUBLIC.post
     author_id INT,
     CONSTRAINT post_USER_ID_fk FOREIGN KEY (author_id) REFERENCES USER (ID)
 );
+
+CREATE TABLE PUBLIC.post_rating
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT,
+    user_id INT,
+    delta SMALLINT,
+    CONSTRAINT post_rating_POST_ID_fk FOREIGN KEY (post_id) REFERENCES POST (ID),
+    CONSTRAINT post_rating_USER_ID_fk FOREIGN KEY (user_id) REFERENCES USER (ID)
+);

@@ -54,7 +54,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 return model;
             } else {
                 // TODO
-                throw new UnsupportedOperationException("User update is not currently implemented");
+                throw new UnsupportedOperationException("Update is not currently implemented");
             }
         } catch (SQLException e) {
             throw new DaoException(e);

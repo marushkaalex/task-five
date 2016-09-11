@@ -16,6 +16,15 @@ public class Post extends BaseModel {
     private long authorId;
     private User author;
     private PaginatedList<Comment> commentList;
+    private PostRating userPostRating;
+
+    public PostRating getUserPostRating() {
+        return userPostRating;
+    }
+
+    public void setUserPostRating(PostRating userPostRating) {
+        this.userPostRating = userPostRating;
+    }
 
     public String getTitle() {
         return title;
