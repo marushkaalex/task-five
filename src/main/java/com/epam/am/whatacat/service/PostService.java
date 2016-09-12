@@ -81,4 +81,12 @@ public class PostService extends BaseService {
             throw new ServiceException(e);
         }
     }
+
+    public Post getById(long id) throws ServiceException {
+        try {
+            return daoFactory.getPostDao().findById(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

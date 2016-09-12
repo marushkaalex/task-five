@@ -5,11 +5,13 @@
 <fmt:setBundle basename="i18n"/>
 <%--<fmt:setLocale value="$Э--%>
 <my:base>
-<form method="post">
-    <input name="email"/><br/>
-    <input name="password" type="password"><br/>
-    <input type="submit"/>
-</form><br>
+    <form method="post" action="login">
+        <input name="email" class="form-control form-group form-group-sm input-sm" type="text"
+               placeholder="<fmt:message key="login.hint.email"/>">
+        <input name="password" class="form-group form-group-sm form-control input-sm" type="password"
+               placeholder="<fmt:message key="login.hint.password"/>">
+        <button type="submit" class="btn btn-success btn-sm"><fmt:message key="login.sign-in"/></button>
+    </form><br>
 <a href="register">Register</a>
     <%--<fmt:message key="${login.error.email}"/><br><br>--%>
 <c:forEach var="error" items="${errorList}">

@@ -3,6 +3,7 @@ package com.epam.am.whatacat.action;
 import com.epam.am.whatacat.action.get.IndexAction;
 import com.epam.am.whatacat.action.get.LogoutAction;
 import com.epam.am.whatacat.action.get.ShowPageAction;
+import com.epam.am.whatacat.action.get.ShowPostAction;
 import com.epam.am.whatacat.action.post.CreatePostAction;
 import com.epam.am.whatacat.action.post.LoginAction;
 import com.epam.am.whatacat.action.post.RatePostAction;
@@ -25,6 +26,7 @@ public class ActionFactory {
         actionMap.put("GET/create-post", new ShowPageAction("create-post"));
         actionMap.put("POST/create-post", new CreatePostAction());
         actionMap.put("POST/rate-post", new RatePostAction());
+        actionMap.put("GET/post", new ShowPostAction());
     }
 
     public Action getAction(String actionName) {
