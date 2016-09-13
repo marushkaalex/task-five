@@ -22,6 +22,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
 
     @Override
     public T save(T model) throws DaoException {
+        PreparedStatement preparedStatement = null;
         try {
             if (model.getId() == null) {
                 // TODO
@@ -39,8 +40,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 }
 
                 String query = String.format("INSERT INTO %s(%s) VALUES(%s);", getTableName(), columnsSb, valuesSb);
-                System.out.println(query);
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement = connection.prepareStatement(query);
                 for (int i = 0; i < columns.size(); i++) {
                     Map.Entry<String, FieldGetter<T>> entry = columns.get(i);
                     preparedStatement.setObject(i + 1, entry.getValue().getField(model));
@@ -53,11 +53,34 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 generatedKeys.close();
                 return model;
             } else {
-                // TODO
-                throw new UnsupportedOperationException("Update is not currently implemented");
+                StringBuilder sb = new StringBuilder();
+                List<Map.Entry<String, FieldGetter<T>>> columns = getColumns();
+                for (Map.Entry<String, FieldGetter<T>> entry : columns) {
+                    sb.append(entry.getKey()).append("=?,");
+                }
+                if (sb.length() != 0) {
+                    sb.setLength(sb.length() - 1); // remove last ,
+                }
+                String query = String.format("UPDATE %s SET %s WHERE id=?", getTableName(), sb);
+                preparedStatement = connection.prepareStatement(query);
+                for (int i = 0; i < columns.size(); i++) {
+                    Map.Entry<String, FieldGetter<T>> entry = columns.get(i);
+                    preparedStatement.setObject(i + 1, entry.getValue().getField(model));
+                }
+                preparedStatement.setLong(columns.size() + 1, model.getId());
+                preparedStatement.execute();
+                return model;
             }
         } catch (SQLException e) {
             throw new DaoException(e);
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    throw new DaoException(e);
+                }
+            }
         }
     }
 

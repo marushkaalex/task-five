@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ attribute name="post" type="com.epam.am.whatacat.model.Post" required="true" %>
+<%@ attribute name="user" type="com.epam.am.whatacat.model.User" required="false" %>
 
 <div class="panel panel-primary">
     <div class="panel-heading post-heading">

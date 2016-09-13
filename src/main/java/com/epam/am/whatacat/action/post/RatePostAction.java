@@ -3,6 +3,7 @@ package com.epam.am.whatacat.action.post;
 import com.epam.am.whatacat.action.Action;
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
+import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.PostRating;
 import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.PostService;
@@ -30,7 +31,8 @@ public class RatePostAction implements Action {
         postRating.setUserId(userId);
         postRating.setRatingDelta(ratingDelta);
         try (PostService postService = new PostService()) {
-            postService.rate(postRating);
+            Post post = postService.getById(postId);
+            postService.rate(post, postRating);
             return new ActionResult("post?id=" + postId, true);
         } catch (ServiceException e) {
             throw new ActionException(e);

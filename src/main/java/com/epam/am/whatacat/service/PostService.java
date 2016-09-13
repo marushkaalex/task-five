@@ -73,11 +73,21 @@ public class PostService extends BaseService {
     }
 
     // TODO: 11.09.2016 check user permissions
-    public void rate(PostRating postRating) throws ServiceException {
+    public void rate(Post post, PostRating postRating) throws ServiceException {
         try {
+            daoFactory.startTransaction();
             PostDao postDao = daoFactory.getPostDao();
+            // TODO: 13.09.2016 allow rate only once
+            post.setRating(post.getRating() + postRating.getRatingDelta());
+            postDao.save(post);
             postDao.rate(postRating);
+            daoFactory.commitTransaction();
         } catch (DaoException e) {
+            try {
+                daoFactory.rollbackTransaction();
+            } catch (DaoException e1) {
+                throw new ServiceException(e1);
+            }
             throw new ServiceException(e);
         }
     }
