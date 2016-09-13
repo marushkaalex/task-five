@@ -73,12 +73,27 @@ public class PostService extends BaseService {
     }
 
     // TODO: 11.09.2016 check user permissions
-    public void rate(Post post, PostRating postRating) throws ServiceException {
+    public void rate(long userId, Post post, int ratingDelta) throws ServiceException {
         try {
             daoFactory.startTransaction();
+            PostRating postRating = post.getUserPostRating();
+            if (postRating == null) {
+                postRating = new PostRating();;
+                postRating.setUserId(userId);
+                postRating.setPostId(post.getId());
+                postRating.setDate(new Date());
+                postRating.setRatingDelta(ratingDelta);
+
+                post.setRating(post.getRating() + ratingDelta);
+            } else {
+                post.setRating(post.getRating() - postRating.getRatingDelta());
+                post.setRating(post.getRating() + ratingDelta);
+                postRating.setRatingDelta(ratingDelta);
+            }
+
             PostDao postDao = daoFactory.getPostDao();
             // TODO: 13.09.2016 allow rate only once
-            post.setRating(post.getRating() + postRating.getRatingDelta());
+            post.setRating(post.getRating() + ratingDelta);
             postDao.save(post);
             postDao.rate(postRating);
             daoFactory.commitTransaction();
@@ -95,6 +110,18 @@ public class PostService extends BaseService {
     public Post getById(long id) throws ServiceException {
         try {
             return daoFactory.getPostDao().findById(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public Post getByIdWithRating(long id, long userId) throws ServiceException {
+        try {
+            PostDao postDao = daoFactory.getPostDao();
+            Post post = postDao.findById(id);
+            PostRating rating = postDao.getRating(id, userId);
+            post.setUserPostRating(rating);
+            return post;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

@@ -25,14 +25,9 @@ public class RatePostAction implements Action {
         long userId = user.getId();
         int ratingDelta = Integer.parseInt(request.getParameter("delta"));
         // TODO: 11.09.2016 check user permissions
-        PostRating postRating = new PostRating();
-        postRating.setId(id);
-        postRating.setPostId(postId);
-        postRating.setUserId(userId);
-        postRating.setRatingDelta(ratingDelta);
         try (PostService postService = new PostService()) {
-            Post post = postService.getById(postId);
-            postService.rate(post, postRating);
+            Post post = postService.getByIdWithRating(postId, userId);
+            postService.rate(userId, post, ratingDelta);
             return new ActionResult("post?id=" + postId, true);
         } catch (ServiceException e) {
             throw new ActionException(e);
