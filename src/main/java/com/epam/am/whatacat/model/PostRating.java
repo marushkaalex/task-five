@@ -39,4 +39,13 @@ public class PostRating extends BaseModel {
     public void setRatingDelta(int ratingDelta) {
         this.ratingDelta = ratingDelta;
     }
+
+    @Override
+    public String toString() {
+        return "PostRating{" +
+                "postId=" + postId +
+                ", userId=" + userId +
+                ", ratingDelta=" + ratingDelta +
+                '}';
+    }
 }

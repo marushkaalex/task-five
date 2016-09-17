@@ -89,4 +89,14 @@ public class Post extends BaseModel {
     public void setRating(long rating) {
         this.rating = rating;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", type=" + type +
+                ", rating=" + rating +
+                ", userPostRating=" + userPostRating +
+                '}';
+    }
 }

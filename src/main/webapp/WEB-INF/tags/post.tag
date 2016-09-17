@@ -4,6 +4,9 @@
 <%@ attribute name="post" type="com.epam.am.whatacat.model.Post" required="true" %>
 <%@ attribute name="user" type="com.epam.am.whatacat.model.User" required="false" %>
 
+<c:set var="plus_class" value="${post.userPostRating.ratingDelta > 0 ? 'btn-success' : 'btn-default'}"/>
+<c:set var="minus_class" value="${post.userPostRating.ratingDelta < 0 ? 'btn-danger' : 'btn-default'}"/>
+${post}
 <div class="panel panel-primary">
     <div class="panel-heading post-heading">
         <c:if test="${sessionScope.user != null}">
@@ -11,7 +14,7 @@
                 <input type="hidden" name="id" value="${post.userPostRating.id}">
                 <input type="hidden" name="post_id" value="${post.id}">
                 <input type="hidden" name="delta" value="1">
-                <button type="submit" class="btn btn-default btn-xs">+</button>
+                <button type="submit" class="btn btn-xs ${plus_class}">+</button>
             </form>
         </c:if>
         ${post.rating}
@@ -20,7 +23,7 @@
                 <input type="hidden" name="id" value="${post.userPostRating.id}">
                 <input type="hidden" name="post_id" value="${post.id}">
                 <input type="hidden" name="delta" value="-1">
-                <button type="submit" class="btn btn-default btn-xs">-</button>
+                <button type="submit" class="btn btn-xs ${minus_class}">-</button>
             </form>
         </c:if>
         <h3><a href="post?id=${post.id}">${post.title}</a></h3>

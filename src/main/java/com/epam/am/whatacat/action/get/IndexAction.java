@@ -29,11 +29,6 @@ public class IndexAction extends ShowPageAction {
 
             User user = (User) request.getSession().getAttribute("user");
             List<Post> postList;
-//            if (user != null) {
-//                postList = postService.getPostListWithRating(user.getId(), POSTS_PER_PAGE, POSTS_PER_PAGE * pageNumber);
-//            } else {
-//                postList = postService.getPostList(POSTS_PER_PAGE, POSTS_PER_PAGE * pageNumber);
-//            }
             postList = postService.getPostList(
                     POSTS_PER_PAGE,
                     POSTS_PER_PAGE * pageNumber,
