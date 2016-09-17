@@ -13,13 +13,13 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     private static final List<Map.Entry<String, FieldGetter<Post>>> columnList = new ArrayList<>();
 
     static {
-        columnList.add(new AbstractMap.SimpleEntry<>("id", Post::getId));
-        columnList.add(new AbstractMap.SimpleEntry<>("title", Post::getTitle));
-        columnList.add(new AbstractMap.SimpleEntry<>("type", Post::getType));
-        columnList.add(new AbstractMap.SimpleEntry<>("content", Post::getContent));
-        columnList.add(new AbstractMap.SimpleEntry<>("date", post -> new java.sql.Date(post.getPublicationDate().getTime())));
-        columnList.add(new AbstractMap.SimpleEntry<>("rating", Post::getRating));
-        columnList.add(new AbstractMap.SimpleEntry<>("author_id", Post::getAuthorId));
+        columnList.add(new AbstractMap.SimpleEntry<>("post.id", Post::getId));
+        columnList.add(new AbstractMap.SimpleEntry<>("post.title", Post::getTitle));
+        columnList.add(new AbstractMap.SimpleEntry<>("post.type", Post::getType));
+        columnList.add(new AbstractMap.SimpleEntry<>("post.content", Post::getContent));
+        columnList.add(new AbstractMap.SimpleEntry<>("post.date", post -> new java.sql.Date(post.getPublicationDate().getTime())));
+        columnList.add(new AbstractMap.SimpleEntry<>("post.rating", Post::getRating));
+        columnList.add(new AbstractMap.SimpleEntry<>("post.author_id", Post::getAuthorId));
     }
 
     public JdbcPostDao(Connection connection) {
@@ -32,17 +32,57 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     }
 
     @Override
+    public List<Post> getAllWithUserRating(long limit, long offset, long userId) throws DaoException {
+        String query = getSelectQuery() + "FROM post, post_rating JOIN post_rating ON post.id=post_rating.post_id WHERE post_rating.user_id=?";
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Post> res = new ArrayList<>();
+            while (resultSet.next()) {
+                Post post = bindData(resultSet);
+                res.add(post);
+            }
+            return res;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public Post findById(Long id) throws DaoException {
+        return super.findById(id);
+    }
+
+    @Override
     public Post bindData(ResultSet resultSet) throws DaoException {
         try {
             Post res = new Post();
-            res.setId(resultSet.getLong("id"));
-            res.setTitle(resultSet.getString("title"));
-            res.setContent(resultSet.getString("content"));
-            res.setPublicationDate(new Date(resultSet.getDate("date").getTime()));
-            res.setType(resultSet.getInt("type"));
-            res.setRating(resultSet.getLong("rating"));
-            res.setAuthorId(resultSet.getLong("author_id"));
+            res.setId(resultSet.getLong("post.id"));
+            res.setTitle(resultSet.getString("post.title"));
+            res.setContent(resultSet.getString("post.content"));
+            res.setPublicationDate(new Date(resultSet.getDate("post.date").getTime()));
+            res.setType(resultSet.getInt("post.type"));
+            res.setRating(resultSet.getLong("post.rating"));
+            res.setAuthorId(resultSet.getLong("post.author_id"));
+
             return res;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    public Post bindDataWithRating(ResultSet resultSet) throws DaoException {
+        try {
+            Post post = bindData(resultSet);
+
+            PostRating postRating = new PostRating();
+            postRating.setId(resultSet.getLong("post_rating.id"));
+            postRating.setUserId(resultSet.getLong("post_rating.user_id"));
+            postRating.setPostId(resultSet.getLong("post_rating.post_id"));
+            postRating.setRatingDelta(resultSet.getInt("post_rating.delta"));
+            postRating.setDate(new Date(resultSet.getDate("post_rating.date_").getTime()));
+
+            post.setUserPostRating(postRating);
+            return post;
         } catch (SQLException e) {
             throw new DaoException(e);
         }

@@ -6,19 +6,23 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading post-heading">
-        <form method="post" action="rate-post" class="post-rate">
-            <input type="hidden" name="id" value="${post.userPostRating.id}">
-            <input type="hidden" name="post_id" value="${post.id}">
-            <input type="hidden" name="delta" value="1">
-            <button type="submit" class="btn btn-default btn-xs">+</button>
-        </form>
+        <c:if test="${sessionScope.user != null}">
+            <form method="post" action="rate-post" class="post-rate">
+                <input type="hidden" name="id" value="${post.userPostRating.id}">
+                <input type="hidden" name="post_id" value="${post.id}">
+                <input type="hidden" name="delta" value="1">
+                <button type="submit" class="btn btn-default btn-xs">+</button>
+            </form>
+        </c:if>
         ${post.rating}
-        <form method="post" action="rate-post" class="post-rate">
-            <input type="hidden" name="id" value="${post.userPostRating.id}">
-            <input type="hidden" name="post_id" value="${post.id}">
-            <input type="hidden" name="delta" value="-1">
-            <button type="submit" class="btn btn-default btn-xs">-</button>
-        </form>
+        <c:if test="${sessionScope.user != null}">
+            <form method="post" action="rate-post" class="post-rate">
+                <input type="hidden" name="id" value="${post.userPostRating.id}">
+                <input type="hidden" name="post_id" value="${post.id}">
+                <input type="hidden" name="delta" value="-1">
+                <button type="submit" class="btn btn-default btn-xs">-</button>
+            </form>
+        </c:if>
         <h3><a href="post?id=${post.id}">${post.title}</a></h3>
     </div>
     <div class="panel-body">

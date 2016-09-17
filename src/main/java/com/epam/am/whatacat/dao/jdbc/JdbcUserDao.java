@@ -70,7 +70,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     public boolean isNicknameFree(String nickname) throws DaoException {
         try {
             PreparedStatement preparedStatement =
-                    getConnection().prepareStatement(getSelectQuery() + " WHERE nickname=?");
+                    getConnection().prepareStatement(getSelectQueryWithFrom() + " WHERE nickname=?");
 
             preparedStatement.setString(1, nickname);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -86,7 +86,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     public boolean isEmailFree(String email) throws DaoException {
         try {
             PreparedStatement preparedStatement =
-                    getConnection().prepareStatement(getSelectQuery() + " WHERE email=?");
+                    getConnection().prepareStatement(getSelectQueryWithFrom() + " WHERE email=?");
 
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -102,7 +102,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     public User findByEmailAndPassword(String email, String password) throws DaoException{
         try {
             PreparedStatement preparedStatement =
-                    getConnection().prepareStatement(getSelectQuery() + " WHERE email=? AND password=?");
+                    getConnection().prepareStatement(getSelectQueryWithFrom() + " WHERE email=? AND password=?");
 
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);

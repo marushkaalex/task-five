@@ -86,13 +86,13 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
 
     @Override
     public void delete(T model) throws DaoException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public T findById(Long id) throws DaoException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQuery() + " WHERE id=?;");
+            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + " WHERE id=?;");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -105,7 +105,11 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
         }
     }
 
-    protected String getSelectQuery() {
+    protected StringBuilder getSelectQueryWithFrom() {
+        return getSelectQuery().append(" FROM ").append(getTableName());
+    }
+
+    protected StringBuilder getSelectQuery() {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ");
         List<Map.Entry<String, FieldGetter<T>>> columns = getColumns();
@@ -115,15 +119,14 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
         if (!columns.isEmpty()) {
             sb.setLength(sb.length() - 1); // remove trailing ','
         }
-        sb.append(" FROM ").append(getTableName());
 
-        return sb.toString();
+        return sb;
     }
 
     @Override
     public List<T> getAll(long limit, long offset) throws DaoException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQuery() + " LIMIT ? OFFSET ?");
+            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + " LIMIT ? OFFSET ?");
             preparedStatement.setLong(1, limit);
             preparedStatement.setLong(2, offset);
             ResultSet resultSet = preparedStatement.executeQuery();

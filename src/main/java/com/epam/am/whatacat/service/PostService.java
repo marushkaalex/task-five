@@ -7,6 +7,7 @@ import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.PostRating;
 import com.epam.am.whatacat.model.User;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.List;
 
@@ -49,10 +50,10 @@ public class PostService extends BaseService {
         }
     }
 
-    public List<Post> getPostList(long limit, long offset) throws ServiceException {
+    public List<Post> getPostList(long limit, long offset, @Nullable Long userId) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
-            return postDao.getAll(limit, offset);
+            return userId == null ? postDao.getAll(limit, offset) : postDao.getAllWithUserRating(limit, offset, userId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
