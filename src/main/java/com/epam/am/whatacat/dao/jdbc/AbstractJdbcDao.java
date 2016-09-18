@@ -4,19 +4,24 @@ import com.epam.am.whatacat.dao.BaseDao;
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.model.BaseModel;
 
+import java.beans.*;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T> {
     private Connection connection;
+    private Class<T> clazz;
 
-    AbstractJdbcDao(Connection connection) {
+    AbstractJdbcDao(Connection connection, Class<T> clazz) {
         this.connection = connection;
+        this.clazz = clazz;
     }
 
-    public abstract String getTableName();
+    public abstract String getTableName(boolean isInsert);
 
     public abstract T bindData(ResultSet resultSet) throws DaoException;
 
@@ -39,7 +44,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                     valuesSb.setLength(valuesSb.length() - 1);
                 }
 
-                String query = String.format("INSERT INTO %s(%s) VALUES(%s);", getTableName(), columnsSb, valuesSb);
+                String query = String.format("INSERT INTO %s(%s) VALUES(%s);", getTableName(true), columnsSb, valuesSb);
                 preparedStatement = connection.prepareStatement(query);
                 for (int i = 0; i < columns.size(); i++) {
                     Map.Entry<String, FieldGetter<T>> entry = columns.get(i);
@@ -61,7 +66,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 if (sb.length() != 0) {
                     sb.setLength(sb.length() - 1); // remove last ,
                 }
-                String query = String.format("UPDATE %s SET %s WHERE id=?", getTableName(), sb);
+                String query = String.format("UPDATE %s SET %s WHERE id=?", getTableName(false), sb);
                 preparedStatement = connection.prepareStatement(query);
                 for (int i = 0; i < columns.size(); i++) {
                     Map.Entry<String, FieldGetter<T>> entry = columns.get(i);
@@ -72,6 +77,98 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 return model;
             }
         } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    throw new DaoException(e);
+                }
+            }
+        }
+    }
+
+    public T saveTest(T model) throws DaoException {
+        PreparedStatement preparedStatement = null;
+        try {
+            if (model.getId() == null) {
+                // TODO
+                StringBuilder columnsSb = new StringBuilder();
+                StringBuilder valuesSb = new StringBuilder();
+                List<TableField> tableFields = getTableFields();
+                for (TableField field : tableFields) {
+                    if (!field.isUseOnSave()) continue;
+                    columnsSb.append(field.getTitle()).append(',');
+                    valuesSb.append("?,");
+                }
+                if (columnsSb.length() > 0) {
+                    columnsSb.setLength(columnsSb.length() - 1);
+                    valuesSb.setLength(valuesSb.length() - 1);
+                }
+
+                String query = String.format("INSERT INTO %s(%s) VALUES(%s);", getTableName(true), columnsSb, valuesSb);
+                preparedStatement = connection.prepareStatement(query);
+
+                BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+                Map<String, PropertyDescriptor> descriptorMap = new HashMap<>();
+                for (PropertyDescriptor descriptor : propertyDescriptors) {
+                    descriptorMap.put(descriptor.getName(), descriptor);
+                }
+                for (int i = 0; i < tableFields.size(); i++) {
+                    TableField field = tableFields.get(i);
+                    PropertyDescriptor descriptor = descriptorMap.get(field.getObjectFieldName());
+                    if (descriptor == null) continue;
+                    Object value = descriptor.getReadMethod().invoke(model);
+                    TableField.TypeConverter<?> typeConverter = field.getTypeConverter();
+                    if (typeConverter != null) {
+                        value = typeConverter.convert(value);
+                    }
+                    preparedStatement.setObject(i + 1, value);
+                }
+                preparedStatement.execute();
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    model.setId(generatedKeys.getLong(1));
+                }
+                generatedKeys.close();
+                return model;
+            } else {
+                StringBuilder sb = new StringBuilder();
+                List<TableField> tableFields = getTableFields();
+                for (TableField field : tableFields) {
+                    if (!field.isUseOnSave()) continue;
+                    sb.append(field.getTable()).append("=?,");
+                }
+                if (sb.length() != 0) {
+                    sb.setLength(sb.length() - 1); // remove last ,
+                }
+                String query = String.format("UPDATE %s SET %s WHERE id=?", getTableName(false), sb);
+                preparedStatement = connection.prepareStatement(query);
+
+                BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+                Map<String, PropertyDescriptor> descriptorMap = new HashMap<>();
+                for (PropertyDescriptor descriptor : propertyDescriptors) {
+                    descriptorMap.put(descriptor.getName(), descriptor);
+                }
+                for (int i = 0; i < tableFields.size(); i++) {
+                    TableField field = tableFields.get(i);
+                    PropertyDescriptor descriptor = descriptorMap.get(field.getObjectFieldName());
+                    if (descriptor == null) continue;
+                    Object value = descriptor.getReadMethod().invoke(model);
+                    TableField.TypeConverter<?> typeConverter = field.getTypeConverter();
+                    if (typeConverter != null) {
+                        value = typeConverter.convert(value);
+                    }
+                    preparedStatement.setObject(i + 1, value);
+                }
+                preparedStatement.setLong(tableFields.size() + 1, model.getId());
+                preparedStatement.execute();
+                return model;
+            }
+        } catch (SQLException | IllegalAccessException | IntrospectionException | InvocationTargetException e) {
             throw new DaoException(e);
         } finally {
             if (preparedStatement != null) {
@@ -106,7 +203,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     }
 
     protected StringBuilder getSelectQueryWithFrom() {
-        return getSelectQuery().append(" FROM ").append(getTableName());
+        return getSelectQuery().append(" FROM ").append(getTableName(false));
     }
 
     protected StringBuilder getSelectQuery() {
@@ -143,6 +240,9 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     }
 
     protected abstract List<Map.Entry<String, FieldGetter<T>>> getColumns();
+
+    protected List<TableField> getTableFields() {
+        return null;}
 
     protected Connection getConnection() {
         return connection;

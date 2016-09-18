@@ -2,6 +2,7 @@ package com.epam.am.whatacat.service;
 
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.UserDao;
+import com.epam.am.whatacat.dao.jdbc.JdbcUserDao;
 import com.epam.am.whatacat.model.User;
 
 import javax.crypto.SecretKeyFactory;
@@ -20,7 +21,8 @@ public class UserService extends BaseService {
         try {
             user.setHashedPassword(hashPassword(password));
             UserDao userDao = daoFactory.getUserDao();
-            return userDao.save(user);
+//            return userDao.save(user);
+            return ((JdbcUserDao) userDao).saveTest(user);
         } catch (DaoException e) {
             throw new ServiceException("Unable to register user", e);
         }

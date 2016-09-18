@@ -7,13 +7,12 @@ import com.epam.am.whatacat.model.Gender;
 import com.epam.am.whatacat.model.Role;
 import com.epam.am.whatacat.model.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
+    public static final String TABLE_NAME = "user";
     private static final List<Map.Entry<String, FieldGetter<User>>> columnMap = new ArrayList<>();
 
     static {
@@ -29,13 +28,14 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
         columnMap.add(new AbstractMap.SimpleEntry<>("role.name", null));
     }
 
+
     public JdbcUserDao(Connection connection) {
-        super(connection);
+        super(connection, User.class);
     }
 
     @Override
-    public String getTableName() {
-        return "user, role";
+    public String getTableName(boolean isInsert) {
+        return isInsert ? "user" : "user, role";
     }
 
     @Override
@@ -116,5 +116,21 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    protected List<TableField> getTableFields() {
+        return Arrays.asList(
+                new TableField(TABLE_NAME, "id"),
+                new TableField(TABLE_NAME, "email"),
+                new TableField(TABLE_NAME, "nickname"),
+                new TableField(TABLE_NAME, "password", "hashedPassword"),
+                new TableField(TABLE_NAME, "role_id", "role").setTypeConverter(o -> ((Role) o).getId()),
+                new TableField(TABLE_NAME, "gender").setTypeConverter(o -> ((Gender) o).getKey()),
+                new TableField(TABLE_NAME, "rating"),
+                new TableField(TABLE_NAME, "avatar", "avatarUrl"),
+                new TableField(TABLE_NAME, "date", "registrationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
+                new TableField("role", "name").setUseOnSave(false)
+        );
     }
 }

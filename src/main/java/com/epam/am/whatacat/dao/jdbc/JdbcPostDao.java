@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.Date;
 
 public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
+    public static final String TABLE_NAME = "post";
     private static final List<Map.Entry<String, FieldGetter<Post>>> columnList = new ArrayList<>();
 
     static {
@@ -23,17 +24,17 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     }
 
     public JdbcPostDao(Connection connection) {
-        super(connection);
+        super(connection, Post.class);
     }
 
     @Override
-    public String getTableName() {
+    public String getTableName(boolean isInsert) {
         return "post";
     }
 
     @Override
     public List<Post> getAllWithUserRating(long limit, long offset, long userId) throws DaoException {
-        String query = getSelectQuery() + ",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post JOIN post_rating ON post.id=post_rating.post_id WHERE post_rating.user_id=?";
+        String query = getSelectQuery() + ",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?";
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -80,7 +81,10 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             postRating.setUserId(resultSet.getLong("post_rating.user_id"));
             postRating.setPostId(resultSet.getLong("post_rating.post_id"));
             postRating.setRatingDelta(resultSet.getInt("post_rating.delta"));
-            postRating.setDate(new Date(resultSet.getDate("post_rating.date_").getTime()));
+            java.sql.Date date = resultSet.getDate("post_rating.date_");
+            if (date != null) {
+                postRating.setDate(new Date(date.getTime()));
+            }
 
             post.setUserPostRating(postRating);
             return post;
@@ -138,8 +142,9 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             preparedStatement.setLong(2, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            PostRating rating = new PostRating();
+            PostRating rating = null;
             if (resultSet.next()) {
+                rating = new PostRating();
                 rating.setId(resultSet.getLong("id"));
                 rating.setPostId(postId);
                 rating.setUserId(userId);
@@ -165,5 +170,19 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     @Override
     protected List<Map.Entry<String, FieldGetter<Post>>> getColumns() {
         return columnList;
+    }
+
+    @Override
+    protected List<TableField> getTableFields() {
+
+        return Arrays.asList(
+                new TableField(TABLE_NAME, "id"),
+                new TableField(TABLE_NAME, "title"),
+                new TableField(TABLE_NAME, "type"),
+                new TableField(TABLE_NAME, "content"),
+                new TableField(TABLE_NAME, "date").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
+                new TableField(TABLE_NAME, "rating"),
+                new TableField(TABLE_NAME, "author_id")
+        );
     }
 }

@@ -87,14 +87,13 @@ public class PostService extends BaseService {
 
                 post.setRating(post.getRating() + ratingDelta);
             } else {
-                post.setRating(post.getRating() - postRating.getRatingDelta());
+//                post.setRating(post.getRating() - postRating.getRatingDelta());
                 post.setRating(post.getRating() + ratingDelta);
                 postRating.setRatingDelta(ratingDelta);
             }
 
             PostDao postDao = daoFactory.getPostDao();
             // TODO: 13.09.2016 allow rate only once
-            post.setRating(post.getRating() + ratingDelta);
             postDao.save(post);
             postDao.rate(postRating);
             daoFactory.commitTransaction();
