@@ -33,69 +33,6 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 // TODO
                 StringBuilder columnsSb = new StringBuilder();
                 StringBuilder valuesSb = new StringBuilder();
-                List<Map.Entry<String, FieldGetter<T>>> columns = getColumns();
-                for (Map.Entry<String, FieldGetter<T>> entry : columns) {
-                    if (entry.getValue() == null) continue;
-                    columnsSb.append(entry.getKey()).append(',');
-                    valuesSb.append("?,");
-                }
-                if (columnsSb.length() > 0) {
-                    columnsSb.setLength(columnsSb.length() - 1);
-                    valuesSb.setLength(valuesSb.length() - 1);
-                }
-
-                String query = String.format("INSERT INTO %s(%s) VALUES(%s);", getTableName(true), columnsSb, valuesSb);
-                preparedStatement = connection.prepareStatement(query);
-                for (int i = 0; i < columns.size(); i++) {
-                    Map.Entry<String, FieldGetter<T>> entry = columns.get(i);
-                    preparedStatement.setObject(i + 1, entry.getValue().getField(model));
-                }
-                preparedStatement.execute();
-                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    model.setId(generatedKeys.getLong(1));
-                }
-                generatedKeys.close();
-                return model;
-            } else {
-                StringBuilder sb = new StringBuilder();
-                List<Map.Entry<String, FieldGetter<T>>> columns = getColumns();
-                for (Map.Entry<String, FieldGetter<T>> entry : columns) {
-                    sb.append(entry.getKey()).append("=?,");
-                }
-                if (sb.length() != 0) {
-                    sb.setLength(sb.length() - 1); // remove last ,
-                }
-                String query = String.format("UPDATE %s SET %s WHERE id=?", getTableName(false), sb);
-                preparedStatement = connection.prepareStatement(query);
-                for (int i = 0; i < columns.size(); i++) {
-                    Map.Entry<String, FieldGetter<T>> entry = columns.get(i);
-                    preparedStatement.setObject(i + 1, entry.getValue().getField(model));
-                }
-                preparedStatement.setLong(columns.size() + 1, model.getId());
-                preparedStatement.execute();
-                return model;
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    throw new DaoException(e);
-                }
-            }
-        }
-    }
-
-    public T saveTest(T model) throws DaoException {
-        PreparedStatement preparedStatement = null;
-        try {
-            if (model.getId() == null) {
-                // TODO
-                StringBuilder columnsSb = new StringBuilder();
-                StringBuilder valuesSb = new StringBuilder();
                 List<TableField> tableFields = getTableFields();
                 for (TableField field : tableFields) {
                     if (!field.isUseOnSave()) continue;
@@ -127,6 +64,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                     }
                     preparedStatement.setObject(i + 1, value);
                 }
+                preparedStatement.setLong(tableFields.size() + 1, model.getId());
                 preparedStatement.execute();
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
@@ -139,7 +77,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 List<TableField> tableFields = getTableFields();
                 for (TableField field : tableFields) {
                     if (!field.isUseOnSave()) continue;
-                    sb.append(field.getTable()).append("=?,");
+                    sb.append(field.getTitle()).append("=?,");
                 }
                 if (sb.length() != 0) {
                     sb.setLength(sb.length() - 1); // remove last ,
@@ -153,6 +91,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 for (PropertyDescriptor descriptor : propertyDescriptors) {
                     descriptorMap.put(descriptor.getName(), descriptor);
                 }
+                int usedCount = 0;
                 for (int i = 0; i < tableFields.size(); i++) {
                     TableField field = tableFields.get(i);
                     PropertyDescriptor descriptor = descriptorMap.get(field.getObjectFieldName());
@@ -163,8 +102,9 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                         value = typeConverter.convert(value);
                     }
                     preparedStatement.setObject(i + 1, value);
+                    usedCount++;
                 }
-                preparedStatement.setLong(tableFields.size() + 1, model.getId());
+                preparedStatement.setLong(usedCount + 1, model.getId());
                 preparedStatement.execute();
                 return model;
             }
@@ -209,11 +149,11 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     protected StringBuilder getSelectQuery() {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ");
-        List<Map.Entry<String, FieldGetter<T>>> columns = getColumns();
-        for (Map.Entry<String, FieldGetter<T>> entry : columns) {
-            sb.append(entry.getKey()).append(',');
+        List<TableField> tableFields = getTableFields();
+        for (TableField field : tableFields) {
+            sb.append(field.getTable()).append('.').append(field.getTitle()).append(',');
         }
-        if (!columns.isEmpty()) {
+        if (!tableFields.isEmpty()) {
             sb.setLength(sb.length() - 1); // remove trailing ','
         }
 
@@ -239,10 +179,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
         }
     }
 
-    protected abstract List<Map.Entry<String, FieldGetter<T>>> getColumns();
-
-    protected List<TableField> getTableFields() {
-        return null;}
+    protected abstract List<TableField> getTableFields();
 
     protected Connection getConnection() {
         return connection;

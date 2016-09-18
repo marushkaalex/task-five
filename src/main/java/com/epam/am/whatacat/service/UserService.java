@@ -21,8 +21,7 @@ public class UserService extends BaseService {
         try {
             user.setHashedPassword(hashPassword(password));
             UserDao userDao = daoFactory.getUserDao();
-//            return userDao.save(user);
-            return ((JdbcUserDao) userDao).saveTest(user);
+            return userDao.save(user);
         } catch (DaoException e) {
             throw new ServiceException("Unable to register user", e);
         }

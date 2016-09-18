@@ -65,4 +65,13 @@ public class TableField {
     public interface TypeConverter<T> {
         T convert(Object o);
     }
+
+    @Override
+    public String toString() {
+        return "TableField{" +
+                "table='" + table + '\'' +
+                ", title='" + title + '\'' +
+                ", objectFieldName='" + objectFieldName + '\'' +
+                '}';
+    }
 }

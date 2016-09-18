@@ -11,17 +11,6 @@ import java.util.Date;
 
 public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     public static final String TABLE_NAME = "post";
-    private static final List<Map.Entry<String, FieldGetter<Post>>> columnList = new ArrayList<>();
-
-    static {
-        columnList.add(new AbstractMap.SimpleEntry<>("post.id", Post::getId));
-        columnList.add(new AbstractMap.SimpleEntry<>("post.title", Post::getTitle));
-        columnList.add(new AbstractMap.SimpleEntry<>("post.type", Post::getType));
-        columnList.add(new AbstractMap.SimpleEntry<>("post.content", Post::getContent));
-        columnList.add(new AbstractMap.SimpleEntry<>("post.date", post -> new java.sql.Date(post.getPublicationDate().getTime())));
-        columnList.add(new AbstractMap.SimpleEntry<>("post.rating", Post::getRating));
-        columnList.add(new AbstractMap.SimpleEntry<>("post.author_id", Post::getAuthorId));
-    }
 
     public JdbcPostDao(Connection connection) {
         super(connection, Post.class);
@@ -168,11 +157,6 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     }
 
     @Override
-    protected List<Map.Entry<String, FieldGetter<Post>>> getColumns() {
-        return columnList;
-    }
-
-    @Override
     protected List<TableField> getTableFields() {
 
         return Arrays.asList(
@@ -180,9 +164,9 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 new TableField(TABLE_NAME, "title"),
                 new TableField(TABLE_NAME, "type"),
                 new TableField(TABLE_NAME, "content"),
-                new TableField(TABLE_NAME, "date").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
+                new TableField(TABLE_NAME, "date", "publicationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
                 new TableField(TABLE_NAME, "rating"),
-                new TableField(TABLE_NAME, "author_id")
+                new TableField(TABLE_NAME, "author_id", "authorId")
         );
     }
 }

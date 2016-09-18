@@ -13,21 +13,6 @@ import java.util.Date;
 
 public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     public static final String TABLE_NAME = "user";
-    private static final List<Map.Entry<String, FieldGetter<User>>> columnMap = new ArrayList<>();
-
-    static {
-        columnMap.add(new AbstractMap.SimpleEntry<>("user.id", BaseModel::getId));
-        columnMap.add(new AbstractMap.SimpleEntry<>("user.email", User::getEmail));
-        columnMap.add(new AbstractMap.SimpleEntry<>("user.nickname", User::getNickname));
-        columnMap.add(new AbstractMap.SimpleEntry<>("user.password", User::getHashedPassword));
-        columnMap.add(new AbstractMap.SimpleEntry<>("user.role_id", i -> i.getRole().getId()));
-        columnMap.add(new AbstractMap.SimpleEntry<>("user.gender", i -> i.getGender().getKey()));
-        columnMap.add(new AbstractMap.SimpleEntry<>("user.rating", User::getRating));
-        columnMap.add(new AbstractMap.SimpleEntry<>("user.avatar", User::getAvatarUrl));
-        columnMap.add(new AbstractMap.SimpleEntry<>("user.date", i -> new java.sql.Date(i.getRegistrationDate().getTime())));
-        columnMap.add(new AbstractMap.SimpleEntry<>("role.name", null));
-    }
-
 
     public JdbcUserDao(Connection connection) {
         super(connection, User.class);
@@ -54,11 +39,6 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-    }
-
-    @Override
-    protected List<Map.Entry<String, FieldGetter<User>>> getColumns() {
-        return columnMap;
     }
 
     @Override
