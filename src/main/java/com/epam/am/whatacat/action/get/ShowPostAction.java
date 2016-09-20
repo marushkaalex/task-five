@@ -4,6 +4,7 @@ import com.epam.am.whatacat.action.Action;
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
 import com.epam.am.whatacat.model.Post;
+import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
 
@@ -17,7 +18,8 @@ public class ShowPostAction implements Action {
         Long id = Long.parseLong(idParameter);
 
         try (PostService postService = new PostService()) {
-            Post post = postService.getById(id);
+            User user = ((User) request.getSession().getAttribute("user"));
+            Post post = user == null ? postService.getById(id) : postService.getByIdWithRating(id, user.getId());
             request.setAttribute("post", post);
             return new ActionResult("post");
         } catch (ServiceException e) {

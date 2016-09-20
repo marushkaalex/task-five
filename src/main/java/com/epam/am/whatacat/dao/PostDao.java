@@ -11,4 +11,6 @@ public interface PostDao extends BaseDao<Post> {
     PostRating getRating(long postId, long userId) throws DaoException;
 
     List<Post> getAllWithUserRating(long limit, long offset, long userId) throws DaoException;
+
+    Post findByIdWithRating(long postId, long userId) throws DaoException;
 }
