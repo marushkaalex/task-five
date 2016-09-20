@@ -4,10 +4,7 @@ import com.epam.am.whatacat.action.get.IndexAction;
 import com.epam.am.whatacat.action.get.LogoutAction;
 import com.epam.am.whatacat.action.get.ShowPageAction;
 import com.epam.am.whatacat.action.get.ShowPostAction;
-import com.epam.am.whatacat.action.post.CreatePostAction;
-import com.epam.am.whatacat.action.post.LoginAction;
-import com.epam.am.whatacat.action.post.RatePostAction;
-import com.epam.am.whatacat.action.post.RegisterAction;
+import com.epam.am.whatacat.action.post.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +25,7 @@ public class ActionFactory {
         actionMap.put("POST/rate-post", new RatePostAction());
         actionMap.put("GET/post", new ShowPostAction());
         actionMap.put("GET/profile", new ShowPageAction("profile"));
+        actionMap.put("POST/profile", new ChangePasswordAction());
     }
 
     public Action getAction(String actionName) {

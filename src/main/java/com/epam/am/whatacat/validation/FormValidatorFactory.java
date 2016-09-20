@@ -31,6 +31,13 @@ public class FormValidatorFactory {
                         .addFieldValidator("title", new NonEmptyFieldValidator("post.error.title.empty"))
                         .addFieldValidator("content", new NonEmptyFieldValidator("post.error.content.empty"))
         );
+
+        validatorMap.put(
+                "change-password",
+                new FormValidator()
+                        .addFieldValidator("old", new NonEmptyFieldValidator("profile.error.old-password.empty"))
+                        .addFieldValidator("new", new NonEmptyFieldValidator("profile.error.new-password.empty"))
+        );
     }
 
     public static void init() {

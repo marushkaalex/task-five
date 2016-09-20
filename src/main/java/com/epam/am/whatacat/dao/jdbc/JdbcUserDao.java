@@ -35,6 +35,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
             user.setRating(resultSet.getLong("user.rating"));
             user.setAvatarUrl(resultSet.getString("user.avatar"));
             user.setRegistrationDate(new Date(resultSet.getDate("user.date").getTime()));
+            user.setHashedPassword(resultSet.getString("password"));
             return user;
         } catch (SQLException e) {
             throw new DaoException(e);

@@ -82,7 +82,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 if (sb.length() != 0) {
                     sb.setLength(sb.length() - 1); // remove last ,
                 }
-                String query = String.format("UPDATE %s SET %s WHERE id=?", getTableName(false), sb);
+                String query = String.format("UPDATE %s SET %s WHERE id=?", getTableName(true), sb);
                 preparedStatement = connection.prepareStatement(query);
 
                 BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
