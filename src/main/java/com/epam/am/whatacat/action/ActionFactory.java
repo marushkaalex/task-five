@@ -27,6 +27,7 @@ public class ActionFactory {
         actionMap.put("POST/create-post", new CreatePostAction());
         actionMap.put("POST/rate-post", new RatePostAction());
         actionMap.put("GET/post", new ShowPostAction());
+        actionMap.put("GET/profile", new ShowPageAction("profile"));
     }
 
     public Action getAction(String actionName) {

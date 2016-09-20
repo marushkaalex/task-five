@@ -66,6 +66,11 @@
                     </c:otherwise>
                 </c:choose>
             </div>
+            <c:if test="${sessionScope.user != null}">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a class="navbar-header" href="/profile">${sessionScope.user.nickname}</a></li>
+                </ul>
+            </c:if>
         </div>
     </div>
 </nav>
