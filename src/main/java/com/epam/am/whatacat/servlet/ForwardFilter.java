@@ -21,7 +21,11 @@ public class ForwardFilter implements Filter {
         if (req instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) req;
             String requestURI = httpRequest.getRequestURI();
-            if (requestURI.startsWith("/static") || requestURI.startsWith("/webjars")) {
+            if (requestURI.startsWith("/static")
+                    || requestURI.startsWith("/webjars")
+                    || requestURI.startsWith("/upload")
+                    || requestURI.startsWith("/image")
+                    ) {
                 req.getRequestDispatcher(requestURI).forward(req, resp);
             } else {
                 User user = (User) httpRequest.getSession().getAttribute("user");

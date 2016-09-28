@@ -4,6 +4,7 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <my:base>
     <fmt:setBundle basename="i18n"/>
+    <p><img src="image/${sessionScope.user.avatarUrl}" width="100" height="100"/></p>
     <p>${sessionScope.user.nickname}</p>
     <p>${sessionScope.user.email}</p>
     <form method="post">
@@ -11,6 +12,10 @@
         <input name="new" type="password" placeholder="<fmt:message key="profile.hint.new-password"/>"/><br>
         <input type="submit"/>
     </form><br>
+    <form method="post" action="upload/photo" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/jpeg,image/png"/><br>
+        <input type="submit">
+    </form>
     <c:forEach var="error" items="${errorList}">
         <fmt:message key="${error}"/><br>
     </c:forEach>
