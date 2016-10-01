@@ -11,9 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ActionFactory {
+    private static ActionFactory instance;
+
     private Map<String, Action> actionMap;
 
-    public ActionFactory() {
+    private ActionFactory() {
         actionMap = new HashMap<>();
         actionMap.put("GET/", new IndexAction());
         actionMap.put("GET/login", new ShowPageAction("login"));
@@ -32,5 +34,13 @@ public class ActionFactory {
 
     public Action getAction(String actionName) {
         return actionMap.get(actionName);
+    }
+
+    public static void init() {
+        instance = new ActionFactory();
+    }
+
+    public static ActionFactory getInstance() {
+        return instance;
     }
 }

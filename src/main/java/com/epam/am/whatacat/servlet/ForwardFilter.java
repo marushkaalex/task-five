@@ -1,5 +1,6 @@
 package com.epam.am.whatacat.servlet;
 
+import com.epam.am.whatacat.action.ActionFactory;
 import com.epam.am.whatacat.model.User;
 
 import javax.servlet.*;
@@ -20,6 +21,7 @@ public class ForwardFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         if (req instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) req;
+            HttpServletResponse httpResponse = (HttpServletResponse) resp;
             String requestURI = httpRequest.getRequestURI();
             if (requestURI.startsWith("/static")
                     || requestURI.startsWith("/webjars")
@@ -27,6 +29,8 @@ public class ForwardFilter implements Filter {
                     || requestURI.startsWith("/image")
                     ) {
                 req.getRequestDispatcher(requestURI).forward(req, resp);
+            } else if (ActionFactory.getInstance().getAction(httpRequest.getMethod() + requestURI) == null) {
+                httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
             } else {
                 User user = (User) httpRequest.getSession().getAttribute("user");
                 if (user == null && !availableUrls.contains(requestURI)) {

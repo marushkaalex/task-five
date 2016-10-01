@@ -17,19 +17,13 @@ import java.io.IOException;
 @WebServlet(name = "FrontControllerServlet", urlPatterns = "/do/*")
 public class FrontControllerServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(FrontControllerServlet.class);
-    private ActionFactory actionFactory;
-
-    @Override
-    public void init() throws ServletException {
-        actionFactory = new ActionFactory();
-    }
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String actionName = req.getMethod() + req.getPathInfo();
         log.info("Action name: {}", actionName);
 
-        Action action = actionFactory.getAction(actionName);
+        Action action = ActionFactory.getInstance().getAction(actionName);
         if (action == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
