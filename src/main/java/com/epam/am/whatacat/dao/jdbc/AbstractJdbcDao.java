@@ -129,7 +129,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     @Override
     public T findById(Long id) throws DaoException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + " WHERE id=?;");
+            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE id=?;");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -163,7 +163,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     @Override
     public List<T> getAll(long limit, long offset) throws DaoException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + " LIMIT ? OFFSET ?");
+            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + getJoin() + " LIMIT ? OFFSET ?");
             preparedStatement.setLong(1, limit);
             preparedStatement.setLong(2, offset);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -177,6 +177,10 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    protected String getJoin() {
+        return "";
     }
 
     protected abstract List<TableField> getTableFields();

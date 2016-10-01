@@ -2,8 +2,7 @@ package com.epam.am.whatacat.dao.jdbc;
 
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.PostDao;
-import com.epam.am.whatacat.model.Post;
-import com.epam.am.whatacat.model.PostRating;
+import com.epam.am.whatacat.model.*;
 
 import java.sql.*;
 import java.util.*;
@@ -55,6 +54,19 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             res.setRating(resultSet.getLong("post.rating"));
             res.setAuthorId(resultSet.getLong("post.author_id"));
 
+            User user = new User();
+            user.setId(res.getAuthorId());
+            user.setId(resultSet.getLong("user.id"));
+            user.setEmail(resultSet.getString("user.email"));
+            user.setNickname(resultSet.getString("user.nickname"));
+            user.setRole(Role.valueOf(resultSet.getString("role.name")));
+            user.setGender(Gender.of(resultSet.getString("user.gender").charAt(0)));
+            user.setRating(resultSet.getLong("user.rating"));
+            user.setAvatarUrl(resultSet.getString("user.avatar"));
+            user.setRegistrationDate(new Date(resultSet.getDate("user.date").getTime()));
+            user.setHashedPassword(resultSet.getString("password"));
+
+            res.setAuthor(user);
             return res;
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -174,6 +186,11 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     }
 
     @Override
+    protected String getJoin() {
+        return " JOIN user ON post.author_id=user.id JOIN role ON user.role_id=role.id";
+    }
+
+    @Override
     protected List<TableField> getTableFields() {
 
         return Arrays.asList(
@@ -183,7 +200,17 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 new TableField(TABLE_NAME, "content"),
                 new TableField(TABLE_NAME, "date", "publicationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
                 new TableField(TABLE_NAME, "rating"),
-                new TableField(TABLE_NAME, "author_id", "authorId")
+                new TableField(TABLE_NAME, "author_id", "authorId"),
+                new TableField("user", "id").setUseOnSave(false),
+                new TableField("user", "email").setUseOnSave(false),
+                new TableField("user", "nickname").setUseOnSave(false),
+                new TableField("user", "password", "hashedPassword").setUseOnSave(false),
+                new TableField("user", "role_id", "role").setTypeConverter(o -> ((Role) o).getId()).setUseOnSave(false),
+                new TableField("user", "gender").setTypeConverter(o -> ((Gender) o).getKey()).setUseOnSave(false),
+                new TableField("user", "rating").setUseOnSave(false),
+                new TableField("user", "avatar", "avatarUrl").setUseOnSave(false),
+                new TableField("user", "date", "registrationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())).setUseOnSave(false),
+                new TableField("role", "name").setUseOnSave(false).setUseOnSave(false)
         );
     }
 }
