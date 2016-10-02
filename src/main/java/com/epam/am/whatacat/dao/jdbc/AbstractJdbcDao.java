@@ -129,7 +129,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     @Override
     public T findById(Long id) throws DaoException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE id=?;");
+            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE " + getTableName(true) + ".id=?;");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {

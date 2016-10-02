@@ -27,7 +27,7 @@ ${post}
             </form>
         </c:if>
         <h3><a href="post?id=${post.id}">${post.title}</a></h3>
-        <a href="${post.author.id}">${post.author.nickname}</a>
+        <a href="user?id=${post.author.id}">${post.author.nickname}</a>
     </div>
     <div class="panel-body">
         ${post.content}

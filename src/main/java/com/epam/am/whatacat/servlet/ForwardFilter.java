@@ -52,6 +52,7 @@ public class ForwardFilter implements Filter {
         availableUrls.add("/register");
         availableUrls.add("/post");
         availableUrls.add("/set-locale");
+        availableUrls.add("/user");
     }
 
 }

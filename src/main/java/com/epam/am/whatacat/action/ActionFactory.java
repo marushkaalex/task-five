@@ -6,6 +6,7 @@ import com.epam.am.whatacat.action.get.ShowPageAction;
 import com.epam.am.whatacat.action.get.ShowPostAction;
 import com.epam.am.whatacat.action.post.*;
 import com.epam.am.whatacat.action.profile.SetLocaleAction;
+import com.epam.am.whatacat.action.profile.ShowUserAction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class ActionFactory {
         actionMap.put("GET/profile", new ShowPageAction("profile"));
         actionMap.put("POST/profile", new ChangePasswordAction());
         actionMap.put("POST/set-locale", new SetLocaleAction());
+        actionMap.put("GET/user", new ShowUserAction());
     }
 
     public Action getAction(String actionName) {
