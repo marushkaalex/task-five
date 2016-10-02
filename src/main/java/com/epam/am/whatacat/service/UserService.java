@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
+import java.util.List;
 import java.util.Random;
 
 public class UserService extends BaseService {
@@ -68,6 +69,24 @@ public class UserService extends BaseService {
         try {
             UserDao userDao = daoFactory.getUserDao();
             return userDao.findById(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public List<User> getAll(long limit, long offset) throws ServiceException {
+        try {
+            UserDao userDao = daoFactory.getUserDao();
+            return userDao.getAll(limit, offset);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public long count() throws ServiceException {
+        try {
+            UserDao userDao = daoFactory.getUserDao();
+            return userDao.count();
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

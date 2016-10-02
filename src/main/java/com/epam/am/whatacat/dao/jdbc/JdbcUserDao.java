@@ -43,11 +43,6 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     }
 
     @Override
-    public List<User> getAll(long limit, long offset) throws DaoException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public boolean isNicknameFree(String nickname) throws DaoException {
         try {
             PreparedStatement preparedStatement =
@@ -113,5 +108,10 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
                 new TableField(TABLE_NAME, "date", "registrationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
                 new TableField("role", "name").setUseOnSave(false)
         );
+    }
+
+    @Override
+    protected String getJoin() {
+        return " JOIN role ON user.role_id=role.id";
     }
 }

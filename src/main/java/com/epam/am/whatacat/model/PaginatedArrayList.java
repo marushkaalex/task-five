@@ -5,6 +5,7 @@ import java.util.Collection;
 
 public class PaginatedArrayList<E> extends ArrayList<E> implements PaginatedList<E> {
     private int page;
+    private int pageCount;
 
     public PaginatedArrayList(int initialCapacity) {
         super(initialCapacity);
@@ -20,6 +21,16 @@ public class PaginatedArrayList<E> extends ArrayList<E> implements PaginatedList
     @Override
     public int getPage() {
         return page;
+    }
+
+    @Override
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    @Override
+    public void setPageCount(int count) {
+        pageCount = count;
     }
 
     @Override

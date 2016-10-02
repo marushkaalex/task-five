@@ -43,7 +43,8 @@ public class LoginAction implements Action {
 //                    return new ActionResult(split[1], true);
 //                }
 //            }
-            return new ActionResult("/", true);
+            String fromUrl = request.getParameter("fromUrl");
+            return new ActionResult(fromUrl == null ? "/" : fromUrl, true);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }

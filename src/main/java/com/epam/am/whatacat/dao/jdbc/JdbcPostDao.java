@@ -22,7 +22,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
 
     @Override
     public List<Post> getAllWithUserRating(long limit, long offset, long userId) throws DaoException {
-        String query = getSelectQuery() + ",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?";
+        String query = getSelectQuery() + ",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?" + getJoin();
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();

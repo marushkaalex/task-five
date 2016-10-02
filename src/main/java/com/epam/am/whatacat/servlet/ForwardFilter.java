@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class ForwardFilter implements Filter {
             } else {
                 User user = (User) httpRequest.getSession().getAttribute("user");
                 if (user == null && !availableUrls.contains(requestURI)) {
-                    ((HttpServletResponse) resp).sendRedirect("/login");
+                    ((HttpServletResponse) resp).sendRedirect("/login?fromUrl=" + URLEncoder.encode(requestURI, "UTF-8"));
                 } else {
                     req.getRequestDispatcher("/do" + requestURI).forward(req, resp);
                 }

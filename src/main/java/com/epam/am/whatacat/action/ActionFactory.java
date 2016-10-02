@@ -1,5 +1,6 @@
 package com.epam.am.whatacat.action;
 
+import com.epam.am.whatacat.action.admin.UserListAction;
 import com.epam.am.whatacat.action.get.IndexAction;
 import com.epam.am.whatacat.action.get.LogoutAction;
 import com.epam.am.whatacat.action.get.ShowPageAction;
@@ -32,6 +33,7 @@ public class ActionFactory {
         actionMap.put("POST/profile", new ChangePasswordAction());
         actionMap.put("POST/set-locale", new SetLocaleAction());
         actionMap.put("GET/user", new ShowUserAction());
+        actionMap.put("GET/admin", new UserListAction());
     }
 
     public Action getAction(String actionName) {

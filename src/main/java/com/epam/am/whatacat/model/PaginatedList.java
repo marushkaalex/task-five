@@ -6,4 +6,8 @@ public interface PaginatedList<E> extends List<E> {
     int getPage();
 
     void setPage(int pageNumber);
+
+    int getPageCount();
+
+    void setPageCount(int count);
 }

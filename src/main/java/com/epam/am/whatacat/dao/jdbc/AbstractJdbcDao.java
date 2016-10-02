@@ -143,7 +143,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     }
 
     protected StringBuilder getSelectQueryWithFrom() {
-        return getSelectQuery().append(" FROM ").append(getTableName(false));
+        return getSelectQuery().append(" FROM ").append(getTableName(true));
     }
 
     protected StringBuilder getSelectQuery() {
@@ -187,5 +187,18 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
 
     protected Connection getConnection() {
         return connection;
+    }
+
+    @Override
+    public long count() throws DaoException {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(1) FROM " + getTableName(true));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            long count = resultSet.getLong(1);
+            return count;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 }
