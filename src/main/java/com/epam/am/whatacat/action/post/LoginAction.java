@@ -44,7 +44,7 @@ public class LoginAction implements Action {
 //                }
 //            }
             String fromUrl = request.getParameter("fromUrl");
-            return new ActionResult(fromUrl == null ? "/" : fromUrl, true);
+            return new ActionResult(fromUrl == null || fromUrl.isEmpty() ? "/" : fromUrl, true);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }

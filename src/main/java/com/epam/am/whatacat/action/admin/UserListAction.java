@@ -5,12 +5,14 @@ import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
 import com.epam.am.whatacat.model.PaginatedArrayList;
 import com.epam.am.whatacat.model.PaginatedList;
+import com.epam.am.whatacat.model.Role;
 import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.ServiceException;
 import com.epam.am.whatacat.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserListAction implements Action {
@@ -19,6 +21,13 @@ public class UserListAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         try (UserService userService = new UserService()) {
+            User user = (User) request.getSession().getAttribute("user");
+            if (user == null || user.getRole() != Role.ADMIN) {
+                List<String> errorList = new ArrayList<>();
+                errorList.add("admin.not-allowed");
+                request.setAttribute("errorList", errorList);
+                return new ActionResult("admin");
+            }
             String pageParameter = request.getParameter("page");
             int page = 0;
             try {

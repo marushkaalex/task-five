@@ -55,6 +55,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 }
                 for (int i = 0; i < tableFields.size(); i++) {
                     TableField field = tableFields.get(i);
+                    if (!field.isUseOnSave()) continue;
                     PropertyDescriptor descriptor = descriptorMap.get(field.getObjectFieldName());
                     if (descriptor == null) continue;
                     Object value = descriptor.getReadMethod().invoke(model);
@@ -64,7 +65,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                     }
                     preparedStatement.setObject(i + 1, value);
                 }
-                preparedStatement.setLong(tableFields.size() + 1, model.getId());
+//                preparedStatement.setLong(tableFields.size() + 1, model.getId());
                 preparedStatement.execute();
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
@@ -94,6 +95,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 int usedCount = 0;
                 for (int i = 0; i < tableFields.size(); i++) {
                     TableField field = tableFields.get(i);
+                    if (!field.isUseOnSave()) continue;
                     PropertyDescriptor descriptor = descriptorMap.get(field.getObjectFieldName());
                     if (descriptor == null) continue;
                     Object value = descriptor.getReadMethod().invoke(model);

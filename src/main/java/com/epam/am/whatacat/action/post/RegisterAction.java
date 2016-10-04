@@ -58,7 +58,7 @@ public class RegisterAction implements Action {
             request.getSession().setAttribute("user", user);
 
             log.info("User {} <{}> has been registered", nickname, email);
-            return new ActionResult("", true);
+            return new ActionResult("/", true);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }

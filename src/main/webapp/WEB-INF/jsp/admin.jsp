@@ -4,6 +4,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setBundle basename="i18n"/>
 <my:base>
+    <c:forEach var="error" items="${errorList}">
+        <fmt:message key="${error}" />
+    </c:forEach>
     <c:forEach var="item" items="${items}">
         <c:out value="${item}"/><br>
     </c:forEach>
