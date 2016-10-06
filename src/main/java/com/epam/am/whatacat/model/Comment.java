@@ -10,6 +10,15 @@ public class Comment extends BaseModel {
     private String text;
     private long authorId;
     private List<Comment> replies;
+    private long postId;
+
+    public long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(long postId) {
+        this.postId = postId;
+    }
 
     public long getAuthorId() {
         return authorId;

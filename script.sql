@@ -56,5 +56,7 @@ CREATE TABLE PUBLIC.comment
     parent_id INT,
     _date DATETIME,
     text VARCHAR(1000) NOT NULL,
-    CONSTRAINT comment_USER_ID_fk FOREIGN KEY (author_id) REFERENCES USER (ID)
+    post_id INT,
+    CONSTRAINT comment_USER_ID_fk FOREIGN KEY (author_id) REFERENCES USER (ID),
+    CONSTRAINT comment_POST_ID_fk FOREIGN KEY (post_id) REFERENCES POST (ID)
 );

@@ -1,12 +1,17 @@
 package com.epam.am.whatacat.dao.jdbc;
 
 import com.epam.am.whatacat.dao.CommentDao;
+import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.jdbc.binder.CommentDataBinder;
 import com.epam.am.whatacat.model.Comment;
 import com.epam.am.whatacat.model.Gender;
 import com.epam.am.whatacat.model.Role;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,6 +42,7 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
                 new TableField(TABLE_NAME, "parent_id", "parentId"),
                 new TableField(TABLE_NAME, "_date", "publicationDate").setTypeConverter(new DateTypeConterter()),
                 new TableField(TABLE_NAME, "text"),
+                new TableField(TABLE_NAME, "post_id", "postId"),
                 new TableField("user", "id").setUseOnSave(false),
                 new TableField("user", "email").setUseOnSave(false),
                 new TableField("user", "nickname").setUseOnSave(false),
@@ -48,5 +54,27 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
                 new TableField("user", "date", "registrationDate").setTypeConverter(new DateTypeConterter()).setUseOnSave(false),
                 new TableField("role", "name").setUseOnSave(false)
         );
+    }
+
+    @Override
+    protected String getJoin() {
+        return " JOIN user ON " + TABLE_NAME + ".author_id=user.id JOIN role ON role.id=user.role_id";
+    }
+
+    @Override
+    public List<Comment> getPostComments(long postId) throws DaoException {
+        try {
+            PreparedStatement preparedStatement =
+                    getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE " + TABLE_NAME + ".post_id=?");
+            preparedStatement.setLong(1, postId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Comment> res = new ArrayList<>();
+            while (resultSet.next()) {
+                res.add(dataBinder.bind(resultSet));
+            }
+            return res;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 }

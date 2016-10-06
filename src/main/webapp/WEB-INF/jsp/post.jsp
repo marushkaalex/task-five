@@ -5,4 +5,7 @@
 <my:base>
     <fmt:setBundle basename="i18n"/>
     <my:post post="${post}"/>
+    <c:forEach items="${comments}" var="comment">
+        <my:comment comment="${comment}"/>
+    </c:forEach>
 </my:base>
