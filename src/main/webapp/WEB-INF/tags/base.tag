@@ -89,23 +89,8 @@
 </nav>
 <div class="container">
     <div class="row">
-        <div class="col-xs-8">
+        <div class="col-xs-12">
             <jsp:doBody/>
-        </div>
-        <div class="col-xs-4">
-            Message: <fmt:message key="test"/><br>
-            Var: ${test}
-            <c:choose>
-                <c:when test="${sessionScope.user != null}">
-                    Welcome, ${sessionScope.user.nickname}!<br>
-                    <a href="create-post">Create post</a>
-                    <a href="logout">Log out</a>
-                </c:when>
-                <c:otherwise>
-                    <a href="login">Log in</a><br>
-                    <a href="register">Register</a>
-                </c:otherwise>
-            </c:choose>
         </div>
     </div>
 </div>
