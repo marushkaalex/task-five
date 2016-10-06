@@ -100,7 +100,7 @@ public class PostService extends BaseService {
             postDao.rate(postRating);
 
             User user = userDao.findById(post.getAuthorId());
-            user.setRating(user.getRating() + postRating.getRatingDelta());
+            user.setRating(user.getRating() + ratingDelta);
             userDao.save(user);
             daoFactory.commitTransaction();
         } catch (DaoException e) {
