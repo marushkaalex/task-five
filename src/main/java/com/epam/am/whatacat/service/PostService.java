@@ -93,9 +93,14 @@ public class PostService extends BaseService {
             }
 
             PostDao postDao = daoFactory.getPostDao();
+            UserDao userDao = daoFactory.getUserDao();
             // TODO: 13.09.2016 allow rate only once
             postDao.save(post);
             postDao.rate(postRating);
+
+            User user = userDao.findById(post.getAuthorId());
+            user.setRating(user.getRating() + postRating.getRatingDelta());
+            userDao.save(user);
             daoFactory.commitTransaction();
         } catch (DaoException e) {
             try {
