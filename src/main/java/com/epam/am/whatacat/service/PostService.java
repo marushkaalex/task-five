@@ -76,7 +76,6 @@ public class PostService extends BaseService {
     // TODO: 11.09.2016 check user permissions
     public void rate(long userId, Post post, int ratingDelta) throws ServiceException {
         try {
-            daoFactory.startTransaction();
             PostRating postRating = post.getUserPostRating();
             if (postRating == null) {
                 postRating = new PostRating();;
@@ -88,10 +87,12 @@ public class PostService extends BaseService {
                 post.setRating(post.getRating() + ratingDelta);
             } else {
 //                post.setRating(post.getRating() - postRating.getRatingDelta());
+                if (postRating.getRatingDelta() == ratingDelta) return;
                 post.setRating(post.getRating() + ratingDelta);
-                postRating.setRatingDelta(ratingDelta);
+                postRating.setRatingDelta(postRating.getRatingDelta() + ratingDelta);
             }
 
+            daoFactory.startTransaction();
             PostDao postDao = daoFactory.getPostDao();
             UserDao userDao = daoFactory.getUserDao();
             // TODO: 13.09.2016 allow rate only once
