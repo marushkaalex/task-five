@@ -2,6 +2,7 @@ package com.epam.am.whatacat.dao.jdbc;
 
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.UserDao;
+import com.epam.am.whatacat.dao.jdbc.binder.UserDataBinder;
 import com.epam.am.whatacat.model.BaseModel;
 import com.epam.am.whatacat.model.Gender;
 import com.epam.am.whatacat.model.Role;
@@ -14,6 +15,8 @@ import java.util.Date;
 public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     public static final String TABLE_NAME = "user";
 
+    private DataBinder<User> dataBinder = new UserDataBinder();
+
     public JdbcUserDao(Connection connection) {
         super(connection, User.class);
     }
@@ -24,22 +27,8 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     }
 
     @Override
-    public User bindData(ResultSet resultSet) throws DaoException {
-        try {
-            User user = new User();
-            user.setId(resultSet.getLong("user.id"));
-            user.setEmail(resultSet.getString("user.email"));
-            user.setNickname(resultSet.getString("user.nickname"));
-            user.setRole(Role.valueOf(resultSet.getString("role.name")));
-            user.setGender(Gender.of(resultSet.getString("user.gender").charAt(0)));
-            user.setRating(resultSet.getLong("user.rating"));
-            user.setAvatarUrl(resultSet.getString("user.avatar"));
-            user.setRegistrationDate(new Date(resultSet.getDate("user.date").getTime()));
-            user.setHashedPassword(resultSet.getString("password"));
-            return user;
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+    public DataBinder<User> getDataBinder() {
+        return dataBinder;
     }
 
     @Override
@@ -85,7 +74,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             User user = null;
             if (resultSet.next()) {
-                user = bindData(resultSet);
+                user = dataBinder.bind(resultSet);
             }
             resultSet.close();
             return user;
@@ -105,7 +94,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
                 new TableField(TABLE_NAME, "gender").setTypeConverter(o -> ((Gender) o).getKey()),
                 new TableField(TABLE_NAME, "rating"),
                 new TableField(TABLE_NAME, "avatar", "avatarUrl"),
-                new TableField(TABLE_NAME, "date", "registrationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
+                new TableField(TABLE_NAME, "date", "registrationDate").setTypeConverter(new DateTypeConterter()),
                 new TableField("role", "name").setUseOnSave(false)
         );
     }

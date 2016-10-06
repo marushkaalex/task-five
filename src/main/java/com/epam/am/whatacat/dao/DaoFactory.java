@@ -30,4 +30,6 @@ public abstract class DaoFactory implements AutoCloseable {
     public abstract UserDao getUserDao() throws DaoException;
 
     public abstract PostDao getPostDao() throws DaoException;
+
+    public abstract CommentDao getCommentDao() throws DaoException;
 }

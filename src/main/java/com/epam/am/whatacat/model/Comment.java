@@ -1,6 +1,7 @@
 package com.epam.am.whatacat.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Comment extends BaseModel {
     private User author;
@@ -8,6 +9,7 @@ public class Comment extends BaseModel {
     private Date publicationDate;
     private String text;
     private long authorId;
+    private List<Comment> replies;
 
     public long getAuthorId() {
         return authorId;
@@ -47,5 +49,13 @@ public class Comment extends BaseModel {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public List<Comment> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Comment> replies) {
+        this.replies = replies;
     }
 }

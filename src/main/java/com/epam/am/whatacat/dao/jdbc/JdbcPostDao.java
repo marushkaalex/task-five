@@ -2,14 +2,25 @@ package com.epam.am.whatacat.dao.jdbc;
 
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.PostDao;
-import com.epam.am.whatacat.model.*;
+import com.epam.am.whatacat.dao.jdbc.binder.PostDataBinder;
+import com.epam.am.whatacat.model.Gender;
+import com.epam.am.whatacat.model.Post;
+import com.epam.am.whatacat.model.PostRating;
+import com.epam.am.whatacat.model.Role;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     public static final String TABLE_NAME = "post";
+
+    private DataBinder<Post> dataBinder = new PostDataBinder();
 
     public JdbcPostDao(Connection connection) {
         super(connection, Post.class);
@@ -38,44 +49,13 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     }
 
     @Override
-    public Post findById(Long id) throws DaoException {
-        return super.findById(id);
-    }
-
-    @Override
-    public Post bindData(ResultSet resultSet) throws DaoException {
-        try {
-            Post res = new Post();
-            res.setId(resultSet.getLong("post.id"));
-            res.setTitle(resultSet.getString("post.title"));
-            res.setContent(resultSet.getString("post.content"));
-            res.setPublicationDate(new Date(resultSet.getDate("post.date").getTime()));
-            res.setType(resultSet.getInt("post.type"));
-            res.setRating(resultSet.getLong("post.rating"));
-            res.setAuthorId(resultSet.getLong("post.author_id"));
-
-            User user = new User();
-            user.setId(res.getAuthorId());
-            user.setId(resultSet.getLong("user.id"));
-            user.setEmail(resultSet.getString("user.email"));
-            user.setNickname(resultSet.getString("user.nickname"));
-            user.setRole(Role.valueOf(resultSet.getString("role.name")));
-            user.setGender(Gender.of(resultSet.getString("user.gender").charAt(0)));
-            user.setRating(resultSet.getLong("user.rating"));
-            user.setAvatarUrl(resultSet.getString("user.avatar"));
-            user.setRegistrationDate(new Date(resultSet.getDate("user.date").getTime()));
-            user.setHashedPassword(resultSet.getString("password"));
-
-            res.setAuthor(user);
-            return res;
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+    public DataBinder<Post> getDataBinder() {
+        return dataBinder;
     }
 
     public Post bindDataWithRating(ResultSet resultSet) throws DaoException {
         try {
-            Post post = bindData(resultSet);
+            Post post = dataBinder.bind(resultSet);
 
             PostRating postRating = new PostRating();
             postRating.setId(resultSet.getLong("post_rating.id"));

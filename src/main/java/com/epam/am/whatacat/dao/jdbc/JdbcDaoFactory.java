@@ -1,9 +1,6 @@
 package com.epam.am.whatacat.dao.jdbc;
 
-import com.epam.am.whatacat.dao.DaoException;
-import com.epam.am.whatacat.dao.DaoFactory;
-import com.epam.am.whatacat.dao.PostDao;
-import com.epam.am.whatacat.dao.UserDao;
+import com.epam.am.whatacat.dao.*;
 import com.epam.am.whatacat.db.ConnectionPool;
 import com.epam.am.whatacat.db.ConnectionPoolException;
 
@@ -63,5 +60,10 @@ public class JdbcDaoFactory extends DaoFactory {
     @Override
     public PostDao getPostDao() throws DaoException {
         return new JdbcPostDao(connection);
+    }
+
+    @Override
+    public CommentDao getCommentDao() throws DaoException {
+        return new JdbcCommentDao(connection);
     }
 }

@@ -23,7 +23,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
 
     public abstract String getTableName(boolean isInsert);
 
-    public abstract T bindData(ResultSet resultSet) throws DaoException;
+    public abstract DataBinder<T> getDataBinder();
 
     @Override
     public T save(T model) throws DaoException {
@@ -135,7 +135,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return bindData(resultSet);
+                return getDataBinder().bind(resultSet);
             } else {
                 return null;
             }
@@ -171,7 +171,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
             ResultSet resultSet = preparedStatement.executeQuery();
             List<T> resultList = new ArrayList<>();
             while (resultSet.next()) {
-                T t = bindData(resultSet);
+                T t = getDataBinder().bind(resultSet);
                 resultList.add(t);
             }
             resultSet.close();

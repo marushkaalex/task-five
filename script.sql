@@ -48,3 +48,13 @@ CREATE TABLE PUBLIC.post_rating
     CONSTRAINT table_name_USER_ID_fk FOREIGN KEY (user_id) REFERENCES USER (ID)
 );
 CREATE UNIQUE INDEX "table_name_post_id_user_id_uindex" ON PUBLIC.post_rating (post_id, user_id);
+
+CREATE TABLE PUBLIC.comment
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    author_id INT,
+    parent_id INT,
+    _date DATETIME,
+    text VARCHAR(1000) NOT NULL,
+    CONSTRAINT comment_USER_ID_fk FOREIGN KEY (author_id) REFERENCES USER (ID)
+);
