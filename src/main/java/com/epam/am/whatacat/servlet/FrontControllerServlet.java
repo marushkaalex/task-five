@@ -16,12 +16,12 @@ import java.io.IOException;
 
 @WebServlet(name = "FrontControllerServlet", urlPatterns = "/do/*")
 public class FrontControllerServlet extends HttpServlet {
-    private static final Logger log = LoggerFactory.getLogger(FrontControllerServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FrontControllerServlet.class);
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String actionName = req.getMethod() + req.getPathInfo();
-        log.info("Action name: {}", actionName);
+        LOG.info("Action name: {}", actionName);
 
         Action action = ActionFactory.getInstance().getAction(actionName);
         if (action == null) {
@@ -38,7 +38,9 @@ public class FrontControllerServlet extends HttpServlet {
     }
 
     private void processResult(HttpServletRequest req, HttpServletResponse resp, ActionResult result) throws IOException, ServletException {
-        if (result.isRedirect()) {
+        if (result.isError()) {
+            resp.sendError(result.getError());
+        } else if (result.isRedirect()) {
             String path = req.getContextPath() + result.getView();
             resp.sendRedirect(path);
         } else {

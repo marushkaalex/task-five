@@ -8,4 +8,5 @@
     <c:forEach items="${comments}" var="comment">
         <my:comment comment="${comment}"/>
     </c:forEach>
+    <my:comment-form post_id="${post.id}"/>
 </my:base>

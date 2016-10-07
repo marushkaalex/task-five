@@ -18,4 +18,13 @@ public class CommentService extends BaseService {
             throw new ServiceException(e);
         }
     }
+
+    public void save(Comment comment) throws ServiceException {
+        try {
+            CommentDao commentDao = daoFactory.getCommentDao();
+            commentDao.save(comment);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

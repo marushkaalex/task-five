@@ -1,10 +1,8 @@
 package com.epam.am.whatacat.validation;
 
-public class NonEmptyFieldValidator implements FieldValidator {
-    private String errorMessageKey;
-
+public class NonEmptyFieldValidator extends BaseFieldValidator {
     public NonEmptyFieldValidator(String errorMessageKey) {
-        this.errorMessageKey = errorMessageKey;
+        super(errorMessageKey);
     }
 
     @Override

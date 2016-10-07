@@ -38,6 +38,13 @@ public class FormValidatorFactory {
                         .addFieldValidator("old", new NonEmptyFieldValidator("profile.error.old-password.empty"))
                         .addFieldValidator("new", new NonEmptyFieldValidator("profile.error.new-password.empty"))
         );
+
+        validatorMap.put(
+                "send-comment",
+                new FormValidator()
+                        .addFieldValidator("text", new NonEmptyFieldValidator("comment.error.empty"))
+                        .addFieldValidator("text", new LengthFieldValidator("comment.error.length", 1, 1000))
+        );
     }
 
     public static void init() {
