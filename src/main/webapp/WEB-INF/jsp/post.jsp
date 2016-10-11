@@ -6,7 +6,9 @@
     <fmt:setBundle basename="i18n"/>
     <my:post post="${post}"/>
     <c:forEach items="${comments}" var="comment">
-        <my:comment comment="${comment}"/>
+        <my:comment comment="${comment}" showReply="${sessionScope.user != null}"/>
     </c:forEach>
-    <my:comment-form post_id="${post.id}"/>
+    <c:if test="${sessionScope.user != null}">
+        <my:comment-form post_id="${post.id}"/>
+    </c:if>
 </my:base>

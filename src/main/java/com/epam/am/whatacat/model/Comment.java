@@ -9,8 +9,16 @@ public class Comment extends BaseModel {
     private Date publicationDate;
     private String text;
     private long authorId;
-    private List<Comment> replies;
     private long postId;
+    private Comment parent;
+
+    public Comment getParent() {
+        return parent;
+    }
+
+    public void setParent(Comment parent) {
+        this.parent = parent;
+    }
 
     public long getPostId() {
         return postId;
@@ -58,13 +66,5 @@ public class Comment extends BaseModel {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public List<Comment> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(List<Comment> replies) {
-        this.replies = replies;
     }
 }

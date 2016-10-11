@@ -13,9 +13,10 @@
         </div>
     </c:if>
     <div class="panel-body">
+        <p><i id="comment-parent-text"></i><button id="comment-parent-clear" style="display:none;" onclick="clearParentComment()">X</button></p>
         <form method="post" action="send-comment" class="post-rate" id="comment-form">
             <input type="hidden" name="post_id" value="${post_id}">
-            <input type="hidden" name="parent_id" value="${parent_comment.id}">
+            <input id="comment-parent-id" type="hidden" name="parent_id" value="${parent_comment.id}">
             <textarea form="comment-form" name="text"
                       placeholder="<fmt:message key='comment.hint.text'/>"></textarea><br>
             <button type="submit" class="btn btn-xs"><fmt:message key="comment.send"/></button>

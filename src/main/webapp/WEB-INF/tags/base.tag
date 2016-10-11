@@ -10,6 +10,7 @@
     <link href="<c:url value="/static/my.css"/>" rel="stylesheet">
     <script src="<c:url value="/webjars/jquery/1.11.1/jquery.js"/>"></script>
     <script src="<c:url value="/webjars/bootstrap/3.3.7/js/bootstrap.js"/>"></script>
+    <script src="<c:url value="/static/my.js"/>"></script>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
