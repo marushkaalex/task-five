@@ -14,6 +14,7 @@ public class SetLocaleAction implements Action {
         String language = request.getParameter("locale");
         if (language.equals("ru") || language.equals("en")) {
             Cookie locale = new Cookie("locale", language);
+            locale.setMaxAge(-1);
             response.addCookie(locale);
         }
         return new ActionResult(request.getHeader("Referer"), true);
