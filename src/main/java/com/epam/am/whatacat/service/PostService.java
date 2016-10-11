@@ -132,4 +132,13 @@ public class PostService extends BaseService {
             throw new ServiceException(e);
         }
     }
+
+    public long count() throws ServiceException {
+        try {
+            PostDao postDao = daoFactory.getPostDao();
+            return postDao.count();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

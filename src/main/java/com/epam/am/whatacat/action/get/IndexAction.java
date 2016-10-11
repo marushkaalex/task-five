@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public class IndexAction extends ShowPageAction {
-    public static final int POSTS_PER_PAGE = 10;
+    public static final int POSTS_PER_PAGE = 2;
 
     public IndexAction() {
         super("index");
@@ -31,12 +31,14 @@ public class IndexAction extends ShowPageAction {
             List<Post> postList;
             postList = postService.getPostList(
                     POSTS_PER_PAGE,
-                    POSTS_PER_PAGE * pageNumber,
+                    POSTS_PER_PAGE * pageNumber - POSTS_PER_PAGE,
                     user == null ? null : user.getId()
                     );
 
             PaginatedList<Post> paginatedList = new PaginatedArrayList<>(postList);
             paginatedList.setPage(pageNumber);
+            double postCount = postService.count();
+            paginatedList.setPageCount(Double.valueOf(Math.ceil(postCount / POSTS_PER_PAGE)).intValue());
             request.setAttribute("postList", paginatedList);
             return super.execute(request, response);
         } catch (ServiceException e) {
