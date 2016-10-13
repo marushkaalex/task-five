@@ -151,6 +151,20 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     }
 
     @Override
+    public long countByStatus(int status) throws DaoException {
+        try {
+            PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT COUNT(1) FROM " + getTableName(false) + " WHERE " + TABLE_NAME + ".status=?");
+            preparedStatement.setInt(1, status);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            long count = resultSet.getLong(1);
+            return count;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
     public Post findByIdWithRating(long postId, long userId) throws DaoException {
         String query = getSelectQuery() + ",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=? WHERE post.id=?";
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
@@ -183,6 +197,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 new TableField(TABLE_NAME, "date", "publicationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
                 new TableField(TABLE_NAME, "rating"),
                 new TableField(TABLE_NAME, "author_id", "authorId"),
+                new TableField(TABLE_NAME, "status"),
                 new TableField("user", "id").setUseOnSave(false),
                 new TableField("user", "email").setUseOnSave(false),
                 new TableField("user", "nickname").setUseOnSave(false),
@@ -194,5 +209,24 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 new TableField("user", "date", "registrationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())).setUseOnSave(false),
                 new TableField("role", "name").setUseOnSave(false).setUseOnSave(false)
         );
+    }
+
+    @Override
+    public List<Post> getByStatus(int status, long limit, long offset) throws DaoException {
+        String query = getSelectQueryWithFrom() + getJoin() + " WHERE " + TABLE_NAME + ".status=? LIMIT ? OFFSET ?";
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
+            preparedStatement.setLong(1, status);
+            preparedStatement.setLong(2, limit);
+            preparedStatement.setLong(3, offset);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Post> res = new ArrayList<>();
+            while (resultSet.next()) {
+                Post post = getDataBinder().bind(resultSet);
+                res.add(post);
+            }
+            return res;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 }

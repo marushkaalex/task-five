@@ -34,6 +34,7 @@ CREATE TABLE PUBLIC.post
     date DATE,
     rating INT,
     author_id INT,
+    status INT NOT NULL,
     CONSTRAINT post_USER_ID_fk FOREIGN KEY (author_id) REFERENCES USER (ID)
 );
 

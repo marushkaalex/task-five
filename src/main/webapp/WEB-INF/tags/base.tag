@@ -33,6 +33,9 @@
                 <c:if test="${sessionScope.user.role == 'ADMIN'}">
                     <li class="active"><a href="/admin">ADMIN <span class="sr-only">(current)</span></a></li>
                 </c:if>
+                <c:if test="${sessionScope.user.role == 'ADMIN' || sessionScope.user.role == 'MODERATOR'}">
+                    <li class="active"><a href="/moderator">MODERATOR <span class="sr-only">(current)</span></a></li>
+                </c:if>
                 <li>
                     <form method="post" action="/set-locale">
                         <input type="hidden" value="en" name="locale"/>

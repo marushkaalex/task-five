@@ -8,7 +8,12 @@ public class Post extends BaseModel {
     public static final int TYPE_PHOTO = 2;
     public static final int TYPE_VIDEO = 3;
 
+    public static final int STATUS_ON_MODERATION = 1;
+    public static final int STATUS_MODERATED = 2;
+    public static final int STATUS_BANNED = 3;
+
     private String title;
+    private int status;
     private int type;
     private String content;
     private Date publicationDate;
@@ -17,6 +22,15 @@ public class Post extends BaseModel {
     private User author;
     private PaginatedList<Comment> commentList;
     private PostRating userPostRating;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public Post setStatus(int status) {
+        this.status = status;
+        return this;
+    }
 
     public PostRating getUserPostRating() {
         return userPostRating;
@@ -94,9 +108,9 @@ public class Post extends BaseModel {
     public String toString() {
         return "Post{" +
                 "title='" + title + '\'' +
-                ", type=" + type +
+                ", status=" + status +
                 ", rating=" + rating +
-                ", userPostRating=" + userPostRating +
+                ", authorId=" + authorId +
                 '}';
     }
 }

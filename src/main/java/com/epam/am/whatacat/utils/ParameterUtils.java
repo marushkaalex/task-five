@@ -8,4 +8,12 @@ public class ParameterUtils {
             return defaultValue;
         }
     }
+
+    public static Integer parseInt(String parameter, Integer defaultValue) {
+        try {
+            return Integer.parseInt(parameter);
+        } catch (NumberFormatException ignored) {
+            return defaultValue;
+        }
+    }
 }

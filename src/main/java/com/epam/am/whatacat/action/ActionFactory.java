@@ -7,6 +7,7 @@ import com.epam.am.whatacat.action.get.IndexAction;
 import com.epam.am.whatacat.action.get.LogoutAction;
 import com.epam.am.whatacat.action.get.ShowPageAction;
 import com.epam.am.whatacat.action.get.ShowPostAction;
+import com.epam.am.whatacat.action.moderator.ShowPostsToModerateAction;
 import com.epam.am.whatacat.action.post.*;
 import com.epam.am.whatacat.action.profile.SetLocaleAction;
 import com.epam.am.whatacat.action.profile.ShowUserAction;
@@ -38,6 +39,7 @@ public class ActionFactory {
         actionMap.put("GET/admin", new UserListAction());
         actionMap.put("POST/send-comment", new SendCommentAction());
         actionMap.put("GET/admin/edit", new ShowEditUserAction());
+        actionMap.put("GET/moderator", new ShowPostsToModerateAction());
     }
 
     public Action getAction(String actionName) {
