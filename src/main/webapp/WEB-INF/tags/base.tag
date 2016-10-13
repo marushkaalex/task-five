@@ -34,13 +34,13 @@
                     <li class="active"><a href="/admin">ADMIN <span class="sr-only">(current)</span></a></li>
                 </c:if>
                 <li>
-                    <form method="post" action="set-locale">
+                    <form method="post" action="/set-locale">
                         <input type="hidden" value="en" name="locale"/>
                         <button type="submit">En</button>
                     </form>
                 </li>
                 <li>
-                    <form method="post" action="set-locale">
+                    <form method="post" action="/set-locale">
                         <input type="hidden" value="ru" name="locale"/>
                         <button type="submit">Ru</button>
                     </form>

@@ -41,12 +41,14 @@ public class UserListAction implements Action {
 
             AdminTable.Row headers = new AdminTable.Row();
             headers
+                    .addColumn("admin.id")
                     .addColumn("admin.users.header.email")
                     .addColumn("admin.users.header.nickname")
                     .addColumn("admin.users.header.role")
                     .addColumn("admin.users.header.gender")
                     .addColumn("admin.users.header.rating")
-                    .addColumn("admin.users.header.date");
+                    .addColumn("admin.users.header.date")
+                    .addColumn("admin.edit");
 
             table.setHeaders(headers);
 
@@ -56,12 +58,14 @@ public class UserListAction implements Action {
                 String formattedDate = new SimpleDateFormat("yyyy-MM-dd", locale).format(item.getRegistrationDate());
                 AdminTable.Row row = new AdminTable.Row();
                 row
+                        .addColumn(String.valueOf(item.getId()))
                         .addColumn(item.getEmail())
                         .addColumn(item.getNickname())
                         .addColumn(item.getRole().name())
                         .addColumn(item.getGender().name())
                         .addColumn(String.valueOf(item.getRating()))
-                        .addColumn(formattedDate);
+                        .addColumn(formattedDate)
+                        .addColumn("E", "admin/edit?type=user&id=" + item.getId());
 
                 rows.add(row);
             }

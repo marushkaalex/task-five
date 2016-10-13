@@ -19,7 +19,15 @@
         <c:forEach var="row" items="${table.rows}">
             <tr>
                 <c:forEach var="column" items="${row.columns}">
-                    <td><c:out value="${column.text}"/></td>
+                    <td>
+                        <c:if test="${column.url != null}">
+                            <a href="${column.url}">
+                        </c:if>
+                        <c:out value="${column.text}"/>
+                        <c:if test="${column.url != null}">
+                            </a>
+                        </c:if>
+                    </td>
                 </c:forEach>
             </tr>
         </c:forEach>

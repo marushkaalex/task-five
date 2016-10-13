@@ -25,7 +25,7 @@ public class IndexAction extends ShowPageAction {
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         try (PostService postService = new PostService()){
             String page = request.getParameter("page");
-            int pageNumber = page == null || page.isEmpty() ? 0 : Integer.parseInt(page);
+            int pageNumber = page == null || page.isEmpty() ? 1 : Integer.parseInt(page);
 
             User user = (User) request.getSession().getAttribute("user");
             List<Post> postList;

@@ -1,5 +1,6 @@
 package com.epam.am.whatacat.action;
 
+import com.epam.am.whatacat.action.admin.ShowEditUserAction;
 import com.epam.am.whatacat.action.admin.UserListAction;
 import com.epam.am.whatacat.action.comment.SendCommentAction;
 import com.epam.am.whatacat.action.get.IndexAction;
@@ -36,6 +37,7 @@ public class ActionFactory {
         actionMap.put("GET/user", new ShowUserAction());
         actionMap.put("GET/admin", new UserListAction());
         actionMap.put("POST/send-comment", new SendCommentAction());
+        actionMap.put("GET/admin/edit", new ShowEditUserAction());
     }
 
     public Action getAction(String actionName) {
