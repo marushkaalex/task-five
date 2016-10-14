@@ -26,7 +26,7 @@ public class ShowPostsToModerateAction implements Action {
         int page = ParameterUtils.parseInt(request.getParameter("page"), 1);
         try (PostService postService = new PostService()) {
             List<Post> postList = postService.getPostListByStatus(
-                    Post.STATUS_ON_MODERATION,
+                    Post.Status.ON_MODERATION,
                     POSTS_PER_PAGE,
                     POSTS_PER_PAGE * (page - 1)
             );
@@ -52,7 +52,7 @@ public class ShowPostsToModerateAction implements Action {
                 rowList.add(row);
             }
 
-            long count = postService.countByStatus(Post.STATUS_ON_MODERATION);
+            long count = postService.countByStatus(Post.Status.ON_MODERATION);
             table.setRows(rowList);
             table.setPage(page);
             table.setPageCount(Double.valueOf(Math.floor(count / POSTS_PER_PAGE)).intValue());

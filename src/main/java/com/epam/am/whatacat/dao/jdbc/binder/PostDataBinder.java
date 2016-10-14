@@ -25,7 +25,7 @@ public class PostDataBinder implements DataBinder<Post> {
             res.setType(resultSet.getInt("post.type"));
             res.setRating(resultSet.getLong("post.rating"));
             res.setAuthorId(resultSet.getLong("post.author_id"));
-            res.setStatus(resultSet.getInt("post.status"));
+            res.setStatus(Post.Status.of(resultSet.getInt("post.status")));
 
             User user = userDataBinder.bind(resultSet);
 

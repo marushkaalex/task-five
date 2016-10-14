@@ -2,18 +2,15 @@ package com.epam.am.whatacat.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class Post extends BaseModel {
     public static final int TYPE_TEXT = 1;
     public static final int TYPE_PHOTO = 2;
     public static final int TYPE_VIDEO = 3;
 
-    public static final int STATUS_ON_MODERATION = 1;
-    public static final int STATUS_MODERATED = 2;
-    public static final int STATUS_BANNED = 3;
-
     private String title;
-    private int status;
+    private Status status;
     private int type;
     private String content;
     private Date publicationDate;
@@ -23,13 +20,12 @@ public class Post extends BaseModel {
     private PaginatedList<Comment> commentList;
     private PostRating userPostRating;
 
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public Post setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
-        return this;
     }
 
     public PostRating getUserPostRating() {
@@ -112,5 +108,26 @@ public class Post extends BaseModel {
                 ", rating=" + rating +
                 ", authorId=" + authorId +
                 '}';
+    }
+
+    public enum Status {
+        ON_MODERATION(1), ALLOWED(2), BANNED(3);
+
+        private final int id;
+
+        Status(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static Status of(int id) {
+            for (Status status : values()) {
+                if (status.getId() == id) return status;
+            }
+            throw new IllegalArgumentException();
+        }
     }
 }

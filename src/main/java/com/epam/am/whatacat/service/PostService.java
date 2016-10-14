@@ -59,19 +59,19 @@ public class PostService extends BaseService {
         }
     }
 
-    public long countByStatus(int status) throws ServiceException {
+    public long countByStatus(Post.Status status) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
-            return postDao.countByStatus(status);
+            return postDao.countByStatus(status.getId());
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
-    public List<Post> getPostListByStatus(int status, long limit, long offset) throws ServiceException {
+    public List<Post> getPostListByStatus(Post.Status status, long limit, long offset) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
-            return postDao.getByStatus(status, limit, offset);
+            return postDao.getByStatus(status.getId(), limit, offset);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
