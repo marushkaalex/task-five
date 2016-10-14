@@ -5,8 +5,9 @@
 <fmt:setBundle basename="i18n"/>
 <%--<fmt:setLocale value="$Э--%>
 <my:base>
+    ${fromUrl}<br>
     <form method="post" action="login">
-        <input type="hidden" value="${param.fromUrl}" name="fromUrl" />
+        <input type="hidden" value="${fromUrl}" name="fromUrl" />
         <input name="email" class="form-control form-group form-group-sm input-sm" type="text"
                placeholder="<fmt:message key="login.hint.email"/>">
         <input name="password" class="form-group form-group-sm form-control input-sm" type="password"
