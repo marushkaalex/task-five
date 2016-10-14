@@ -159,4 +159,13 @@ public class PostService extends BaseService {
             throw new ServiceException(e);
         }
     }
+
+    public void save(Post post) throws ServiceException {
+        try{
+            PostDao postDao = daoFactory.getPostDao();
+            postDao.save(post);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

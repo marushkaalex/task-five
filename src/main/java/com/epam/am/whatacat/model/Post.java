@@ -111,7 +111,7 @@ public class Post extends BaseModel {
     }
 
     public enum Status {
-        ON_MODERATION(1), ALLOWED(2), BANNED(3);
+        ON_MODERATION(1), ALLOWED(2), DENIED(3);
 
         private final int id;
 

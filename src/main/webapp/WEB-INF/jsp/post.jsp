@@ -8,7 +8,9 @@
     <my:post post="${post}"/>
     <c:set var="role" value="${sessionScope.user.role}"/>
     <c:if test="${role == 'MODERATOR' || role == 'ADMIN'}">
-        <form method="post" action="/moderate/allow" id="moderatorForm"/>
+        <form method="post" action="/moderator/moderate" id="moderatorForm">
+            <input type="hidden" name="id" value="${post.id}" />
+        </form>
         <c:if test="${post.status == 'ON_MODERATION' || post.status == 'DENIED'}">
             <button form="moderatorForm" value="allow" name="decision" type="submit"><fmt:message
                     key="post.moderate.allow"/></button>

@@ -197,7 +197,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 new TableField(TABLE_NAME, "date", "publicationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
                 new TableField(TABLE_NAME, "rating"),
                 new TableField(TABLE_NAME, "author_id", "authorId"),
-                new TableField(TABLE_NAME, "status"),
+                new TableField(TABLE_NAME, "status").setTypeConverter(o -> ((Post.Status) o).getId()),
                 new TableField("user", "id").setUseOnSave(false),
                 new TableField("user", "email").setUseOnSave(false),
                 new TableField("user", "nickname").setUseOnSave(false),
