@@ -165,7 +165,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     @Override
     public List<T> getAll(long limit, long offset) throws DaoException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + getJoin() + " LIMIT ? OFFSET ?");
+            PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + getJoin() + getOrderBy() + " LIMIT ? OFFSET ?");
             preparedStatement.setLong(1, limit);
             preparedStatement.setLong(2, offset);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -182,6 +182,10 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     }
 
     protected String getJoin() {
+        return "";
+    }
+
+    protected String getOrderBy() {
         return "";
     }
 

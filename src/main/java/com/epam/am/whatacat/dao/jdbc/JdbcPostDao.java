@@ -152,6 +152,11 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     }
 
     @Override
+    protected String getOrderBy() {
+        return " ORDER BY post.date";
+    }
+
+    @Override
     public long countByStatus(int status) throws DaoException {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT COUNT(1) FROM " + getTableName(false) + " WHERE " + TABLE_NAME + ".status=?");
