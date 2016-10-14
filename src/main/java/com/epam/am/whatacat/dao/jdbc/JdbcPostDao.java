@@ -313,4 +313,37 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public long countUsersPosts(long userId, @Nullable Integer status) throws DaoException {
+        try {
+            StringBuilder query = new StringBuilder()
+                    .append("SELECT COUNT(1) FROM ")
+                    .append(TABLE_NAME)
+                    .append(" WHERE ")
+                    .append(TABLE_NAME)
+                    .append(".author_id=?");
+
+            if (status != null) {
+                query
+                        .append(" AND ")
+                        .append(TABLE_NAME)
+                        .append(".status=?");
+            }
+
+            PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString());
+            preparedStatement.setLong(1, userId);
+
+            if (status != null) {
+                preparedStatement.setInt(2, status);
+            }
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            long count = resultSet.getLong(1);
+            return count;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 }

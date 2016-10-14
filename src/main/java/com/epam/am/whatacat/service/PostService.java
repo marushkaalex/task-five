@@ -44,6 +44,7 @@ public class PostService extends BaseService {
             post.setContent(content);
             post.setPublicationDate(new Date());
             post.setType(type);
+            post.setStatus(Post.Status.ON_MODERATION);
             return postDao.save(post);
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -63,6 +64,16 @@ public class PostService extends BaseService {
         try {
             PostDao postDao = daoFactory.getPostDao();
             return postDao.countByStatus(status.getId());
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+
+    public long countUsersPosts(long userId, @Nullable Post.Status status) throws ServiceException {
+        try {
+            PostDao postDao = daoFactory.getPostDao();
+            return postDao.countUsersPosts(userId,status == null ? null : status.getId());
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

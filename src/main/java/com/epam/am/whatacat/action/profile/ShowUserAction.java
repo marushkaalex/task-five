@@ -61,7 +61,7 @@ public class ShowUserAction implements Action {
                 POSTS_PER_PAGE,
                 POSTS_PER_PAGE * (page - 1)
         );
-        long count = status == null ? postService.count() : postService.countByStatus(status);
+        long count = postService.countUsersPosts(userId, status);
 
         AdminTable adminTable = new AdminTable();
         List<AdminTable.Row> rowList = new ArrayList<>();

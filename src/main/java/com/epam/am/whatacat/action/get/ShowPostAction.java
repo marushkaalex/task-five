@@ -28,7 +28,7 @@ public class ShowPostAction implements Action {
             User user = ((User) request.getSession().getAttribute("user"));
             Post post = user == null ? postService.getById(id) : postService.getByIdWithRating(id, user.getId());
 
-            if (post.getStatus() != Post.Status.ALLOWED && (user == null || (user.getRole() != Role.MODERATOR && user.getRole() != Role.ADMIN))) {
+            if (!checkRights(user, post)) {
                 return new ActionResult(HttpServletResponse.SC_NOT_FOUND);
             }
 
@@ -40,5 +40,21 @@ public class ShowPostAction implements Action {
         } catch (ServiceException e) {
             throw new ActionException(e);
         }
+    }
+
+    private boolean checkRights(User user, Post post) {
+        if (post.getStatus() == Post.Status.ALLOWED) {
+            return true;
+        }
+
+        if (user == null) {
+            return false;
+        }
+
+        if (user.getId() != post.getAuthorId()) {
+            return true;
+        }
+
+        return user.getRole() == Role.MODERATOR || user.getRole() == Role.ADMIN;
     }
 }

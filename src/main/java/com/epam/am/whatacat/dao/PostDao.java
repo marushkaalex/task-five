@@ -20,4 +20,6 @@ public interface PostDao extends BaseDao<Post> {
     List<Post> getAllOfUser(long userId, @Nullable Integer status, long limit, long offset) throws DaoException;
 
     long countByStatus(int status) throws DaoException;
+
+    long countUsersPosts(long user, @Nullable Integer status) throws DaoException;
 }

@@ -7,6 +7,7 @@
     <p><img src="image/${sessionScope.user.avatarUrl}" width="100" height="100"/></p>
     <p>${sessionScope.user.nickname}</p>
     <p>${sessionScope.user.email}</p>
+    <a href="/user?id=${sessionScope.user.id}"><fmt:message key="profile.my-posts"/></a>
     <form method="post">
         <input name="old" type="password" placeholder="<fmt:message key="profile.hint.old-password"/>"/><br>
         <input name="new" type="password" placeholder="<fmt:message key="profile.hint.new-password"/>"/><br>
