@@ -2,7 +2,6 @@ package com.epam.am.whatacat.action.get;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
-import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.model.PaginatedArrayList;
 import com.epam.am.whatacat.model.PaginatedList;
 import com.epam.am.whatacat.model.Post;
@@ -16,6 +15,7 @@ import java.util.List;
 
 public class IndexAction extends ShowPageAction {
     public static final int POSTS_PER_PAGE = 2;
+    public static final int MAX_TEXT_LENGTH = 1000;
 
     public IndexAction() {
         super("index");
@@ -36,6 +36,7 @@ public class IndexAction extends ShowPageAction {
                     POSTS_PER_PAGE * pageNumber - POSTS_PER_PAGE
                     );
 
+            postList.forEach(post -> post.setContent(trim(post.getContent())));
             PaginatedList<Post> paginatedList = new PaginatedArrayList<>(postList);
             paginatedList.setPage(pageNumber);
             double postCount = postService.countByStatus(Post.Status.ALLOWED);
@@ -44,6 +45,14 @@ public class IndexAction extends ShowPageAction {
             return super.execute(request, response);
         } catch (ServiceException e) {
             throw new ActionException(e);
+        }
+    }
+
+    private String trim(String origin) {
+        if (origin.length() > MAX_TEXT_LENGTH) {
+            return origin.substring(0, MAX_TEXT_LENGTH - 1) + '…';
+        } else {
+            return origin;
         }
     }
 }
