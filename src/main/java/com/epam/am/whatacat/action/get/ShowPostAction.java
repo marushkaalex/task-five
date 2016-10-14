@@ -51,7 +51,7 @@ public class ShowPostAction implements Action {
             return false;
         }
 
-        if (user.getId() != post.getAuthorId()) {
+        if (user.getId() == post.getAuthorId()) {
             return true;
         }
 
