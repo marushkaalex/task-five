@@ -3,6 +3,7 @@ package com.epam.am.whatacat.dao;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.PostRating;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface PostDao extends BaseDao<Post> {
@@ -12,7 +13,7 @@ public interface PostDao extends BaseDao<Post> {
 
     List<Post> getAllWithUserRating(long limit, long offset, long userId) throws DaoException;
 
-    List<Post> getByStatus(int status, long limit, long offset) throws DaoException;
+    List<Post> getByStatus(int status, @Nullable Long userId, long limit, long offset) throws DaoException;
 
     Post findByIdWithRating(long postId, long userId) throws DaoException;
 

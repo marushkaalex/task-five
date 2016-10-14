@@ -8,6 +8,7 @@ import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.PostRating;
 import com.epam.am.whatacat.model.Role;
 
+import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -211,10 +212,38 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
         );
     }
 
-    @Override
-    public List<Post> getByStatus(int status, long limit, long offset) throws DaoException {
-        String query = getSelectQueryWithFrom() + getJoin() + " WHERE " + TABLE_NAME + ".status=? LIMIT ? OFFSET ?";
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
+    public List<Post> getByStatusWithUserPostRating(int status, long userId, long limit, long offset) throws DaoException {
+        StringBuilder query = new StringBuilder()
+                .append(getSelectQuery())
+                .append(",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=? WHERE post.status=?")
+                .append(getJoin())
+                .append(" LIMIT ? OFFSET ?");
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString())) {
+            preparedStatement.setLong(1, userId);
+            preparedStatement.setLong(2, limit);
+            preparedStatement.setLong(3, offset);
+            preparedStatement.setLong(4, status);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Post> res = new ArrayList<>();
+            while (resultSet.next()) {
+                Post post = bindDataWithRating(resultSet);
+                res.add(post);
+            }
+            return res;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    public List<Post> getByStatusWithoutUserPostRating(int status, long limit, long offset) throws DaoException {
+        StringBuilder query = new StringBuilder()
+                .append(getSelectQueryWithFrom())
+                .append(getJoin())
+                .append(" WHERE ")
+                .append(TABLE_NAME)
+                .append(".status=? LIMIT ? OFFSET ?");
+
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString())) {
             preparedStatement.setLong(1, status);
             preparedStatement.setLong(2, limit);
             preparedStatement.setLong(3, offset);
@@ -227,6 +256,15 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             return res;
         } catch (SQLException e) {
             throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Post> getByStatus(int status, @Nullable Long userId, long limit, long offset) throws DaoException {
+        if (userId == null) {
+            return getByStatusWithoutUserPostRating(status, limit, offset);
+        } else {
+            return getByStatusWithUserPostRating(status, userId, limit, offset);
         }
     }
 }

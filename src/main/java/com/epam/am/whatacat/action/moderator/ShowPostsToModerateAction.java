@@ -27,6 +27,7 @@ public class ShowPostsToModerateAction implements Action {
         try (PostService postService = new PostService()) {
             List<Post> postList = postService.getPostListByStatus(
                     Post.Status.ON_MODERATION,
+                    null,
                     POSTS_PER_PAGE,
                     POSTS_PER_PAGE * (page - 1)
             );

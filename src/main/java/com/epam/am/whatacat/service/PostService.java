@@ -68,10 +68,10 @@ public class PostService extends BaseService {
         }
     }
 
-    public List<Post> getPostListByStatus(Post.Status status, long limit, long offset) throws ServiceException {
+    public List<Post> getPostListByStatus(Post.Status status, @Nullable Long userId, long limit, long offset) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
-            return postDao.getByStatus(status.getId(), limit, offset);
+            return postDao.getByStatus(status.getId(), userId, limit, offset);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

@@ -29,15 +29,16 @@ public class IndexAction extends ShowPageAction {
 
             User user = (User) request.getSession().getAttribute("user");
             List<Post> postList;
-            postList = postService.getPostList(
+            postList = postService.getPostListByStatus(
+                    Post.Status.ALLOWED,
+                    user == null ? null : user.getId(),
                     POSTS_PER_PAGE,
-                    POSTS_PER_PAGE * pageNumber - POSTS_PER_PAGE,
-                    user == null ? null : user.getId()
+                    POSTS_PER_PAGE * pageNumber - POSTS_PER_PAGE
                     );
 
             PaginatedList<Post> paginatedList = new PaginatedArrayList<>(postList);
             paginatedList.setPage(pageNumber);
-            double postCount = postService.count();
+            double postCount = postService.countByStatus(Post.Status.ALLOWED);
             paginatedList.setPageCount(Double.valueOf(Math.ceil(postCount / POSTS_PER_PAGE)).intValue());
             request.setAttribute("postList", paginatedList);
             return super.execute(request, response);
