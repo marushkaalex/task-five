@@ -215,14 +215,14 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     public List<Post> getByStatusWithUserPostRating(int status, long userId, long limit, long offset) throws DaoException {
         StringBuilder query = new StringBuilder()
                 .append(getSelectQuery())
-                .append(",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=? WHERE post.status=?")
+                .append(",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?")
                 .append(getJoin())
-                .append(" LIMIT ? OFFSET ?");
+                .append(" WHERE post.status=? LIMIT ? OFFSET ?");
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString())) {
             preparedStatement.setLong(1, userId);
-            preparedStatement.setLong(2, limit);
-            preparedStatement.setLong(3, offset);
-            preparedStatement.setLong(4, status);
+            preparedStatement.setLong(2, status);
+            preparedStatement.setLong(3, limit);
+            preparedStatement.setLong(4, offset);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Post> res = new ArrayList<>();
             while (resultSet.next()) {
@@ -265,6 +265,47 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             return getByStatusWithoutUserPostRating(status, limit, offset);
         } else {
             return getByStatusWithUserPostRating(status, userId, limit, offset);
+        }
+    }
+
+    @Override
+    public List<Post> getAllOfUser(long userId, @Nullable Integer status, long limit, long offset) throws DaoException {
+        StringBuilder query = new StringBuilder()
+                .append(getSelectQueryWithFrom())
+                .append(getJoin())
+                .append(" WHERE ")
+                .append(TABLE_NAME)
+                .append(".author_id=?");
+
+        if (status != null) {
+            query
+                    .append("AND ")
+                    .append(TABLE_NAME)
+                    .append(".status=?");
+        }
+
+        query.append(" LIMIT ? OFFSET ?");
+
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString())) {
+            preparedStatement.setLong(1, userId);
+            if (status != null) {
+                preparedStatement.setLong(2, status);
+                preparedStatement.setLong(3, limit);
+                preparedStatement.setLong(4, offset);
+            } else {
+                preparedStatement.setLong(2, limit);
+                preparedStatement.setLong(3, offset);
+            }
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Post> res = new ArrayList<>();
+            while (resultSet.next()) {
+                Post post = getDataBinder().bind(resultSet);
+                res.add(post);
+            }
+            return res;
+        } catch (SQLException e) {
+            throw new DaoException(e);
         }
     }
 }

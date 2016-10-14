@@ -8,5 +8,5 @@
     <c:forEach items="${postList}" var="item">
         <my:post post="${item}"/>
     </c:forEach>
-    <my:pagination pageNumber="${postList.getPage()}" pageCount="${postList.getPageCount()}" url="/"/>
+    <my:pagination pageNumber="${postList.getPage()}" pageCount="${postList.getPageCount()}" url="/?"/>
 </my:base>

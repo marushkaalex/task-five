@@ -96,7 +96,8 @@ public class PostService extends BaseService {
         try {
             PostRating postRating = post.getUserPostRating();
             if (postRating == null) {
-                postRating = new PostRating();;
+                postRating = new PostRating();
+                ;
                 postRating.setUserId(userId);
                 postRating.setPostId(post.getId());
                 postRating.setDate(new Date());
@@ -161,11 +162,21 @@ public class PostService extends BaseService {
     }
 
     public void save(Post post) throws ServiceException {
-        try{
+        try {
             PostDao postDao = daoFactory.getPostDao();
             postDao.save(post);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
+
+    public List<Post> getAllOfUser(long userId, @Nullable Integer status, long limit, long offset) throws ServiceException {
+        try {
+            PostDao postDao = daoFactory.getPostDao();
+            return postDao.getAllOfUser(userId, status, limit, offset);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
 }

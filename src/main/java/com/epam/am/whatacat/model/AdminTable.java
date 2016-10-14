@@ -71,10 +71,16 @@ public class AdminTable {
             columns.add(new Column(text, url));
             return this;
         }
+
+        public Row addColumn(String text, boolean isKey, String url) {
+            columns.add(new Column(text, isKey, url));
+            return this;
+        }
     }
 
     public static class Column {
         private String text;
+        private boolean isKey;
         private String url;
 
         public Column(String text) {
@@ -86,12 +92,22 @@ public class AdminTable {
             this.url = url;
         }
 
+        public Column(String text, boolean isKey, String url) {
+            this.text = text;
+            this.isKey = isKey;
+            this.url = url;
+        }
+
         public String getText() {
             return text;
         }
 
         public String getUrl() {
             return url;
+        }
+
+        public boolean isKey() {
+            return isKey;
         }
     }
 }
