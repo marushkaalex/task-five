@@ -35,8 +35,8 @@ public class FormValidatorFactory {
         validatorMap.put(
                 "change-password",
                 new FormValidator()
-                        .addFieldValidator("old", new NonEmptyFieldValidator("profile.error.old-password.empty"))
-                        .addFieldValidator("new", new NonEmptyFieldValidator("profile.error.new-password.empty"))
+                        .addFieldValidator("oldPassword", new NonEmptyFieldValidator("profile.error.old-password.empty"))
+                        .addFieldValidator("newPassword", new LengthFieldValidator("profile.error.new-password.length", 4, 30))
         );
 
         validatorMap.put(

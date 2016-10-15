@@ -100,3 +100,6 @@
 </div>
 </body>
 </html>
+<c:if test="${sessionScope.errorMap != null && !sessionScope.errorMap.isEmpty()}">
+    <c:set var="errorMapShown" value="true" scope="session"/>
+</c:if>

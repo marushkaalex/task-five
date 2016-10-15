@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ShowProfileAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
+
         request.setAttribute("genders", Gender.values());
         return new ActionResult("profile");
     }
