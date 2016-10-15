@@ -28,9 +28,8 @@ public class FormValidatorFactory {
         validatorMap.put(
                 "post",
                 new FormValidator()
-                        // TODO: 05.09.2016 use proper validator
-                        .addFieldValidator("title", new NonEmptyFieldValidator("post.error.title.empty"))
-                        .addFieldValidator("content", new NonEmptyFieldValidator("post.error.content.empty"))
+                        .addFieldValidator("title", new LengthFieldValidator("post.error.title", 10, 255))
+                        .addFieldValidator("content", new LengthFieldValidator("post.error.content", 50, 10000))
         );
 
         validatorMap.put(

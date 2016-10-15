@@ -12,7 +12,7 @@
         <my:form-input type="password" name="password" labelKey="login.hint.password"
                        error="${sessionScope.errorMap.password}"/>
         <div class="col-xs-offset-2 col-xs-10">
-            <button type="submit" class="btn btn-success"><fmt:message key="login.sign-in"/></button>
+            <button type="submit" class="btn btn-success"><fmt:message key="login.sign-in"/></button><my:print key="${sessionScope.errorMap.error}"/>
         </div>
     </form>
     <br>

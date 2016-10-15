@@ -34,7 +34,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
 
     @Override
     public List<Post> getAllWithUserRating(long limit, long offset, long userId) throws DaoException {
-        String query = getSelectQuery() + ",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?" + getJoin() + " LIMIT ? OFFSET ?";
+        String query = getSelectQuery() + ",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?" + getJoin() + getOrderBy() + " LIMIT ? OFFSET ?";
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
             preparedStatement.setLong(1, userId);
             preparedStatement.setLong(2, limit);
@@ -153,7 +153,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
 
     @Override
     protected String getOrderBy() {
-        return " ORDER BY post.date";
+        return " ORDER BY post.date DESC";
     }
 
     @Override
@@ -222,7 +222,9 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 .append(getSelectQuery())
                 .append(",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?")
                 .append(getJoin())
-                .append(" WHERE post.status=? LIMIT ? OFFSET ?");
+                .append(" WHERE post.status=?")
+                .append(getOrderBy())
+                .append("  LIMIT ? OFFSET ?");
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString())) {
             preparedStatement.setLong(1, userId);
             preparedStatement.setLong(2, status);
@@ -246,7 +248,9 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 .append(getJoin())
                 .append(" WHERE ")
                 .append(TABLE_NAME)
-                .append(".status=? LIMIT ? OFFSET ?");
+                .append(".status=?")
+                .append(getOrderBy())
+                .append(" LIMIT ? OFFSET ?");
 
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString())) {
             preparedStatement.setLong(1, status);
@@ -289,7 +293,9 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                     .append(".status=?");
         }
 
-        query.append(" LIMIT ? OFFSET ?");
+        query
+                .append(getOrderBy())
+                .append(" LIMIT ? OFFSET ?");
 
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString())) {
             preparedStatement.setLong(1, userId);
