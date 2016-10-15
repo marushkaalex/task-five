@@ -26,19 +26,34 @@
         <br>
         <br>
     </c:if>
-    <c:forEach items="${comments}" var="comment">
-        <my:comment comment="${comment}" showReply="${sessionScope.user != null}"/>
-    </c:forEach>
     <c:choose>
         <c:when test="${post.status == 'ALLOWED'}">
             <c:if test="${sessionScope.user != null}">
-                <my:comment-form post_id="${post.id}"/>
+                <c:set var="allowComment" value="${true}"/>
             </c:if>
         </c:when>
         <c:otherwise>
             <c:if test="${sessionScope.user.role == 'MODERATOR' || sessionScope.user.role == 'ADMIN'}">
-                <my:comment-form post_id="${post.id}"/>
+                <c:set var="allowComment" value="${true}"/>
             </c:if>
         </c:otherwise>
     </c:choose>
+    <c:forEach items="${comments}" var="comment">
+        <my:comment comment="${comment}" showReply="${allowComment}"/>
+    </c:forEach>
+    <%--<c:choose>--%>
+        <%--<c:when test="${post.status == 'ALLOWED'}">--%>
+            <%--<c:if test="${sessionScope.user != null}">--%>
+                <%--<my:comment-form post_id="${post.id}"/>--%>
+            <%--</c:if>--%>
+        <%--</c:when>--%>
+        <%--<c:otherwise>--%>
+            <%--<c:if test="${sessionScope.user.role == 'MODERATOR' || sessionScope.user.role == 'ADMIN'}">--%>
+                <%--<my:comment-form post_id="${post.id}"/>--%>
+            <%--</c:if>--%>
+        <%--</c:otherwise>--%>
+    <%--</c:choose>--%>
+    <c:if test="${allowComment}">
+        <my:comment-form post_id="${post.id}"/>
+    </c:if>
 </my:base>

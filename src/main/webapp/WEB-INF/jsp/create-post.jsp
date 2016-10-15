@@ -15,7 +15,7 @@
                 <fmt:message key="post.hint.content"/>
             </label>
             <div class="col-xs-7">
-                <textarea id="content" form="post-form" class="form-control" name="content">${param.content}</textarea>
+                <textarea id="content" form="post-form" class="form-control" name="content" rows="10">${param.content}</textarea>
             </div>
             <div class="col-xs-3"><my:print key="${errorMap.content}"/></div>
         </div>

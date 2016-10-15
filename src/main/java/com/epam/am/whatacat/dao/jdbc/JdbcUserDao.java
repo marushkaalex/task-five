@@ -64,13 +64,12 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     }
 
     @Override
-    public User findByEmailAndPassword(String email, String password) throws DaoException{
+    public User findByEmail(String email) throws DaoException{
         try {
             PreparedStatement preparedStatement =
-                    getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE email=? AND password=?");
+                    getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE email=?");
 
             preparedStatement.setString(1, email);
-            preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             User user = null;
             if (resultSet.next()) {

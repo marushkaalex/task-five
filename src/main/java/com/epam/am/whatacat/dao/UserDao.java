@@ -7,5 +7,5 @@ public interface UserDao extends BaseDao<User> {
 
     boolean isEmailFree(String email) throws DaoException;
 
-    User findByEmailAndPassword(String email, String password) throws DaoException;
+    User findByEmail(String email) throws DaoException;
 }

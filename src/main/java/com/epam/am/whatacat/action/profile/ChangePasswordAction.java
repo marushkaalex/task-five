@@ -11,7 +11,9 @@ import com.epam.am.whatacat.validation.FormValidatorFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Base64;
 import java.util.Map;
+import java.util.Random;
 
 public class ChangePasswordAction extends ErrorHandlingAction {
     @Override
@@ -36,19 +38,23 @@ public class ChangePasswordAction extends ErrorHandlingAction {
         }
 
         try (UserService userService = new UserService()) {
-            String oldHashedPassword = userService.hashPassword(oldPassword);
             User user = (User) request.getSession().getAttribute("user");
+            String saltStr = user.getHashedPassword().split(" ")[1];
+            byte[] salt = Base64.getDecoder().decode(saltStr);
+            String oldHashedPassword = userService.hashPassword(oldPassword, salt);
             if (!oldHashedPassword.equals(user.getHashedPassword())) {
                 errorMap.put("old", "profile.error.old-password.wrong");
                 request.setAttribute("errorMap", errorMap);
                 return new ActionResult("profile");
             }
 
-            String newHashedPassword = userService.hashPassword(newPassword);
+            salt = new byte[16];
+            new Random().nextBytes(salt);
+            String newHashedPassword = userService.hashPassword(newPassword, salt);
             user.setHashedPassword(newHashedPassword);
             userService.save(user);
             errorMap.put("successPassword", "profile.password.change-success");
-            request.setAttribute("errorMap", errorMap);
+            request.getSession().setAttribute("errorMap", errorMap);
             return new ActionResult("profile");
         } catch (ServiceException e) {
             throw new ActionException(e);
