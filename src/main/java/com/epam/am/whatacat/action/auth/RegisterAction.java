@@ -33,14 +33,19 @@ public class RegisterAction implements Action {
         try (UserService userService = new UserService()) {
             String email = request.getParameter("email");
             if (!userService.isEmailFree(email)) {
-                errorMap.put("email", "register.error.email-already-in-use");
+                errorMap.put("email", "register.error.email.already-in-use");
             }
 
             String nickname = request.getParameter("nickname");
             if (!userService.isNicknameFree(nickname)) {
-                errorMap.put("nickname", "register.error.nickname-already-in-use");
+                errorMap.put("nickname", "register.error.nickname.already-in-use");
             }
             String password = request.getParameter("password");
+            String passwordConfirmed = request.getParameter("confirmPassword");
+
+            if (!password.equals(passwordConfirmed)) {
+                errorMap.put("confirmPassword", "register.error.passwords-dont-match");
+            }
 
             if (!errorMap.isEmpty()) {
                 request.setAttribute("errorMap", errorMap);

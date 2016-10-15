@@ -4,14 +4,29 @@
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
 <fmt:setBundle basename="i18n"/>
 <my:base>
-<form method="post">
-    <input name="email" placeholder="<fmt:message key="register.hint.email"/>" value="${param.email}"/><br/>
-    <input name="nickname" placeholder="<fmt:message key="register.hint.nickname"/>" value="${param.nickname}"/><br/>
-    <input name="password" type="password" placeholder="<fmt:message key="register.hint.password"/>"><br/>
-    <input type="submit"/>
+<form method="post" class="form-horizontal">
+    <my:form-input type="email"
+                   name="email"
+                   labelKey="register.hint.email"
+                   value="${param.email}"
+                   error="${errorMap.email}"/>
+    <my:form-input type="text"
+                   name="nickname"
+                   labelKey="register.hint.nickname"
+                   value="${param.nickname}"
+                   error="${errorMap.nickname}"/>
+    <my:form-input type="password"
+                   name="password"
+                   labelKey="register.hint.password"
+                   error="${errorMap.password}"/>
+    <my:form-input type="password"
+                   name="confirmPassword"
+                   labelKey="register.hint.confirm-password"
+                   error="${errorMap.confirmPassword}"/>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-success"><fmt:message key="register"/></button>
+        </div>
+    </div>
 </form>
-    <%--<fmt:message key="${login.error.email}"/><br><br>--%>
-<c:forEach var="error" items="${errorList}">
-    <c:out value="${error}"/><br>
-</c:forEach>
 </my:base>

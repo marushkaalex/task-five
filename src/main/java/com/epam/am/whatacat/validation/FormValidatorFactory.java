@@ -20,8 +20,9 @@ public class FormValidatorFactory {
         validatorMap.put(
                 "register",
                 new FormValidator()
-                        // TODO: 03.09.2016 use proper validator
-                        .addFieldValidator("nickname", new LengthFieldValidator("register.error.nickname", 6, 255))
+                        .addFieldValidator("email", new NonEmptyFieldValidator("register.error.email"))
+                        .addFieldValidator("password", new LengthFieldValidator("register.error.password.length", 4, 30))
+                        .addFieldValidator("nickname", new LengthFieldValidator("register.error.nickname.length", 4, 255))
         );
 
         validatorMap.put(
