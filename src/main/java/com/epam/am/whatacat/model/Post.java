@@ -111,16 +111,24 @@ public class Post extends BaseModel {
     }
 
     public enum Status {
-        ON_MODERATION(1), ALLOWED(2), DENIED(3);
+        ON_MODERATION(1, "post.status.on-moderation"),
+        ALLOWED(2, "post.status.allowed"),
+        DENIED(3, "post.status.denied");
 
         private final int id;
+        private String titleKey;
 
-        Status(int id) {
+        Status(int id, String titleKey) {
             this.id = id;
+            this.titleKey = titleKey;
         }
 
         public int getId() {
             return id;
+        }
+
+        public String getTitleKey() {
+            return titleKey;
         }
 
         public static Status of(int id) {

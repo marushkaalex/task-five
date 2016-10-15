@@ -48,6 +48,11 @@ public class SaveUserProfileAction implements Action {
             }
 
             if (errorMap.isEmpty()) {
+                user.setEmail(email);
+                user.setNickname(nickname);
+                user.setGender(gender);
+                userService.save(user);
+
                 errorMap.put("success", "profile.save.success");
             }
 

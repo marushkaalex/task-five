@@ -72,7 +72,7 @@ public class ShowUserAction implements Action {
                     .addColumn(post.getTitle(), "/post?id=" + post.getId());
 
             if (showStatus) {
-                row.addColumn(getStatusKey(post.getStatus()), true, null);
+                row.addColumn(post.getStatus().getTitleKey(), true, null);
             }
 
             rowList.add(row);
@@ -83,18 +83,5 @@ public class ShowUserAction implements Action {
         adminTable.setPageCount(Double.valueOf(Math.floor(count / POSTS_PER_PAGE)).intValue());
 
         return adminTable;
-    }
-
-    private String getStatusKey(Post.Status status) {
-        switch (status) {
-            case ON_MODERATION:
-                return "post.status.on-moderation";
-            case ALLOWED:
-                return "post.status.allowed";
-            case DENIED:
-                return "post.status.denied";
-            default:
-                throw new IllegalArgumentException();
-        }
     }
 }
