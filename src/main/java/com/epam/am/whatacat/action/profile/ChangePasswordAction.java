@@ -1,4 +1,4 @@
-package com.epam.am.whatacat.action.post;
+package com.epam.am.whatacat.action.profile;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;

@@ -1,4 +1,4 @@
-package com.epam.am.whatacat.action.get;
+package com.epam.am.whatacat.action.base;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
@@ -23,7 +23,7 @@ public class IndexAction extends ShowPageAction {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        try (PostService postService = new PostService()){
+        try (PostService postService = new PostService()) {
             String page = request.getParameter("page");
             int pageNumber = page == null || page.isEmpty() ? 1 : Integer.parseInt(page);
 
@@ -34,7 +34,7 @@ public class IndexAction extends ShowPageAction {
                     user == null ? null : user.getId(),
                     POSTS_PER_PAGE,
                     POSTS_PER_PAGE * pageNumber - POSTS_PER_PAGE
-                    );
+            );
 
             postList.forEach(post -> post.setContent(trim(post.getContent())));
             PaginatedList<Post> paginatedList = new PaginatedArrayList<>(postList);

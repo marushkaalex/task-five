@@ -2,19 +2,18 @@ package com.epam.am.whatacat.action;
 
 import com.epam.am.whatacat.action.admin.ShowEditUserAction;
 import com.epam.am.whatacat.action.admin.UserListAction;
+import com.epam.am.whatacat.action.auth.LoginAction;
+import com.epam.am.whatacat.action.auth.RegisterAction;
 import com.epam.am.whatacat.action.auth.ShowLoginAction;
+import com.epam.am.whatacat.action.base.IndexAction;
+import com.epam.am.whatacat.action.base.LogoutAction;
 import com.epam.am.whatacat.action.comment.SendCommentAction;
-import com.epam.am.whatacat.action.get.IndexAction;
-import com.epam.am.whatacat.action.get.LogoutAction;
-import com.epam.am.whatacat.action.get.ShowPageAction;
-import com.epam.am.whatacat.action.get.ShowPostAction;
+import com.epam.am.whatacat.action.base.ShowPageAction;
+import com.epam.am.whatacat.action.post.ShowPostAction;
 import com.epam.am.whatacat.action.moderator.ModeratePostAction;
 import com.epam.am.whatacat.action.moderator.ShowPostsToModerateAction;
 import com.epam.am.whatacat.action.post.*;
-import com.epam.am.whatacat.action.profile.SaveUserProfileAction;
-import com.epam.am.whatacat.action.profile.SetLocaleAction;
-import com.epam.am.whatacat.action.profile.ShowProfileAction;
-import com.epam.am.whatacat.action.profile.ShowUserAction;
+import com.epam.am.whatacat.action.profile.*;
 
 import java.util.HashMap;
 import java.util.Map;

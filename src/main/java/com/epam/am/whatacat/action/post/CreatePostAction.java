@@ -30,7 +30,7 @@ public class CreatePostAction implements Action {
         String content = request.getParameter("content");
 
         try (PostService postService = new PostService()) {
-            // TODO: 05.09.2016 get type
+            // TODO: 05.09.2016 base type
             User user = (User) request.getSession().getAttribute("user");
             Post post = postService.createPost(Post.TYPE_TEXT, title, content, user.getId());
             return new ActionResult("post?id=" + post.getId(), true);

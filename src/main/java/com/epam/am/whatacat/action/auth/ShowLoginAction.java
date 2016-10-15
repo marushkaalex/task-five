@@ -2,7 +2,7 @@ package com.epam.am.whatacat.action.auth;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
-import com.epam.am.whatacat.action.get.ShowPageAction;
+import com.epam.am.whatacat.action.base.ShowPageAction;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

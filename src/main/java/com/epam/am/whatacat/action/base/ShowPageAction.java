@@ -1,4 +1,4 @@
-package com.epam.am.whatacat.action.get;
+package com.epam.am.whatacat.action.base;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
