@@ -104,4 +104,13 @@ public class UserService extends BaseService {
             throw new ServiceException(e);
         }
     }
+
+    public void delete(long id) throws ServiceException {
+        try {
+            UserDao userDao = daoFactory.getUserDao();
+            userDao.delete(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

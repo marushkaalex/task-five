@@ -68,6 +68,7 @@ public class ForwardFilter implements Filter {
         availabilityMap.put("/rate-post", RightContainer.authorized());
         availabilityMap.put("/send-comment", RightContainer.authorized());
         availabilityMap.put("/moderator/moderate", RightContainer.of(ADMIN, MODERATOR));
+        availabilityMap.put("/admin/delete-user", RightContainer.of(ADMIN));
     }
 
     private boolean isUrlAllowed(User user, String url) {

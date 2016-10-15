@@ -5,7 +5,7 @@ import java.util.List;
 public interface BaseDao<T> {
     T save(T model) throws DaoException;
 
-    void delete(T model) throws DaoException;
+    void delete(long id) throws DaoException;
 
     T findById(Long id) throws DaoException;
 

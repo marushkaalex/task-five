@@ -124,8 +124,15 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
     }
 
     @Override
-    public void delete(T model) throws DaoException {
-        throw new UnsupportedOperationException();
+    public void delete(long id) throws DaoException {
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("DELETE FROM " + getTableName(true) + " WHERE id=?");
+            preparedStatement.setLong(1, id);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override
