@@ -31,31 +31,30 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <c:if test="${sessionScope.user.role == 'ADMIN'}">
-                    <li><a href="/admin"><fmt:message key="base.admin"/><span class="sr-only">(current)</span></a></li>
+                    <li><a href="<c:url value="/admin"/>"><fmt:message key="base.admin"/><span
+                            class="sr-only">(current)</span></a></li>
                 </c:if>
                 <c:if test="${sessionScope.user.role == 'ADMIN' || sessionScope.user.role == 'MODERATOR'}">
-                    <li><a href="/moderator"><fmt:message key="base.moderator"/><span class="sr-only">(current)</span></a></li>
+                    <li><a href="<c:url value="/moderator"/>"><fmt:message key="base.moderator"/><span class="sr-only">(current)</span></a>
+                    </li>
                 </c:if>
-                <li>
-                    <form method="post" action="/set-locale">
-                        <input type="hidden" value="en" name="locale"/>
-                        <button type="submit">En</button>
-                    </form>
-                </li>
-                <li>
-                    <form method="post" action="/set-locale">
-                        <input type="hidden" value="ru" name="locale"/>
-                        <button type="submit">Ru</button>
-                    </form>
-                </li>
+                <form method="post" action="<c:url value="/set-locale"/>" id="locale-form"></form>
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-default" form="locale-form" value="en" name="locale" type="submit">
+                        <fmt:message
+                                key="base.lang.en"/></button>
+                    <button class="btn btn-xs btn-primary" form="locale-form" value="ru" name="locale" type="submit">
+                        <fmt:message
+                                key="base.lang.ru"/></button>
+                </div>
             </ul>
             <div class="navbar-form navbar-right">
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
-                        <a href="/create-post">
+                        <a href="<c:url value="/create-post"/>">
                             <button class="btn btn-success"><fmt:message key="base.create-post"/></button>
                         </a>
-                        <a href="/logout">
+                        <a href="<c:url value="/logout"/>">
                             <button class="btn btn-success"><fmt:message key="base.log-out"/></button>
                         </a>
                     </c:when>
@@ -78,7 +77,7 @@
     </div>
 </nav>
 <div class="container">
-            <jsp:doBody/>
+    <jsp:doBody/>
 </div>
 </body>
 </html>
