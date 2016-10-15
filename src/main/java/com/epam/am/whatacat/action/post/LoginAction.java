@@ -20,8 +20,8 @@ public class LoginAction implements Action {
         FormValidator validator = FormValidatorFactory.getInstance().getValidator("login");
         Map<String, String> errorMap = validator.validate(request.getParameterMap());
         if (!errorMap.isEmpty()) {
-            request.setAttribute("errorMap", errorMap);
-            return new ActionResult("login");
+            request.getSession().setAttribute("errorMap", errorMap);
+            return new ActionResult("login", true);
         }
 
         String email = request.getParameter("email");

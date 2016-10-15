@@ -71,8 +71,8 @@ public class UserListAction implements Action {
                     .addColumn(String.valueOf(item.getId()))
                     .addColumn(item.getEmail())
                     .addColumn(item.getNickname())
-                    .addColumn(item.getRole().name())
-                    .addColumn(item.getGender().name())
+                    .addColumn(item.getRole().getTitleKey(), true)
+                    .addColumn(item.getGender().getTitleKey(), true)
                     .addColumn(String.valueOf(item.getRating()))
                     .addColumn(formattedDate)
                     .addColumn("admin.edit", true, "admin/edit-user?id=" + item.getId());

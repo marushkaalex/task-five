@@ -31,24 +31,16 @@
 
     <form method="post" action="/profile/save" class="form-horizontal">
         <input type="hidden" name="id" value="${user.id}"/>
-        <div class="form-group">
-            <label class="control-label col-xs-2" for="nickname">
-                <fmt:message key="admin.users.header.nickname"/>
-            </label>
-            <div class="col-xs-7">
-                <input type="text" class="form-control" value="${user.nickname}" name="nickname" id="nickname"/>
-            </div>
-            <div class="col-xs-3"><my:print key="${errorMap.nickname}"/></div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-xs-2" for="email">
-                <fmt:message key="admin.users.header.email"/>
-            </label>
-            <div class="col-xs-7">
-                <input type="text" class="form-control" value="${user.email}" name="email" id="email"/>
-            </div>
-            <div class="col-xs-3"><my:print key="${errorMap.email}"/></div>
-        </div>
+        <my:form-input type="text"
+                       name="nickname"
+                       labelKey="admin.users.header.nickname"
+                       value="${sessionScope.user.nickname}"
+                       error="${sessionScope.errorMap.nickname}"/>
+        <my:form-input type="email"
+                       name="email"
+                       labelKey="admin.users.header.email"
+                       value="${sessionScope.user.email}"
+                       error="${sessionScope.errorMap.email}"/>
         <div class="form-group">
             <label class="control-label col-xs-2" for="gender">
                 <fmt:message key="admin.users.header.gender"/>
@@ -73,37 +65,22 @@
     <br>
     <br>
     <form method="post" class="form-horizontal">
-        <div class="form-group">
-            <label class="control-label col-xs-2" for="oldPassword">
-                <fmt:message key="profile.hint.old-password"/>
-            </label>
-            <div class="col-xs-7">
-                <input type="password" class="form-control" name="oldPassword" id="oldPassword"/>
-            </div>
-            <div class="col-xs-3"><my:print key="${errorMap.oldPassword}"/></div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-xs-2" for="newPassword">
-                <fmt:message key="profile.hint.new-password"/>
-            </label>
-            <div class="col-xs-7">
-                <input type="password" class="form-control" name="newPassword" id="newPassword"/>
-            </div>
-            <div class="col-xs-3"><my:print key="${errorMap.newPassword}"/></div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-xs-2" for="retypeNewPassword">
-                <fmt:message key="profile.hint.retype-new-password"/>
-            </label>
-            <div class="col-xs-7">
-                <input type="password" class="form-control" name="retypeNewPassword" id="retypeNewPassword"/>
-            </div>
-            <div class="col-xs-3"><my:print key="${errorMap.retypeNewPassword}"/></div>
-        </div>
+        <my:form-input type="password"
+                       name="oldPassword"
+                       labelKey="profile.hint.old-password"
+                       error="${sessionScope.errorMap.oldPassword}"/>
+        <my:form-input type="password"
+                       name="newPassword"
+                       labelKey="profile.hint.new-password"
+                       error="${sessionScope.errorMap.newPassword}"/>
+        <my:form-input type="password"
+                       name="retypeNewPassword"
+                       labelKey="profile.hint.retype-new-password"
+                       error="${sessionScope.errorMap.retypeNewPassword}"/>
         <div class="form-group">
             <div class="col-xs-offset-2 col-xs-10">
                 <button type="submit" class="btn btn-success"><fmt:message key="profile.change-password"/></button>
-                <my:print key="${errorMap.successPassword}"/>
+                <my:print key="${sessionScope.errorMap.successPassword}"/>
             </div>
         </div>
     </form>

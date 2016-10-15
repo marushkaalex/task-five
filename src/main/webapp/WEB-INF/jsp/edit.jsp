@@ -12,38 +12,32 @@
     <h3 class="text-center"><fmt:message key="admin.users.edit-user"/></h3>
     <form method="post" action="admin/edit/user" class="form-horizontal">
         <input type="hidden" name="id" value="${user.id}"/>
-        <div class="form-group">
-            <label class="control-label col-xs-2" for="nickname">
-                <fmt:message key="admin.users.header.nickname"/>
-            </label>
-            <div class="col-xs-10">
-                <input type="text" class="form-control" value="${user.nickname}" name="nickname" id="nickname"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-xs-2" for="email">
-                <fmt:message key="admin.users.header.email"/>
-            </label>
-            <div class="col-xs-10">
-                <input type="text" class="form-control" value="${user.email}" name="email" id="email"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-xs-2" for="nickname">
-                <fmt:message key="admin.users.header.rating"/>
-            </label>
-            <div class="col-xs-10">
-                <input type="number" class="form-control" value="${user.rating}" name="rating" id="rating"/>
-            </div>
-        </div>
+        <my:form-input
+                type="text"
+                name="nickname"
+                labelKey="admin.users.header.nickname"
+                value="${user.nickname}"
+                error="${sessionScope.errorMap.nickname}" />
+        <my:form-input
+                type="email"
+                name="email"
+                labelKey="admin.users.header.email"
+                value="${user.email}"
+                error="${sessionScope.errorMap.email}" />
+        <my:form-input
+                type="number"
+                name="rating"
+                labelKey="admin.users.header.rating"
+                value="${user.rating}"
+                error="${sessionScope.errorMap.rating}" />
         <div class="form-group">
             <label class="control-label col-xs-2" for="role">
                 <fmt:message key="admin.users.header.gender"/>
             </label>
-            <div class="col-xs-10">
+            <div class="col-xs-7">
                 <select class="form-control" id="gender" name="gender">
                     <c:forEach items="${genders}" var="gender">
-                        <option <c:if test="${gender == user.gender}">selected</c:if> >${gender}</option>
+                        <option <c:if test="${gender == user.gender}">selected</c:if> ><fmt:message key="${gender.titleKey}"/></option>
                     </c:forEach>
                 </select>
             </div>
@@ -52,10 +46,10 @@
             <label class="control-label col-xs-2" for="role">
                 <fmt:message key="admin.users.header.role"/>
             </label>
-            <div class="col-xs-10">
+            <div class="col-xs-7">
                 <select class="form-control" id="role" name="role">
                     <c:forEach items="${roles}" var="role">
-                        <option <c:if test="${role == user.role}">selected</c:if> >${role}</option>
+                        <option <c:if test="${role == user.role}">selected</c:if> ><fmt:message key="${role.titleKey}"/></option>
                     </c:forEach>
                 </select>
             </div>
