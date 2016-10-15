@@ -38,16 +38,16 @@
                     <li><a href="<c:url value="/moderator"/>"><fmt:message key="base.moderator"/><span class="sr-only">(current)</span></a>
                     </li>
                 </c:if>
-                <form method="post" action="<c:url value="/set-locale"/>" id="locale-form"></form>
-                <div class="btn-group">
-                    <button class="btn btn-xs btn-default" form="locale-form" value="en" name="locale" type="submit">
-                        <fmt:message
-                                key="base.lang.en"/></button>
-                    <button class="btn btn-xs btn-primary" form="locale-form" value="ru" name="locale" type="submit">
-                        <fmt:message
-                                key="base.lang.ru"/></button>
-                </div>
+
             </ul>
+            <form class="navbar-form btn-group" method="post" action="<c:url value="/set-locale"/>" id="locale-form">
+                <button class="btn btn-xs btn-default" form="locale-form" value="en" name="locale" type="submit">
+                    <fmt:message
+                            key="base.lang.en"/></button>
+                <button class="btn btn-xs btn-primary" form="locale-form" value="ru" name="locale" type="submit">
+                    <fmt:message
+                            key="base.lang.ru"/></button>
+            </form>
             <div class="navbar-form navbar-right">
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
