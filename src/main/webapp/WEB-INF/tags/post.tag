@@ -10,7 +10,6 @@
 <c:if test="${post.status != 'ALLOWED'}">
     <c:set var="statusKey" value="${post.status.titleKey}"/>
 </c:if>
-${post}
 <div class="panel panel-primary">
     <div class="panel-heading post-heading">
         <c:if test="${sessionScope.user != null && post.status == 'ALLOWED'}">

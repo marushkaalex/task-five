@@ -29,7 +29,7 @@ public class ShowEditUserAction extends ErrorHandlingAction {
             request.setAttribute("roles", Role.values());
             request.setAttribute("genders", Gender.values());
 
-            return new ActionResult("edit");
+            return new ActionResult("edit-user");
         } catch (ServiceException e) {
             throw new ActionException(e);
         }
