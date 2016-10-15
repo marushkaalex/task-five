@@ -12,15 +12,16 @@ import com.epam.am.whatacat.validation.FormValidatorFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 public class ChangePasswordAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         FormValidator validator = FormValidatorFactory.getInstance().getValidator("change-password");
-        List<String> errorList = validator.validate(request.getParameterMap());
-        if (!errorList.isEmpty()) {
+        Map<String, String> errorMap = validator.validate(request.getParameterMap());
+        if (!errorMap.isEmpty()) {
             // TODO: 21.09.2016 show on page
-            request.setAttribute("errorList", errorList);
+            request.setAttribute("errorMap", errorMap);
             return new ActionResult("profile");
         }
 
@@ -31,16 +32,16 @@ public class ChangePasswordAction implements Action {
             String oldHashedPassword = userService.hashPassword(oldPassword);
             User user = (User) request.getSession().getAttribute("user");
             if (!oldHashedPassword.equals(user.getHashedPassword())) {
-                errorList.add("profile.error.old-password.wrong");
-                request.setAttribute("errorList", errorList);
+                errorMap.put("old", "profile.error.old-password.wrong");
+                request.setAttribute("errorMap", errorMap);
                 return new ActionResult("profile");
             }
 
             String newHashedPassword = userService.hashPassword(newPassword);
             user.setHashedPassword(newHashedPassword);
             userService.save(user);
-            errorList.add("profile.password.change-success");
-            request.setAttribute("errorList", errorList);
+            errorMap.put("success", "profile.password.change-success");
+            request.setAttribute("errorMap", errorMap);
             return new ActionResult("profile");
         } catch (ServiceException e) {
             throw new ActionException(e);

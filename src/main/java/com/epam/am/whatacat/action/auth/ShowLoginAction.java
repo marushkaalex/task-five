@@ -17,14 +17,6 @@ public class ShowLoginAction extends ShowPageAction {
         if (request.getSession().getAttribute("user") != null) {
             return new ActionResult("/", true);
         }
-
-        String referer = request.getHeader("Referer");
-        if (referer != null) {
-            String[] split = referer.split("/");
-            if (split.length > 3) { // 'http' '' 'localhost'
-                request.setAttribute("fromUrl", split[split.length - 1]); // last segment
-            }
-        }
         return super.execute(request, response);
     }
 }

@@ -21,7 +21,7 @@ public class FormValidatorFactory {
                 "register",
                 new FormValidator()
                         // TODO: 03.09.2016 use proper validator
-                        .addFieldValidator("nickname", new NonEmptyFieldValidator("register.error.nickname"))
+                        .addFieldValidator("nickname", new LengthFieldValidator("register.error.nickname", 6, 255))
         );
 
         validatorMap.put(
@@ -44,6 +44,13 @@ public class FormValidatorFactory {
                 new FormValidator()
                         .addFieldValidator("text", new NonEmptyFieldValidator("comment.error.empty"))
                         .addFieldValidator("text", new LengthFieldValidator("comment.error.length", 1, 1000))
+        );
+
+        validatorMap.put(
+                "save-user",
+                new FormValidator()
+                        .addFieldValidator("nickname", new LengthFieldValidator("profile.error.nickname.length", 6, 255))
+                        .addFieldValidator("email", new NonEmptyFieldValidator("profile.error.email"))
         );
     }
 

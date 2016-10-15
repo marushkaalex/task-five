@@ -21,8 +21,8 @@ public class FormValidator {
         return this;
     }
 
-    public List<String> validate(Map<String, String[]> form) {
-        List<String> res = new ArrayList<>();
+    public Map<String, String> validate(Map<String, String[]> form) {
+        Map<String, String> res = new HashMap<>();
         for (Map.Entry<String, String[]> entry : form.entrySet()) {
             String fieldName = entry.getKey();
             String fieldValue = entry.getValue()[0];
@@ -30,7 +30,7 @@ public class FormValidator {
             if (validator == null) continue; // we don't need to validate this field
             String errorMessageKey = validator.validate(fieldValue);
             if (errorMessageKey != null) {
-                res.add(errorMessageKey);
+                res.put(fieldName, errorMessageKey);
             }
         }
 

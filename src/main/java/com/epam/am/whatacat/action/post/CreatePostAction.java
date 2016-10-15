@@ -13,15 +13,16 @@ import com.epam.am.whatacat.validation.FormValidatorFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 public class CreatePostAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         // TODO: 05.09.2016 post validation
         FormValidator validator = FormValidatorFactory.getInstance().getValidator("post");
-        List<String> errorList = validator.validate(request.getParameterMap());
-        if (!errorList.isEmpty()) {
-            request.setAttribute("errorList", errorList);
+        Map<String, String> errorMap = validator.validate(request.getParameterMap());
+        if (!errorMap.isEmpty()) {
+            request.setAttribute("errorMap", errorMap);
             return new ActionResult("create-post");
         }
 

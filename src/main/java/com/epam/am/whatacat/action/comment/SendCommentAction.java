@@ -15,14 +15,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class SendCommentAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         FormValidator validator = FormValidatorFactory.getInstance().getValidator("send-comment");
-        List<String> errorList = validator.validate(request.getParameterMap());
-        if (!errorList.isEmpty()) {
-            request.getSession().setAttribute("errorList", errorList);
+        Map<String, String> errorMap = validator.validate(request.getParameterMap());
+        if (!errorMap.isEmpty()) {
+            request.getSession().setAttribute("errorMap", errorMap);
             return new ActionResult("post?id=" + request.getParameter("post_id"), true);
         }
 

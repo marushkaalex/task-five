@@ -12,14 +12,15 @@ import com.epam.am.whatacat.validation.FormValidatorFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 public class LoginAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         FormValidator validator = FormValidatorFactory.getInstance().getValidator("login");
-        List<String> errorList = validator.validate(request.getParameterMap());
-        if (!errorList.isEmpty()) {
-            request.setAttribute("errorList", errorList);
+        Map<String, String> errorMap = validator.validate(request.getParameterMap());
+        if (!errorMap.isEmpty()) {
+            request.setAttribute("errorMap", errorMap);
             return new ActionResult("login");
         }
 
@@ -29,8 +30,8 @@ public class LoginAction implements Action {
         try (UserService userService = new UserService()) {
             User user = userService.logIn(email, password);
             if (user == null) {
-                errorList.add("login.error.user-not-found");
-                request.setAttribute("errorList", errorList);
+                errorMap.put("error", "login.error.user-not-found");
+                request.setAttribute("errorList", errorMap);
                 return new ActionResult("login");
             } else {
                 request.getSession().setAttribute("user", user);

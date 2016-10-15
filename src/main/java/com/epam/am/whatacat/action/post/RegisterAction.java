@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class RegisterAction implements Action {
     private static final Logger log = LoggerFactory.getLogger(RegisterAction.class);
@@ -24,26 +25,26 @@ public class RegisterAction implements Action {
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         FormValidator validator = FormValidatorFactory.getInstance().getValidator("register");
-        List<String> errorList = validator.validate(request.getParameterMap());
-        if (!errorList.isEmpty()) {
-            request.setAttribute("errorList", errorList);
+        Map<String, String> errorMap = validator.validate(request.getParameterMap());
+        if (!errorMap.isEmpty()) {
+            request.setAttribute("errorMap", errorMap);
             return new ActionResult("register");
         }
 
         try (UserService userService = new UserService()) {
             String email = request.getParameter("email");
             if (!userService.isEmailFree(email)) {
-                errorList.add("register.error.email-already-in-use");
+                errorMap.put("email", "register.error.email-already-in-use");
             }
 
             String nickname = request.getParameter("nickname");
             if (!userService.isNicknameFree(nickname)) {
-                errorList.add("register.error.nickname-already-in-use");
+                errorMap.put("nickname", "register.error.nickname-already-in-use");
             }
             String password = request.getParameter("password");
 
-            if (!errorList.isEmpty()) {
-                request.setAttribute("errorList", errorList);
+            if (!errorMap.isEmpty()) {
+                request.setAttribute("errorMap", errorMap);
                 return new ActionResult("register");
             }
 

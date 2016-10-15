@@ -1,15 +1,24 @@
 package com.epam.am.whatacat.model;
 
 public enum Gender {
-    MALE('m'), FEMALE('f'), UNDEFINED('u');
-    private char key;
+    MALE('m', "gender.male"),
+    FEMALE('f', "gender.female"),
+    UNDEFINED('u', "gender.undefined");
 
-    Gender(char key) {
+    private char key;
+    private String titleKey;
+
+    Gender(char key, String titleKey) {
         this.key = key;
+        this.titleKey = titleKey;
     }
 
     public char getKey() {
         return key;
+    }
+
+    public String getTitleKey() {
+        return titleKey;
     }
 
     public static Gender of(char key) {

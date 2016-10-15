@@ -10,10 +10,10 @@
     <c:set var="avatar" value="${user.avatarUrl}" />
     <c:choose>
         <c:when test="${avatar == null || avatar == ''}">
-            ${avatar = '/static/noavatar.png'}
+            <c:set var="avatar" value="/static/noavatar.png"/>
         </c:when>
         <c:otherwise>
-            ${avatar = 'image/'.concat(avatar)}
+            <c:set var="avatar" value="${avatar = 'image/'.concat(avatar)}"/>
         </c:otherwise>
     </c:choose>
     <p><img src="${avatar}" width="100" height="100"/></p>

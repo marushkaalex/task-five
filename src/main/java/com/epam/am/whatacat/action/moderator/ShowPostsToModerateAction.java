@@ -49,7 +49,7 @@ public class ShowPostsToModerateAction implements Action {
                         .addColumn(cutString(post.getTitle()))
                         .addColumn(cutString(post.getAuthor().getNickname()))
                         .addColumn(formattedDate)
-                        .addColumn("M", "/post?id=" + post.getId());
+                        .addColumn("admin.posts.header.moderate", true, "/post?id=" + post.getId());
                 rowList.add(row);
             }
 

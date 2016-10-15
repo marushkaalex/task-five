@@ -11,7 +11,9 @@ import com.epam.am.whatacat.action.get.ShowPostAction;
 import com.epam.am.whatacat.action.moderator.ModeratePostAction;
 import com.epam.am.whatacat.action.moderator.ShowPostsToModerateAction;
 import com.epam.am.whatacat.action.post.*;
+import com.epam.am.whatacat.action.profile.SaveUserProfileAction;
 import com.epam.am.whatacat.action.profile.SetLocaleAction;
+import com.epam.am.whatacat.action.profile.ShowProfileAction;
 import com.epam.am.whatacat.action.profile.ShowUserAction;
 
 import java.util.HashMap;
@@ -34,7 +36,7 @@ public class ActionFactory {
         actionMap.put("POST/create-post", new CreatePostAction());
         actionMap.put("POST/rate-post", new RatePostAction());
         actionMap.put("GET/post", new ShowPostAction());
-        actionMap.put("GET/profile", new ShowPageAction("profile"));
+        actionMap.put("GET/profile", new ShowProfileAction());
         actionMap.put("POST/profile", new ChangePasswordAction());
         actionMap.put("POST/set-locale", new SetLocaleAction());
         actionMap.put("GET/user", new ShowUserAction());
@@ -43,6 +45,7 @@ public class ActionFactory {
         actionMap.put("GET/admin/edit-user", new ShowEditUserAction());
         actionMap.put("GET/moderator", new ShowPostsToModerateAction());
         actionMap.put("POST/moderator/moderate", new ModeratePostAction());
+        actionMap.put("POST/profile/save", new SaveUserProfileAction());
     }
 
     public Action getAction(String actionName) {
