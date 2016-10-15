@@ -14,6 +14,10 @@ public class ShowLoginAction extends ShowPageAction {
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
+        if (request.getSession().getAttribute("user") != null) {
+            return new ActionResult("/", true);
+        }
+
         String referer = request.getHeader("Referer");
         if (referer != null) {
             String[] split = referer.split("/");

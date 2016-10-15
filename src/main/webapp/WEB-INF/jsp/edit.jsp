@@ -9,12 +9,49 @@
     <c:forEach var="error" items="${errorList}">
         <fmt:message key="${error}"/>
     </c:forEach>
-    <form method="post" action="admin/edit/user">
-        <input type="hidden" name="id" value="${user.id}" />
-        <input type="text" name="nickname" value="${user.nickname}" /><br>
-        <input type="email" name="email" value="${user.email}" /><br>
-        <input type="number" name="rating" value="${user.rating}" /><br>
-        <input type="text" name="avatarUrl" value="${user.avatarUrl}" /><br>
-        <input type="datetime" name="date" value="<fmt:formatDate value="${user.registrationDate}"/>"/>
+    <h3 class="text-center"><fmt:message key="admin.users.edit-user"/></h3>
+    <form method="post" action="admin/edit/user" class="form-horizontal">
+        <input type="hidden" name="id" value="${user.id}"/>
+        <div class="form-group">
+            <label class="control-label col-xs-2" for="nickname">
+                <fmt:message key="admin.users.header.nickname"/>
+            </label>
+            <div class="col-xs-10">
+                <input type="text" class="form-control" value="${user.nickname}" name="nickname" id="nickname"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-2" for="email">
+                <fmt:message key="admin.users.header.email"/>
+            </label>
+            <div class="col-xs-10">
+                <input type="text" class="form-control" value="${user.email}" name="email" id="email"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-2" for="nickname">
+                <fmt:message key="admin.users.header.rating"/>
+            </label>
+            <div class="col-xs-10">
+                <input type="number" class="form-control" value="${user.rating}" name="rating" id="rating"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-2" for="role">
+                <fmt:message key="admin.users.header.role"/>
+            </label>
+            <div class="col-xs-10">
+                <select class="form-control" id="role" name="role">
+                    <c:forEach items="${roles}" var="role">
+                        <option <c:if test="${role == user.role}">selected</c:if> >${role}</option>
+                    </c:forEach>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success"><fmt:message key="admin.save"/></button>
+            </div>
+        </div>
     </form>
 </my:base>

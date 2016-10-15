@@ -9,30 +9,5 @@
     <c:forEach var="error" items="${errorList}">
         <fmt:message key="${error}"/>
     </c:forEach>
-    <h1><fmt:message key="${table.title}"/></h1>
-    <table class="table table-striped">
-        <tr>
-            <c:forEach var="column" items="${table.headers.columns}">
-                <td><b><fmt:message key="${column.text}"/></b></td>
-            </c:forEach>
-        </tr>
-        <c:forEach var="row" items="${table.rows}">
-            <tr>
-                <c:forEach var="column" items="${row.columns}">
-                    <td>
-                        <c:if test="${column.url != null}">
-                            <a href="${column.url}">
-                        </c:if>
-                        <c:out value="${column.text}"/>
-                        <c:if test="${column.url != null}">
-                            </a>
-                        </c:if>
-                    </td>
-                </c:forEach>
-            </tr>
-        </c:forEach>
-    </table>
-    <c:forEach var="item" items="${items}">
-        <c:out value="${item}"/><br>
-    </c:forEach>
+    <my:table table="${table}" paginationUrl="/admin?type=user&" />
 </my:base>
