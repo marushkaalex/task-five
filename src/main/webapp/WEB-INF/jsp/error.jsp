@@ -5,5 +5,5 @@
 <my:base>
     <fmt:setBundle basename="i18n"/>
     <h1>Error</h1>
-    <img src="static/${pageContext.errorData.statusCode}.jpg"/>
+    <img src="/static/${pageContext.errorData.statusCode}.jpg"/>
 </my:base>

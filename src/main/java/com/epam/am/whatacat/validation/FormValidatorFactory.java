@@ -52,6 +52,13 @@ public class FormValidatorFactory {
                         .addFieldValidator("nickname", new LengthFieldValidator("profile.error.nickname.length", 4, 255))
                         .addFieldValidator("email", new NonEmptyFieldValidator("profile.error.email"))
         );
+
+        validatorMap.put(
+                "edit-user",
+                new FormValidator()
+                        .addFieldValidator("nickname", new LengthFieldValidator("profile.error.nickname.length", 4, 255))
+                        .addFieldValidator("email", new NonEmptyFieldValidator("profile.error.email"))
+        );
     }
 
     public static void init() {

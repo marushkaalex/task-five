@@ -1,5 +1,6 @@
 package com.epam.am.whatacat.action;
 
+import com.epam.am.whatacat.action.admin.EditUserAction;
 import com.epam.am.whatacat.action.admin.ShowEditUserAction;
 import com.epam.am.whatacat.action.admin.UserListAction;
 import com.epam.am.whatacat.action.auth.LoginAction;
@@ -45,6 +46,7 @@ public class ActionFactory {
         actionMap.put("GET/moderator", new ShowPostsToModerateAction());
         actionMap.put("POST/moderator/moderate", new ModeratePostAction());
         actionMap.put("POST/profile/save", new SaveUserProfileAction());
+        actionMap.put("POST/admin/edit-user", new EditUserAction());
     }
 
     public Action getAction(String actionName) {
