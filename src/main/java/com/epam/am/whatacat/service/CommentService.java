@@ -44,4 +44,13 @@ public class CommentService extends BaseService {
             throw new ServiceException(e);
         }
     }
+
+    public void delete(long id) throws ServiceException {
+        try {
+            CommentDao commentDao = daoFactory.getCommentDao();
+            commentDao.delete(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

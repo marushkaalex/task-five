@@ -9,6 +9,7 @@ import com.epam.am.whatacat.action.auth.RegisterAction;
 import com.epam.am.whatacat.action.auth.ShowLoginAction;
 import com.epam.am.whatacat.action.base.IndexAction;
 import com.epam.am.whatacat.action.base.LogoutAction;
+import com.epam.am.whatacat.action.comment.DeleteCommentAction;
 import com.epam.am.whatacat.action.comment.SendCommentAction;
 import com.epam.am.whatacat.action.base.ShowPageAction;
 import com.epam.am.whatacat.action.post.ShowPostAction;
@@ -49,6 +50,7 @@ public class ActionFactory {
         actionMap.put("POST/profile/save", new SaveUserProfileAction());
         actionMap.put("POST/admin/edit-user", new EditUserAction());
         actionMap.put("POST/admin/delete-user", new DeleteUserAction());
+        actionMap.put("POST/moderator/delete-comment", new DeleteCommentAction());
     }
 
     public Action getAction(String actionName) {
