@@ -4,7 +4,16 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <my:base>
     <fmt:setBundle basename="i18n"/>
-    <p><img src="image/${sessionScope.user.avatarUrl}" width="100" height="100"/></p>
+    <c:set var="avatar" value="${sessionScope.user.avatarUrl}" />
+    <c:choose>
+        <c:when test="${avatar == null || avatar == ''}">
+            ${avatar = '/static/noavatar.png'}
+        </c:when>
+        <c:otherwise>
+            ${avatar = 'image/'.concat(avatar)}
+        </c:otherwise>
+    </c:choose>
+    <p><img src="${avatar}" width="100" height="100"/></p>
     <p>${sessionScope.user.nickname}</p>
     <p>${sessionScope.user.email}</p>
     <a href="/user?id=${sessionScope.user.id}"><fmt:message key="profile.my-posts"/></a>
