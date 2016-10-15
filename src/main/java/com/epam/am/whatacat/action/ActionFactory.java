@@ -40,7 +40,7 @@ public class ActionFactory {
         actionMap.put("GET/user", new ShowUserAction());
         actionMap.put("GET/admin", new UserListAction());
         actionMap.put("POST/send-comment", new SendCommentAction());
-        actionMap.put("GET/admin/edit", new ShowEditUserAction());
+        actionMap.put("GET/admin/edit-user", new ShowEditUserAction());
         actionMap.put("GET/moderator", new ShowPostsToModerateAction());
         actionMap.put("POST/moderator/moderate", new ModeratePostAction());
     }

@@ -38,6 +38,18 @@
         </div>
         <div class="form-group">
             <label class="control-label col-xs-2" for="role">
+                <fmt:message key="admin.users.header.gender"/>
+            </label>
+            <div class="col-xs-10">
+                <select class="form-control" id="gender" name="gender">
+                    <c:forEach items="${genders}" var="gender">
+                        <option <c:if test="${gender == user.gender}">selected</c:if> >${gender}</option>
+                    </c:forEach>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-2" for="role">
                 <fmt:message key="admin.users.header.role"/>
             </label>
             <div class="col-xs-10">

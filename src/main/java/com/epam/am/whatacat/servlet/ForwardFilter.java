@@ -1,6 +1,7 @@
 package com.epam.am.whatacat.servlet;
 
 import com.epam.am.whatacat.action.ActionFactory;
+import com.epam.am.whatacat.model.Role;
 import com.epam.am.whatacat.model.User;
 
 import javax.servlet.*;
@@ -9,12 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import static com.epam.am.whatacat.model.Role.*;
 
 @WebFilter(filterName = "ForwardFilter")
 public class ForwardFilter implements Filter {
-    private Set<String> availableUrls = new HashSet<>();
+    private Map<String, RightContainer> availabilityMap = new HashMap<>();
 
     public void destroy() {
     }
@@ -34,8 +36,10 @@ public class ForwardFilter implements Filter {
                 httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
             } else {
                 User user = (User) httpRequest.getSession().getAttribute("user");
-                if (user == null && !availableUrls.contains(requestURI)) {
+                if (user == null && !isUrlAllowed(user, requestURI)) {
                     ((HttpServletResponse) resp).sendRedirect("/login?fromUrl=" + URLEncoder.encode(requestURI, "UTF-8"));
+                } else if (!isUrlAllowed(user, requestURI)) {
+                    httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
                 } else {
                     req.getRequestDispatcher("/do" + requestURI).forward(req, resp);
                 }
@@ -48,12 +52,51 @@ public class ForwardFilter implements Filter {
 
     public void init(FilterConfig config) throws ServletException {
         // TODO: 20.09.2016 load from properties
-        availableUrls.add("/login");
-        availableUrls.add("/");
-        availableUrls.add("/register");
-        availableUrls.add("/post");
-        availableUrls.add("/set-locale");
-        availableUrls.add("/user");
+        availabilityMap.put("/", RightContainer.any());
+        availabilityMap.put("/login", RightContainer.any());
+        availabilityMap.put("/logout", RightContainer.any());
+        availabilityMap.put("/register", RightContainer.any());
+        availabilityMap.put("/post", RightContainer.any());
+        availabilityMap.put("/set-locale", RightContainer.any());
+        availabilityMap.put("/user", RightContainer.any());
+        availabilityMap.put("/admin", RightContainer.of(ADMIN));
+        availabilityMap.put("/admin/edit-user", RightContainer.of(ADMIN));
+        availabilityMap.put("/moderator", RightContainer.of(ADMIN, MODERATOR));
+        availabilityMap.put("/create-post", RightContainer.authorized());
+        availabilityMap.put("/profile", RightContainer.authorized());
     }
 
+    private boolean isUrlAllowed(User user, String url) {
+        RightContainer rightContainer = availabilityMap.get(url);
+        return rightContainer != null && rightContainer.isAllowed(user);
+    }
+
+    private static class RightContainer {
+        public List<Role> roleList;
+        public boolean allowUnauthorized;
+
+        private RightContainer(Role... roles) {
+            this.roleList = Arrays.asList(roles);
+        }
+
+        private RightContainer(boolean allowUnauthorized) {
+            this.allowUnauthorized = allowUnauthorized;
+        }
+
+        public boolean isAllowed(User user) {
+            return allowUnauthorized || (user != null && roleList.contains(user.getRole()));
+        }
+
+        public static RightContainer any() {
+            return new RightContainer(true);
+        }
+
+        public static RightContainer of(Role... roles) {
+            return new RightContainer(roles);
+        }
+
+        public static RightContainer authorized() {
+            return new RightContainer(Role.values());
+        }
+    }
 }

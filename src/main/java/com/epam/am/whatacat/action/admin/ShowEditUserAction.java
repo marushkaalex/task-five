@@ -3,6 +3,7 @@ package com.epam.am.whatacat.action.admin;
 import com.epam.am.whatacat.action.Action;
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
+import com.epam.am.whatacat.model.Gender;
 import com.epam.am.whatacat.model.Role;
 import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.ServiceException;
@@ -22,6 +23,7 @@ public class ShowEditUserAction implements Action {
             User user = userService.findById(id);
             request.setAttribute("user", user);
             request.setAttribute("roles", Role.values());
+            request.setAttribute("genders", Gender.values());
 
             return new ActionResult("edit");
         } catch (ServiceException e) {
