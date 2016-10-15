@@ -1,6 +1,6 @@
-function replyToComment(id, text) {
+function replyToComment(id, author, text) {
     $('#comment-parent-id').attr('value', id);
-    $('#comment-parent-text').text(text);
+    $('#comment-parent-text').text(author + ": " + text);
     $('#comment-parent-clear').show();
 }
 

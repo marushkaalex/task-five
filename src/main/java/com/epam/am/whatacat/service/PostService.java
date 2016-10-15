@@ -108,7 +108,6 @@ public class PostService extends BaseService {
             PostRating postRating = post.getUserPostRating();
             if (postRating == null) {
                 postRating = new PostRating();
-                ;
                 postRating.setUserId(userId);
                 postRating.setPostId(post.getId());
                 postRating.setDate(new Date());

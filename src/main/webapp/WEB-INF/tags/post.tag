@@ -14,7 +14,7 @@ ${post}
 <div class="panel panel-primary">
     <div class="panel-heading post-heading">
         <c:if test="${sessionScope.user != null && post.status == 'ALLOWED'}">
-            <form method="post" action="rate-post" class="post-rate">
+            <form method="post" action="<c:url value="/rate-post"/>" class="post-rate">
                 <input type="hidden" name="id" value="${post.userPostRating.id}">
                 <input type="hidden" name="post_id" value="${post.id}">
                 <input type="hidden" name="delta" value="1">
@@ -23,19 +23,19 @@ ${post}
         </c:if>
         ${post.rating}
         <c:if test="${sessionScope.user != null && post.status == 'ALLOWED'}">
-            <form method="post" action="rate-post" class="post-rate">
+            <form method="post" action="<c:url value="/rate-post"/>" class="post-rate">
                 <input type="hidden" name="id" value="${post.userPostRating.id}">
                 <input type="hidden" name="post_id" value="${post.id}">
                 <input type="hidden" name="delta" value="-1">
                 <button type="submit" class="btn btn-xs ${minus_class}">-</button>
             </form>
         </c:if>
-        <h3><a href="post?id=${post.id}">${post.title}</a>
+        <h3><a href="post?id=${post.id}"><c:out value="${post.title}"/></a>
         </h3>
         <c:if test="${statusKey != null}">
             (<fmt:message key="${statusKey}"/>)
         </c:if>
-        <a href="user?id=${post.author.id}">${post.author.nickname}</a>
+        <a href="user?id=${post.author.id}"><i><c:out value="${post.author.nickname}"/></i></a>
     </div>
     <div class="panel-body">
         ${post.content}

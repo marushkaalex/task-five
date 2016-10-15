@@ -61,7 +61,8 @@ public class ShowUserAction implements Action {
                 POSTS_PER_PAGE,
                 POSTS_PER_PAGE * (page - 1)
         );
-        long count = postService.countUsersPosts(userId, status);
+
+        double count = postService.countUsersPosts(userId, status);
 
         AdminTable adminTable = new AdminTable();
         List<AdminTable.Row> rowList = new ArrayList<>();
@@ -80,7 +81,7 @@ public class ShowUserAction implements Action {
 
         adminTable.setRows(rowList);
         adminTable.setPage(page);
-        adminTable.setPageCount(Double.valueOf(Math.floor(count / POSTS_PER_PAGE)).intValue());
+        adminTable.setPageCount(Double.valueOf(Math.ceil(count / POSTS_PER_PAGE)).intValue());
 
         return adminTable;
     }

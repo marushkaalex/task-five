@@ -5,14 +5,18 @@
 <%@ attribute name="showReply" type="java.lang.Boolean" required="true" %>
 
 <fmt:setBundle basename="i18n"/>
-<div id="comment-${comment.id}" class="panel panel-default">
+<div id="comment-${comment.id}" class="panel panel-default panel-body">
     <c:if test="${comment.parent != null}">
-        <i>${comment.parent.author.nickname}: <a href="#comment-${comment.parent.id}">${comment.parent.text}</a></i><br>
+        <span class="glyphicon glyphicon-chevron-right"></span><i>${comment.parent.author.nickname}:
+            <a class="text" href="#comment-${comment.parent.id}">${comment.parent.text}</a></i><br>
     </c:if>
-    ${comment.author.nickname}<br>
-    ${comment.text}<br>
+    <small><i><a href="<c:url value="/user?id=${comment.author.id}"/>"><c:out
+            value="${comment.author.nickname}"/></a></i></small>
+    <br>
+    <c:out value="${comment.text}"/><br>
     <c:if test="${showReply}">
-        <button type="button" class="btn btn-info btn-xs" onclick="replyToComment(${comment.id}, '${comment.text}')">
+        <button type="button" class="btn btn-info btn-xs"
+                onclick="replyToComment(${comment.id}, '${comment.author.nickname}', '${comment.text}')">
             <fmt:message key="comment.reply"/>
         </button>
     </c:if>

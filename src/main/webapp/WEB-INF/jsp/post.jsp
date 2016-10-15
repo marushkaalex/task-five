@@ -8,17 +8,23 @@
     <my:post post="${post}"/>
     <c:set var="role" value="${sessionScope.user.role}"/>
     <c:if test="${role == 'MODERATOR' || role == 'ADMIN'}">
-        <form method="post" action="/moderator/moderate" id="moderatorForm">
-            <input type="hidden" name="id" value="${post.id}" />
+        <form method="post" action="<c:url value="/moderator/moderate"/>" id="moderatorForm">
+            <input type="hidden" name="id" value="${post.id}"/>
         </form>
+        <b><fmt:message key="post.moderate"/></b>
         <c:if test="${post.status == 'ON_MODERATION' || post.status == 'DENIED'}">
-            <button form="moderatorForm" value="allow" name="decision" type="submit"><fmt:message
-                    key="post.moderate.allow"/></button>
+            <button class="btn btn-success" form="moderatorForm" value="allow" name="decision" type="submit">
+                <fmt:message
+                        key="post.moderate.allow"/></button>
         </c:if>
         <c:if test="${post.status == 'ON_MODERATION' || post.status == 'ALLOWED'}">
-            <button form="moderatorForm" value="deny" name="decision" type="submit"><fmt:message
-                    key="post.moderate.deny"/></button>
+            <button class="btn btn-danger" form="moderatorForm" value="deny" name="decision" type="submit">
+                <fmt:message
+                        key="post.moderate.deny"/></button>
         </c:if>
+
+        <br>
+        <br>
     </c:if>
     <c:forEach items="${comments}" var="comment">
         <my:comment comment="${comment}" showReply="${sessionScope.user != null}"/>
