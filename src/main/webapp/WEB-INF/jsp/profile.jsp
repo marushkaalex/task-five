@@ -56,7 +56,7 @@
             <div class="col-xs-7">
                 <select class="form-control" id="gender" name="gender">
                     <c:forEach items="${genders}" var="gender">
-                        <option name="${gender}"
+                        <option value="${gender}"
                                 <c:if test="${gender == user.gender}">selected</c:if> ><fmt:message
                                 key="${gender.titleKey}"/></option>
                     </c:forEach>

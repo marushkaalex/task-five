@@ -3,7 +3,10 @@ package com.epam.am.whatacat.action.profile;
 import com.epam.am.whatacat.action.Action;
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
+import com.epam.am.whatacat.model.Gender;
 import com.epam.am.whatacat.model.User;
+import com.epam.am.whatacat.service.ServiceException;
+import com.epam.am.whatacat.service.UserService;
 import com.epam.am.whatacat.utils.ParameterUtils;
 import com.epam.am.whatacat.validation.FormValidator;
 import com.epam.am.whatacat.validation.FormValidatorFactory;
@@ -30,11 +33,36 @@ public class SaveUserProfileAction implements Action {
             return new ActionResult("/profile", true);
         }
 
-        // TODO: 15.10.2016 save
-        // TODO: 15.10.2016 role
+        String genderStr = request.getParameter("gender");
+        Gender gender = Gender.valueOf(genderStr);
 
-        errorMap.put("success", "profile.save.success");
-        request.getSession().setAttribute("errorMap", errorMap);
-        return new ActionResult("/profile", true);
+        try (UserService userService = new UserService()) {
+            String nickname = request.getParameter("nickname");
+            if (!checkNickname(userService, user.getNickname(), nickname)) {
+                errorMap.put("nickname", "profile.error.nickname.already-taken");
+            }
+
+            String email = request.getParameter("email");
+            if (!checkEmail(userService, user.getEmail(), email)) {
+                errorMap.put("email", "profile.error.email-already-in-use");
+            }
+
+            if (errorMap.isEmpty()) {
+                errorMap.put("success", "profile.save.success");
+            }
+
+            request.getSession().setAttribute("errorMap", errorMap);
+            return new ActionResult("/profile", true);
+        } catch (ServiceException e) {
+            throw new ActionException(e);
+        }
+    }
+
+    private boolean checkNickname(UserService userService, String userNickname, String nickname) throws ServiceException {
+        return userNickname.equals(nickname) || userService.isNicknameFree(nickname);
+    }
+
+    private boolean checkEmail(UserService userService, String userEmail, String email) throws ServiceException {
+        return userEmail.equals(email) || userService.isEmailFree(email);
     }
 }

@@ -49,7 +49,7 @@ public class FormValidatorFactory {
         validatorMap.put(
                 "save-user",
                 new FormValidator()
-                        .addFieldValidator("nickname", new LengthFieldValidator("profile.error.nickname.length", 6, 255))
+                        .addFieldValidator("nickname", new LengthFieldValidator("profile.error.nickname.length", 4, 255))
                         .addFieldValidator("email", new NonEmptyFieldValidator("profile.error.email"))
         );
     }
