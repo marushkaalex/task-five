@@ -52,8 +52,10 @@ Whatacat
 1. Скачайте и установите среду разработки Intellij IDEA Ultimate (https://www.jetbrains.com/idea/download/download-thanks.html);
 2. При запуске среды разработки выберите Check out from Version Control - Git,  укажите Git Repository URL - https://github.com/marushkaalex/task-five, parent directory - любая папка. нажмите кнопку Clone;
 3. Откройте в панели управления Run\Edit configuration, добавьте Tomcat Server\Local, во вкладке Deployment добавьте task-five: war;
-4. Запустите H2 Database;
-5. В открывшейся вкладке в браузере соединитесь с байзой данных;
-6. В открывшееся окно скопируйте и выполните скрипт script.sql;
-7. В среде разработки откройте файл /src/main/resources/poop.properties и настройте пул соединений под вашу базу данных;
-8. Запустите проект сочетанием клавишь Shift + F10.
+4. Сконфигурируйте папку для загружаемых изображений: в поле VM options запишите -Dupload.location="путь-к-вашей-папке";
+5. Закройте конфигнурацию запуска нажатием на кнопку Ок;
+6. Запустите H2 Database;
+7. В открывшейся вкладке в браузере соединитесь с байзой данных;
+8. В открывшееся окно скопируйте и выполните скрипт script.sql;
+9. В среде разработки откройте файл /src/main/resources/poop.properties и настройте пул соединений под вашу базу данных;
+10. Запустите проект сочетанием клавишь Shift + F10.
