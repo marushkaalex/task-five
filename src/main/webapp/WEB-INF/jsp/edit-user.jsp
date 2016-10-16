@@ -4,11 +4,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setBundle basename="i18n"/>
 <jsp:useBean id="user" scope="request" type="com.epam.am.whatacat.model.User"/>
-<my:base>
 
-    <c:forEach var="error" items="${errorList}">
-        <fmt:message key="${error}"/>
-    </c:forEach>
+<my:base>
     <h3 class="text-center"><fmt:message key="admin.users.edit-user"/></h3>
     <form method="post" action="<c:url value="/admin/edit-user"/>" class="form-horizontal">
         <input type="hidden" name="id" value="${user.id}"/>

@@ -1,9 +1,6 @@
 package com.epam.am.whatacat.action;
 
-import com.epam.am.whatacat.action.admin.DeleteUserAction;
-import com.epam.am.whatacat.action.admin.EditUserAction;
-import com.epam.am.whatacat.action.admin.ShowEditUserAction;
-import com.epam.am.whatacat.action.admin.UserListAction;
+import com.epam.am.whatacat.action.admin.*;
 import com.epam.am.whatacat.action.auth.LoginAction;
 import com.epam.am.whatacat.action.auth.RegisterAction;
 import com.epam.am.whatacat.action.auth.ShowLoginAction;
@@ -42,7 +39,8 @@ public class ActionFactory {
         actionMap.put("POST/profile", new ChangePasswordAction());
         actionMap.put("POST/set-locale", new SetLocaleAction());
         actionMap.put("GET/user", new ShowUserAction());
-        actionMap.put("GET/admin", new UserListAction());
+        actionMap.put("GET/admin/users", new UserListAction());
+        actionMap.put("GET/admin/posts", new PostListAction());
         actionMap.put("POST/send-comment", new SendCommentAction());
         actionMap.put("GET/admin/edit-user", new ShowEditUserAction());
         actionMap.put("GET/moderator", new ShowPostsToModerateAction());
@@ -51,6 +49,7 @@ public class ActionFactory {
         actionMap.put("POST/admin/edit-user", new EditUserAction());
         actionMap.put("POST/admin/delete-user", new DeleteUserAction());
         actionMap.put("POST/moderator/delete-comment", new DeleteCommentAction());
+        actionMap.put("GET/admin/edit-post", new ShowEditPostAction());
     }
 
     public Action getAction(String actionName) {

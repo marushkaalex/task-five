@@ -26,6 +26,7 @@ public class ForwardFilter implements Filter {
             HttpServletRequest httpRequest = (HttpServletRequest) req;
             HttpServletResponse httpResponse = (HttpServletResponse) resp;
             String requestURI = httpRequest.getRequestURI();
+
             if (requestURI.startsWith("/static")
                     || requestURI.startsWith("/webjars")
                     || requestURI.startsWith("/upload")
@@ -59,7 +60,8 @@ public class ForwardFilter implements Filter {
         availabilityMap.put("/post", RightContainer.any());
         availabilityMap.put("/set-locale", RightContainer.any());
         availabilityMap.put("/user", RightContainer.any());
-        availabilityMap.put("/admin", RightContainer.of(ADMIN));
+        availabilityMap.put("/admin/users", RightContainer.of(ADMIN));
+        availabilityMap.put("/admin/posts", RightContainer.of(ADMIN));
         availabilityMap.put("/admin/edit-user", RightContainer.of(ADMIN));
         availabilityMap.put("/moderator", RightContainer.of(ADMIN, MODERATOR));
         availabilityMap.put("/create-post", RightContainer.authorized());
@@ -70,6 +72,7 @@ public class ForwardFilter implements Filter {
         availabilityMap.put("/moderator/moderate", RightContainer.of(ADMIN, MODERATOR));
         availabilityMap.put("/admin/delete-user", RightContainer.of(ADMIN));
         availabilityMap.put("/moderator/delete-comment", RightContainer.of(ADMIN, MODERATOR));
+        availabilityMap.put("/admin/edit-post", RightContainer.of(ADMIN));
     }
 
     private boolean isUrlAllowed(User user, String url) {

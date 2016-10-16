@@ -31,7 +31,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <c:if test="${sessionScope.user.role == 'ADMIN'}">
-                    <li><a href="<c:url value="/admin"/>"><fmt:message key="base.admin"/><span
+                    <li><a href="<c:url value="/admin/users"/>"><fmt:message key="base.admin"/><span
                             class="sr-only">(current)</span></a></li>
                 </c:if>
                 <c:if test="${sessionScope.user.role == 'ADMIN' || sessionScope.user.role == 'MODERATOR'}">
