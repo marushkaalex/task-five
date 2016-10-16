@@ -48,6 +48,7 @@ public class ActionFactory {
         actionMap.put("POST/profile/save", new SaveUserProfileAction());
         actionMap.put("POST/admin/edit-user", new EditUserAction());
         actionMap.put("POST/admin/delete-user", new DeleteUserAction());
+        actionMap.put("POST/admin/edit-post", new EditPostAction());
         actionMap.put("POST/moderator/delete-comment", new DeleteCommentAction());
         actionMap.put("GET/admin/edit-post", new ShowEditPostAction());
     }

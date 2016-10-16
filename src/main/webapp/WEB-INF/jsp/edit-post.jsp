@@ -1,4 +1,4 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -20,9 +20,29 @@
             </div>
             <div class="col-xs-3"><my:print key="${errorMap.content}"/></div>
         </div>
+        <my:form-input
+                type="number"
+                name="rating"
+                labelKey="admin.posts.header.rating"
+                value="${post.rating}"
+                error="${sessionScope.errorMap.rating}"/>
+        <div class="form-group">
+            <label class="control-label col-xs-2" for="status">
+                <fmt:message key="admin.posts.header.status"/>
+            </label>
+            <div class="col-xs-7">
+                <select class="form-control" id="status" name="status">
+                    <c:forEach items="${statuses}" var="status">
+                        <option value="${status}"
+                                <c:if test="${status == post.status}">selected</c:if> ><fmt:message
+                                key="${status.titleKey}"/></option>
+                    </c:forEach>
+                </select>
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-success"><fmt:message key="admin.save"/></button>
+                <button type="submit" class="btn btn-success"><fmt:message key="admin.save"/></button><my:print key="${errorMap.success}"/>
             </div>
         </div>
     </form>

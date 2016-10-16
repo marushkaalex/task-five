@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class ShowPostsToModerateAction implements Action {
     private static final int COLUMN_MAX_LENGTH = 30;
-    public static final int POSTS_PER_PAGE = 30;
+    public static final int POSTS_PER_PAGE = 2;
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
@@ -53,13 +53,14 @@ public class ShowPostsToModerateAction implements Action {
                 rowList.add(row);
             }
 
-            long count = postService.countByStatus(Post.Status.ON_MODERATION);
+            double count = postService.countByStatus(Post.Status.ON_MODERATION);
             table.setRows(rowList);
             table.setPage(page);
-            table.setPageCount(Double.valueOf(Math.floor(count / POSTS_PER_PAGE)).intValue());
+            table.setPageCount(Double.valueOf(Math.ceil(count / POSTS_PER_PAGE)).intValue());
             table.setTitle("admin.posts");
 
             request.setAttribute("table", table);
+            request.setAttribute("type", "moderation");
             return new ActionResult("admin");
         } catch (ServiceException e) {
             throw new ActionException(e);

@@ -7,10 +7,13 @@
 
 <c:set var="usersClass" value="${type == 'users' ? 'active' : ''}"/>
 <c:set var="postsClass" value="${type == 'posts' ? 'active' : ''}"/>
+<c:set var="paginationUrl" value="${type == 'moderation' ? '/moderator?' : '/admin/'.concat(type).concat('?')}"/>
 <my:base>
-    <ul class="nav nav-tabs">
-        <li class="${usersClass}"><a href="<c:url value="/admin/users"/>"><fmt:message key="admin.users.edit-user"/></a></li>
-        <li class="${postsClass}"><a href="<c:url value="/admin/posts"/>"><fmt:message key="admin.posts.edit-post"/></a></li>
-    </ul>
-    <my:table table="${table}" paginationUrl="/admin/${type}?" />
+    <c:if test="${type != 'moderation'}">
+        <ul class="nav nav-tabs">
+            <li class="${usersClass}"><a href="<c:url value="/admin/users"/>"><fmt:message key="admin.users"/></a></li>
+            <li class="${postsClass}"><a href="<c:url value="/admin/posts"/>"><fmt:message key="admin.posts"/></a></li>
+        </ul>
+    </c:if>
+    <my:table table="${table}" paginationUrl="${paginationUrl}" />
 </my:base>
