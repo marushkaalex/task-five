@@ -7,11 +7,15 @@ import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
 import com.epam.am.whatacat.utils.ParameterUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ModeratePostAction implements Action {
+    private static final Logger LOG = LoggerFactory.getLogger(ModeratePostAction.class);
+
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         String decision = request.getParameter("decision");
@@ -39,6 +43,9 @@ public class ModeratePostAction implements Action {
 
             post.setStatus(status);
             postService.save(post);
+
+            LOG.info("Post [{}] has been moderated. New status: {}", id, status);
+
             return new ActionResult("/post?id=" + id, true);
         } catch (ServiceException e) {
             throw new ActionException(e);

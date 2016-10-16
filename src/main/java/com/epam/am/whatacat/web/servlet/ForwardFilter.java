@@ -1,4 +1,4 @@
-package com.epam.am.whatacat.servlet;
+package com.epam.am.whatacat.web.servlet;
 
 import com.epam.am.whatacat.action.ActionFactory;
 import com.epam.am.whatacat.model.Role;

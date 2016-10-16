@@ -9,16 +9,18 @@ import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
 import com.epam.am.whatacat.validation.FormValidator;
 import com.epam.am.whatacat.validation.FormValidatorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
 
 public class CreatePostAction implements Action {
+    private static final Logger LOG = LoggerFactory.getLogger(CreatePostAction.class);
+
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        // TODO: 05.09.2016 post validation
         FormValidator validator = FormValidatorFactory.getInstance().getValidator("post");
         Map<String, String> errorMap = validator.validate(request.getParameterMap());
         if (!errorMap.isEmpty()) {
@@ -30,9 +32,10 @@ public class CreatePostAction implements Action {
         String content = request.getParameter("content");
 
         try (PostService postService = new PostService()) {
-            // TODO: 05.09.2016 base type
             User user = (User) request.getSession().getAttribute("user");
             Post post = postService.createPost(Post.TYPE_TEXT, title, content, user.getId());
+
+            LOG.info("Post [{}] has been created", post.getId());
             return new ActionResult("post?id=" + post.getId(), true);
         } catch (ServiceException e) {
             throw new ActionException(e);

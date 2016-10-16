@@ -11,12 +11,16 @@ import com.epam.am.whatacat.service.UserService;
 import com.epam.am.whatacat.utils.ParameterUtils;
 import com.epam.am.whatacat.validation.FormValidator;
 import com.epam.am.whatacat.validation.FormValidatorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public class EditUserAction extends ErrorHandlingAction {
+    private static final Logger LOG = LoggerFactory.getLogger(EditUserAction.class);
+
     @Override
     public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         long id = ParameterUtils.parseLong(request.getParameter("id"), -1L);
@@ -66,6 +70,7 @@ public class EditUserAction extends ErrorHandlingAction {
             }
 
             request.getSession().setAttribute("errorMap", errorMap);
+            LOG.info("User [{}] has been edited", id);
             return new ActionResult("/admin/edit-user?id=" + id, true);
         } catch (ServiceException e) {
             throw new ActionException(e);

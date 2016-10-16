@@ -1,6 +1,5 @@
 package com.epam.am.whatacat.action.admin;
 
-import com.epam.am.whatacat.action.Action;
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
 import com.epam.am.whatacat.action.ErrorHandlingAction;
@@ -10,12 +9,17 @@ import com.epam.am.whatacat.service.ServiceException;
 import com.epam.am.whatacat.utils.ParameterUtils;
 import com.epam.am.whatacat.validation.FormValidator;
 import com.epam.am.whatacat.validation.FormValidatorFactory;
+import com.epam.am.whatacat.web.listener.Listener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public class EditPostAction extends ErrorHandlingAction {
+    private static final Logger LOG = LoggerFactory.getLogger(EditPostAction.class);
+
     @Override
     public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         long id = ParameterUtils.parseLong(request.getParameter("id"), -1L);
@@ -51,6 +55,7 @@ public class EditPostAction extends ErrorHandlingAction {
             errorMap.put("success", "admin.posts.changes-saved-successfully");
             request.getSession().setAttribute("errorMap", errorMap);
 
+            LOG.info("Post [{}] has been edited", id);
             return new ActionResult("/admin/edit-post?id=" + id, true);
         } catch (ServiceException e) {
             throw new ActionException(e);

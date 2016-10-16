@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class RegisterAction implements Action {
-    private static final Logger log = LoggerFactory.getLogger(RegisterAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RegisterAction.class);
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
@@ -62,7 +62,7 @@ public class RegisterAction implements Action {
             user = userService.register(user, password);
             request.getSession().setAttribute("user", user);
 
-            log.info("User {} <{}> has been registered", nickname, email);
+            LOG.info("User {} <{}> has been registered", nickname, email);
             return new ActionResult("/", true);
         } catch (ServiceException e) {
             throw new ActionException(e);

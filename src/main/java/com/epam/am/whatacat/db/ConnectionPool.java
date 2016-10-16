@@ -12,7 +12,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 public class ConnectionPool {
-    private static final Logger log = LoggerFactory.getLogger(ConnectionPool.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConnectionPool.class);
 
     private static final String DEFAULT_COUNT = "5";
     private static final String DEFAULT_TIMEOUT = "3000";
@@ -44,7 +44,7 @@ public class ConnectionPool {
 
                 connectionQueue.add(connection);
             }
-            log.info("Connection pool for '{}' was initiated with {} connections", uri, count);
+            LOG.info("Connection pool for '{}' was initiated with {} connections", uri, count);
         } catch (ClassNotFoundException | SQLException e) {
             throw new ConnectionPoolException(e);
         }
@@ -53,13 +53,13 @@ public class ConnectionPool {
     public void releaseConnection(Connection connection) {
         connectionQueue.add(connection);
         usedConnectionQueue.remove(connection);
-        log.info("Connection {} was released", connection);
+        LOG.info("Connection {} was released", connection);
     }
 
     public void shutDown() throws ConnectionPoolException {
         shutDown(connectionQueue);
         shutDown(usedConnectionQueue);
-        log.info("Connection pool was successfully shut down");
+        LOG.info("Connection pool was successfully shut down");
     }
 
     private void shutDown(BlockingQueue<Connection> queue) throws ConnectionPoolException {

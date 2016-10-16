@@ -1,4 +1,4 @@
-package com.epam.am.whatacat.servlet;
+package com.epam.am.whatacat.web.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
