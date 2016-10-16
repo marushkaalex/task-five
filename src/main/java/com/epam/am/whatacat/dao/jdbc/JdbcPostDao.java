@@ -65,7 +65,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             postRating.setUserId(resultSet.getLong("post_rating.user_id"));
             postRating.setPostId(resultSet.getLong("post_rating.post_id"));
             postRating.setRatingDelta(resultSet.getInt("post_rating.delta"));
-            java.sql.Date date = resultSet.getDate("post_rating.date_");
+            java.sql.Timestamp date = resultSet.getTimestamp("post_rating.date_");
             if (date != null) {
                 postRating.setDate(new Date(date.getTime()));
             }
@@ -86,7 +86,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 preparedStatement.setLong(1, postRating.getPostId());
                 preparedStatement.setLong(2, postRating.getUserId());
                 preparedStatement.setInt(3, postRating.getRatingDelta());
-                preparedStatement.setDate(4, new java.sql.Date(new Date().getTime()));
+                preparedStatement.setTimestamp(4, new java.sql.Timestamp(new Date().getTime()));
                 preparedStatement.execute();
 
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -99,7 +99,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 preparedStatement.setLong(1, postRating.getPostId());
                 preparedStatement.setLong(2, postRating.getUserId());
                 preparedStatement.setInt(3, postRating.getRatingDelta());
-                preparedStatement.setDate(4, new java.sql.Date(new Date().getTime()));
+                preparedStatement.setTimestamp(4, new java.sql.Timestamp(new Date().getTime()));
                 preparedStatement.setLong(5, postRating.getId());
 
                 preparedStatement.execute();
@@ -133,7 +133,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 rating.setPostId(postId);
                 rating.setUserId(userId);
                 rating.setRatingDelta(resultSet.getInt("delta"));
-                java.sql.Date date_ = resultSet.getDate("date_");
+                java.sql.Timestamp date_ = resultSet.getTimestamp("date_");
                 rating.setDate(new Date(date_.getTime()));
             }
 
@@ -200,7 +200,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 new TableField(TABLE_NAME, "title"),
                 new TableField(TABLE_NAME, "type"),
                 new TableField(TABLE_NAME, "content"),
-                new TableField(TABLE_NAME, "date", "publicationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())),
+                new TableField(TABLE_NAME, "date", "publicationDate").setTypeConverter(o -> new java.sql.Timestamp(((Date) o).getTime())),
                 new TableField(TABLE_NAME, "rating"),
                 new TableField(TABLE_NAME, "author_id", "authorId"),
                 new TableField(TABLE_NAME, "status").setTypeConverter(o -> ((Post.Status) o).getId()),
@@ -212,7 +212,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 new TableField("user", "gender").setTypeConverter(o -> ((Gender) o).getKey()).setUseOnSave(false),
                 new TableField("user", "rating").setUseOnSave(false),
                 new TableField("user", "avatar", "avatarUrl").setUseOnSave(false),
-                new TableField("user", "date", "registrationDate").setTypeConverter(o -> new java.sql.Date(((Date) o).getTime())).setUseOnSave(false),
+                new TableField("user", "date", "registrationDate").setTypeConverter(o -> new java.sql.Timestamp(((Date) o).getTime())).setUseOnSave(false),
                 new TableField("role", "name").setUseOnSave(false).setUseOnSave(false)
         );
     }

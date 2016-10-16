@@ -35,7 +35,7 @@ CREATE TABLE PUBLIC.post
     type TINYINT,
     content VARCHAR(10000) NOT NULL,
     column_5 INT,
-    date DATE,
+    date DATETIME,
     rating INT,
     author_id INT,
     status INT NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE PUBLIC.post_rating
     post_id INT,
     user_id INT,
     delta SMALLINT,
-    date_ DATE,
+    date_ DATETIME,
     CONSTRAINT table_name_POST_ID_fk FOREIGN KEY (post_id) REFERENCES POST (ID),
     CONSTRAINT table_name_USER_ID_fk FOREIGN KEY (user_id) REFERENCES USER (ID)
 );

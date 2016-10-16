@@ -3,14 +3,12 @@ package com.epam.am.whatacat.dao.jdbc;
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.UserDao;
 import com.epam.am.whatacat.dao.jdbc.binder.UserDataBinder;
-import com.epam.am.whatacat.model.BaseModel;
 import com.epam.am.whatacat.model.Gender;
 import com.epam.am.whatacat.model.Role;
 import com.epam.am.whatacat.model.User;
 
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 
 public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     public static final String TABLE_NAME = "user";
@@ -93,7 +91,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
                 new TableField(TABLE_NAME, "gender").setTypeConverter(o -> ((Gender) o).getKey()),
                 new TableField(TABLE_NAME, "rating"),
                 new TableField(TABLE_NAME, "avatar", "avatarUrl"),
-                new TableField(TABLE_NAME, "date", "registrationDate").setTypeConverter(new DateTypeConterter()),
+                new TableField(TABLE_NAME, "date", "registrationDate").setTypeConverter(new DateTypeConverter()),
                 new TableField("role", "name").setUseOnSave(false)
         );
     }

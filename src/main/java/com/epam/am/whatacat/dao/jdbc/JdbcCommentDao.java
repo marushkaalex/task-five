@@ -40,7 +40,7 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
                 new TableField(TABLE_NAME, "id"),
                 new TableField(TABLE_NAME, "author_id", "authorId"),
                 new TableField(TABLE_NAME, "parent_id", "parentId"),
-                new TableField(TABLE_NAME, "_date", "publicationDate").setTypeConverter(new DateTypeConterter()),
+                new TableField(TABLE_NAME, "_date", "publicationDate").setTypeConverter(new DateTypeConverter()),
                 new TableField(TABLE_NAME, "text"),
                 new TableField(TABLE_NAME, "post_id", "postId"),
                 new TableField("user", "id").setUseOnSave(false),
@@ -51,7 +51,7 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
                 new TableField("user", "gender").setTypeConverter(o -> ((Gender) o).getKey()).setUseOnSave(false),
                 new TableField("user", "rating").setUseOnSave(false),
                 new TableField("user", "avatar", "avatarUrl").setUseOnSave(false),
-                new TableField("user", "date", "registrationDate").setTypeConverter(new DateTypeConterter()).setUseOnSave(false),
+                new TableField("user", "date", "registrationDate").setTypeConverter(new DateTypeConverter()).setUseOnSave(false),
                 new TableField("role", "name").setUseOnSave(false)
         );
     }
