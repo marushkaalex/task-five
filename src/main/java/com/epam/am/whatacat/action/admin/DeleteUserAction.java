@@ -26,7 +26,7 @@ public class DeleteUserAction implements Action {
         try (UserService userService = new UserService()) {
             userService.delete(id);
             LOG.info("User [{}] has been deleted", id);
-            return new ActionResult("/admin", true);
+            return new ActionResult("/admin/users", true);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }
