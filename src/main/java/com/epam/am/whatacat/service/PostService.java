@@ -1,5 +1,6 @@
 package com.epam.am.whatacat.service;
 
+import com.epam.am.whatacat.dao.CommentDao;
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.PostDao;
 import com.epam.am.whatacat.dao.UserDao;
@@ -240,6 +241,29 @@ public class PostService extends BaseService {
             PostDao postDao = daoFactory.getPostDao();
             return postDao.getAll(limit, offset);
         } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    /**
+     * Deletes post with specified id
+     * @param id post ud
+     * @throws ServiceException
+     */
+    public void delete(long id) throws ServiceException {
+        try {
+            daoFactory.startTransaction();
+            CommentDao commentDao = daoFactory.getCommentDao();
+            commentDao.deletePostComment(id);
+            PostDao postDao = daoFactory.getPostDao();
+            postDao.delete(id);
+            daoFactory.commitTransaction();
+        } catch (DaoException e) {
+            try {
+                daoFactory.rollbackTransaction();
+            } catch (DaoException e1) {
+                throw new ServiceException(e1);
+            }
             throw new ServiceException(e);
         }
     }

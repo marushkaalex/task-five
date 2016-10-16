@@ -352,4 +352,28 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public void delete(long id) throws DaoException {
+        Connection connection = getConnection();
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM post_rating WHERE post_id=?");
+            preparedStatement.setLong(1, id);
+            preparedStatement.execute();
+
+            super.delete(id);
+
+            getConnection().commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException e1) {
+                throw new DaoException(e1);
+            }
+            throw new DaoException(e);
+        }
+    }
 }

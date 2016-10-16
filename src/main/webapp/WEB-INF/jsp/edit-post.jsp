@@ -46,4 +46,16 @@
             </div>
         </div>
     </form>
+    <br>
+    <form method="post" action="<c:url value="/admin/delete-post"/>" class="form-horizontal">
+        <input type="hidden" name="id" value="${post.id}"/>
+        <div class="form-group">
+            <label class="control-label col-xs-2">
+                <fmt:message key="admin.posts.delete"/>
+            </label>
+            <div class="col-xs-7">
+                <button type="submit" class="btn btn-danger"><fmt:message key="admin.delete"/></button>
+            </div>
+        </div>
+    </form>
 </my:base>

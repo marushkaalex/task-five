@@ -52,7 +52,6 @@ public class ForwardFilter implements Filter {
     }
 
     public void init(FilterConfig config) throws ServletException {
-        // TODO: 20.09.2016 load from properties
         availabilityMap.put("/", RightContainer.any());
         availabilityMap.put("/login", RightContainer.any());
         availabilityMap.put("/logout", RightContainer.any());
@@ -73,6 +72,7 @@ public class ForwardFilter implements Filter {
         availabilityMap.put("/admin/delete-user", RightContainer.of(ADMIN));
         availabilityMap.put("/moderator/delete-comment", RightContainer.of(ADMIN, MODERATOR));
         availabilityMap.put("/admin/edit-post", RightContainer.of(ADMIN));
+        availabilityMap.put("/admin/delete-post", RightContainer.of(ADMIN));
     }
 
     private boolean isUrlAllowed(User user, String url) {

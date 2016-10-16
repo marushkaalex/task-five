@@ -51,6 +51,7 @@ public class ActionFactory {
         actionMap.put("POST/admin/edit-post", new EditPostAction());
         actionMap.put("POST/moderator/delete-comment", new DeleteCommentAction());
         actionMap.put("GET/admin/edit-post", new ShowEditPostAction());
+        actionMap.put("POST/admin/delete-post", new DeletePostAction());
     }
 
     public Action getAction(String actionName) {

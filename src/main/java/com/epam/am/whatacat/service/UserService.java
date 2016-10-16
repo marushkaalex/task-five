@@ -176,6 +176,7 @@ public class UserService extends BaseService {
      */
     public void delete(long id) throws ServiceException {
         try {
+            // TODO: 16.10.2016 delete comments and posts
             UserDao userDao = daoFactory.getUserDao();
             userDao.delete(id);
         } catch (DaoException e) {
