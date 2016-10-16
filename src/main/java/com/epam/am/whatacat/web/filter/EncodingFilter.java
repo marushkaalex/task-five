@@ -1,4 +1,4 @@
-package com.epam.am.whatacat.web.servlet;
+package com.epam.am.whatacat.web.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
