@@ -21,7 +21,7 @@ public class PostDataBinder implements DataBinder<Post> {
             res.setId(resultSet.getLong("post.id"));
             res.setTitle(resultSet.getString("post.title"));
             res.setContent(resultSet.getString("post.content"));
-            res.setPublicationDate(new Date(resultSet.getDate("post.date").getTime()));
+            res.setPublicationDate(new Date(resultSet.getTimestamp("post.date").getTime()));
             res.setType(resultSet.getInt("post.type"));
             res.setRating(resultSet.getLong("post.rating"));
             res.setAuthorId(resultSet.getLong("post.author_id"));

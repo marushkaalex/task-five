@@ -24,7 +24,7 @@ public class ChangePasswordAction extends ErrorHandlingAction {
         Map<String, String> errorMap = validator.validate(request.getParameterMap());
         if (!errorMap.isEmpty()) {
             request.getSession().setAttribute("errorMap", errorMap);
-            return new ActionResult("profile", true);
+            return new ActionResult("/profile", true);
         }
 
         String oldPassword = request.getParameter("oldPassword");
@@ -34,7 +34,7 @@ public class ChangePasswordAction extends ErrorHandlingAction {
         if (!newPassword.equals(retypedPassword)) {
             errorMap.put("retypeNewPassword", "profile.error.retype-new-password.doesnt-match");
             request.getSession().setAttribute("errorMap", errorMap);
-            return new ActionResult("profile", true);
+            return new ActionResult("/profile", true);
         }
 
         try (UserService userService = new UserService()) {
@@ -43,9 +43,9 @@ public class ChangePasswordAction extends ErrorHandlingAction {
             byte[] salt = Base64.getDecoder().decode(saltStr);
             String oldHashedPassword = userService.hashPassword(oldPassword, salt);
             if (!oldHashedPassword.equals(user.getHashedPassword())) {
-                errorMap.put("old", "profile.error.old-password.wrong");
-                request.setAttribute("errorMap", errorMap);
-                return new ActionResult("profile");
+                errorMap.put("oldPassword", "profile.error.old-password.wrong");
+                request.getSession().setAttribute("errorMap", errorMap);
+                return new ActionResult("/profile", true);
             }
 
             salt = new byte[16];
@@ -55,7 +55,7 @@ public class ChangePasswordAction extends ErrorHandlingAction {
             userService.save(user);
             errorMap.put("successPassword", "profile.password.change-success");
             request.getSession().setAttribute("errorMap", errorMap);
-            return new ActionResult("profile");
+            return new ActionResult("/profile", true);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }

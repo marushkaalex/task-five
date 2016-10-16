@@ -21,7 +21,7 @@
             <button class="btn btn-xs btn-info">
                 <fmt:message key="profile.my-posts"/>
             </button>
-        </a>
+        </a><br><br>
         <p><img src="${avatar}" width="100" height="100"/></p>
         <form method="post" action="upload/photo" enctype="multipart/form-data">
             <input type="file" name="file" accept="image/jpeg,image/png"/><br>

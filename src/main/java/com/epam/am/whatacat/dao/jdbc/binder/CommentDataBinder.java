@@ -19,7 +19,7 @@ public class CommentDataBinder implements DataBinder<Comment> {
             res.setId(resultSet.getLong("comment.id"));
             res.setAuthorId(resultSet.getLong("comment.author_id"));
             res.setParentId(resultSet.getLong("comment.parent_id"));
-            res.setPublicationDate(new Date(resultSet.getDate("_date").getTime()));
+            res.setPublicationDate(new Date(resultSet.getTimestamp("_date").getTime()));
             res.setText(resultSet.getString("comment.text"));
 
             User author = userDataBinder.bind(resultSet);
