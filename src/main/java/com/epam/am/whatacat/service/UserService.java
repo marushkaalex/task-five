@@ -1,6 +1,8 @@
 package com.epam.am.whatacat.service;
 
+import com.epam.am.whatacat.dao.CommentDao;
 import com.epam.am.whatacat.dao.DaoException;
+import com.epam.am.whatacat.dao.PostDao;
 import com.epam.am.whatacat.dao.UserDao;
 import com.epam.am.whatacat.model.User;
 
@@ -176,10 +178,24 @@ public class UserService extends BaseService {
      */
     public void delete(long id) throws ServiceException {
         try {
-            // TODO: 16.10.2016 delete comments and posts
+            daoFactory.startTransaction();
+
+            CommentDao commentDao = daoFactory.getCommentDao();
+            commentDao.deleteUserComments(id);
+
+            PostDao postDao = daoFactory.getPostDao();
+            postDao.deleteUserPosts(id);
+
             UserDao userDao = daoFactory.getUserDao();
             userDao.delete(id);
+
+            daoFactory.commitTransaction();
         } catch (DaoException e) {
+            try {
+                daoFactory.rollbackTransaction();
+            } catch (DaoException e1) {
+                throw new ServiceException(e1);
+            }
             throw new ServiceException(e);
         }
     }

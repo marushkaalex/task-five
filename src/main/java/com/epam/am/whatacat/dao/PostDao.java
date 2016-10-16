@@ -22,4 +22,6 @@ public interface PostDao extends BaseDao<Post> {
     long countByStatus(int status) throws DaoException;
 
     long countUsersPosts(long user, @Nullable Integer status) throws DaoException;
+
+    void deleteUserPosts(long user) throws DaoException;
 }

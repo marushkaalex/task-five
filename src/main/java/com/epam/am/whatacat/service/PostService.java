@@ -254,7 +254,7 @@ public class PostService extends BaseService {
         try {
             daoFactory.startTransaction();
             CommentDao commentDao = daoFactory.getCommentDao();
-            commentDao.deletePostComment(id);
+            commentDao.deletePostComments(id);
             PostDao postDao = daoFactory.getPostDao();
             postDao.delete(id);
             daoFactory.commitTransaction();

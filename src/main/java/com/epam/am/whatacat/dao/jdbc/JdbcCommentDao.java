@@ -79,10 +79,22 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
     }
 
     @Override
-    public void deletePostComment(long postId) throws DaoException {
+    public void deletePostComments(long postId) throws DaoException {
         try {
             PreparedStatement preparedStatement =
                     getConnection().prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE post_id=?");
+            preparedStatement.setLong(1, postId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void deleteUserComments(long postId) throws DaoException {
+        try {
+            PreparedStatement preparedStatement =
+                    getConnection().prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE author_id=?");
             preparedStatement.setLong(1, postId);
             preparedStatement.execute();
         } catch (SQLException e) {

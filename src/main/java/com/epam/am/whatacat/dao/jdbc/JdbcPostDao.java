@@ -376,4 +376,20 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public void deleteUserPosts(long userId) throws DaoException {
+        try {
+            PreparedStatement preparedStatement =
+                    getConnection().prepareStatement("SELECT id FROM " + TABLE_NAME + " WHERE author_id=?");
+            preparedStatement.setLong(1, userId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                delete(resultSet.getLong("id"));
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 }
