@@ -15,16 +15,12 @@ public class PostService extends BaseService {
     public PostService() throws ServiceException {
     }
 
-    public User getPostAuthor(long authorId) throws ServiceException {
-        try {
-            UserDao userDao = daoFactory.getUserDao();
-            User user = userDao.findById(authorId);
-            return user;
-        } catch (DaoException e) {
-            throw new ServiceException("Error while getting post author", e);
-        }
-    }
-
+    /**
+     * Finds post by its id
+     * @param postId post id
+     * @return Post or null if not found
+     * @throws ServiceException
+     */
     public Post findById(long postId) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -35,6 +31,15 @@ public class PostService extends BaseService {
         }
     }
 
+    /**
+     * Creates and saves a post
+     * @param type type
+     * @param title title
+     * @param content text content
+     * @param authorId id of the author
+     * @return saved Post
+     * @throws ServiceException
+     */
     public Post createPost(int type, String title, String content, long authorId) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -51,15 +56,12 @@ public class PostService extends BaseService {
         }
     }
 
-    public List<Post> getPostList(long limit, long offset, @Nullable Long userId) throws ServiceException {
-        try {
-            PostDao postDao = daoFactory.getPostDao();
-            return userId == null ? postDao.getAll(limit, offset) : postDao.getAllWithUserRating(limit, offset, userId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
+    /**
+     * Counts posts with the status
+     * @param status post status
+     * @return number of posts with specified status
+     * @throws ServiceException
+     */
     public long countByStatus(Post.Status status) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -69,7 +71,13 @@ public class PostService extends BaseService {
         }
     }
 
-
+    /**
+     * Counts user posts of specified status or any status if parameter is null
+     * @param userId id of the user
+     * @param status posts status
+     * @return number of posts of the user
+     * @throws ServiceException
+     */
     public long countUsersPosts(long userId, @Nullable Post.Status status) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -79,6 +87,15 @@ public class PostService extends BaseService {
         }
     }
 
+    /**
+     *
+     * @param status post status
+     * @param userId user id
+     * @param limit limit
+     * @param offset offset
+     * @return post with specified status belong to the user or for all users if user id is not specified
+     * @throws ServiceException
+     */
     public List<Post> getPostListByStatus(Post.Status status, @Nullable Long userId, long limit, long offset) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -88,21 +105,13 @@ public class PostService extends BaseService {
         }
     }
 
-    public List<Post> getPostListWithRating(long userId, long limit, long offset) throws ServiceException {
-        try {
-            PostDao postDao = daoFactory.getPostDao();
-            List<Post> postList = postDao.getAll(limit, offset);
-            for (Post post : postList) {
-                // TODO: 11.09.2016 use only one SQL query
-                post.setUserPostRating(postDao.getRating(post.getId(), userId));
-            }
-            return postList;
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    // TODO: 11.09.2016 check user permissions
+    /**
+     * Rates the post by the user
+     * @param userId rater id
+     * @param post post to be rated
+     * @param ratingDelta how much rating will be added to the post
+     * @throws ServiceException
+     */
     public void rate(long userId, Post post, int ratingDelta) throws ServiceException {
         try {
             PostRating postRating = post.getUserPostRating();
@@ -115,7 +124,6 @@ public class PostService extends BaseService {
 
                 post.setRating(post.getRating() + ratingDelta);
             } else {
-//                post.setRating(post.getRating() - postRating.getRatingDelta());
                 if (postRating.getRatingDelta() == ratingDelta) return;
                 post.setRating(post.getRating() + ratingDelta);
                 postRating.setRatingDelta(postRating.getRatingDelta() + ratingDelta);
@@ -124,7 +132,6 @@ public class PostService extends BaseService {
             daoFactory.startTransaction();
             PostDao postDao = daoFactory.getPostDao();
             UserDao userDao = daoFactory.getUserDao();
-            // TODO: 13.09.2016 allow rate only once
             postDao.save(post);
             postDao.rate(postRating);
 
@@ -142,6 +149,12 @@ public class PostService extends BaseService {
         }
     }
 
+    /**
+     *
+     * @param id post id
+     * @return Post or null if not fount
+     * @throws ServiceException
+     */
     public Post getById(long id) throws ServiceException {
         try {
             return daoFactory.getPostDao().findById(id);
@@ -150,6 +163,13 @@ public class PostService extends BaseService {
         }
     }
 
+    /**
+     * Returns post with set UserPostRating
+     * @param id post id
+     * @param userId user id
+     * @return Post or null if not found
+     * @throws ServiceException
+     */
     public Post getByIdWithRating(long id, long userId) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -162,6 +182,11 @@ public class PostService extends BaseService {
         }
     }
 
+    /**
+     *
+     * @return the number of posts
+     * @throws ServiceException
+     */
     public long count() throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -171,6 +196,11 @@ public class PostService extends BaseService {
         }
     }
 
+    /**
+     * Saves the post
+     * @param post post to be saved
+     * @throws ServiceException
+     */
     public void save(Post post) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -180,6 +210,15 @@ public class PostService extends BaseService {
         }
     }
 
+    /**
+     *
+     * @param userId user id
+     * @param status post status
+     * @param limit limit
+     * @param offset offset
+     * @return list of user posts with specified or any status (if the status is null)
+     * @throws ServiceException
+     */
     public List<Post> getAllOfUser(long userId, @Nullable Integer status, long limit, long offset) throws ServiceException {
         try {
             PostDao postDao = daoFactory.getPostDao();
@@ -189,6 +228,13 @@ public class PostService extends BaseService {
         }
     }
 
+    /**
+     *
+     * @param limit limit
+     * @param offset offset
+     * @return list of all posts
+     * @throws ServiceException
+     */
     public List<Post> getAll(long limit, long offset) throws ServiceException{
         try {
             PostDao postDao = daoFactory.getPostDao();

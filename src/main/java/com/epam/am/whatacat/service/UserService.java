@@ -17,6 +17,13 @@ public class UserService extends BaseService {
     public UserService() throws ServiceException {
     }
 
+    /**
+     * Registers new user
+     * @param user user to be registered
+     * @param password user password
+     * @return User with set id
+     * @throws ServiceException
+     */
     public User register(User user, String password) throws ServiceException {
         try {
             byte[] salt = new byte[16];
@@ -29,6 +36,13 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     * Logs in user if credentials are correct
+     * @param email user email
+     * @param password user password
+     * @return User or null if credentials are wrong
+     * @throws ServiceException
+     */
     public User logIn(String email, String password) throws ServiceException {
         try {
             UserDao userDao = daoFactory.getUserDao();
@@ -47,6 +61,12 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     * Checks is specified email already in use
+     * @param email email
+     * @return true if email free, false otherwise
+     * @throws ServiceException
+     */
     public boolean isEmailFree(String email) throws ServiceException {
         try {
             UserDao userDao = daoFactory.getUserDao();
@@ -56,6 +76,12 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     * Checks is specified email already in use
+     * @param nickname nickname
+     * @return true if nickname free, false otherwise
+     * @throws ServiceException
+     */
     public boolean isNicknameFree(String nickname) throws ServiceException {
         try {
             UserDao userDao = daoFactory.getUserDao();
@@ -65,6 +91,11 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     * Saves user
+     * @param user user
+     * @throws ServiceException
+     */
     public void save(User user) throws ServiceException {
         try {
             UserDao userDao = daoFactory.getUserDao();
@@ -74,6 +105,12 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     * Finds user by id
+     * @param id user id
+     * @return User or null if not found
+     * @throws ServiceException
+     */
     public User findById(long id) throws ServiceException {
         try {
             UserDao userDao = daoFactory.getUserDao();
@@ -83,6 +120,13 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     *
+     * @param limit limit
+     * @param offset offset
+     * @return List of all users
+     * @throws ServiceException
+     */
     public List<User> getAll(long limit, long offset) throws ServiceException {
         try {
             UserDao userDao = daoFactory.getUserDao();
@@ -92,6 +136,11 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     * Counts all users
+     * @return the number of users
+     * @throws ServiceException
+     */
     public long count() throws ServiceException {
         try {
             UserDao userDao = daoFactory.getUserDao();
@@ -101,6 +150,13 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     * Hashes password with specified salt
+     * @param password password
+     * @param salt byte salt
+     * @return password hash and salt hash split by whitespace
+     * @throws ServiceException
+     */
     public String hashPassword(String password, byte[] salt) throws ServiceException {
         try {
             KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
@@ -113,6 +169,11 @@ public class UserService extends BaseService {
         }
     }
 
+    /**
+     * Deletes user
+     * @param id user id
+     * @throws ServiceException
+     */
     public void delete(long id) throws ServiceException {
         try {
             UserDao userDao = daoFactory.getUserDao();

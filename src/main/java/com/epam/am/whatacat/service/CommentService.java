@@ -12,6 +12,12 @@ public class CommentService extends BaseService {
     public CommentService() throws ServiceException {
     }
 
+    /**
+     *
+     * @param postId id of the post
+     * @return List of post comments
+     * @throws ServiceException
+     */
     public List<Comment> getPostComments(long postId) throws ServiceException {
         try {
             CommentDao commentDao = daoFactory.getCommentDao();
@@ -36,6 +42,11 @@ public class CommentService extends BaseService {
         }
     }
 
+    /**
+     * Saves comment
+     * @param comment comment to save
+     * @throws ServiceException
+     */
     public void save(Comment comment) throws ServiceException {
         try {
             CommentDao commentDao = daoFactory.getCommentDao();
@@ -45,6 +56,11 @@ public class CommentService extends BaseService {
         }
     }
 
+    /**
+     * Deletes comment
+     * @param id comment to be deleted
+     * @throws ServiceException
+     */
     public void delete(long id) throws ServiceException {
         try {
             CommentDao commentDao = daoFactory.getCommentDao();
