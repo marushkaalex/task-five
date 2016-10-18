@@ -2,7 +2,7 @@ package com.epam.am.whatacat.action.auth;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
-import com.epam.am.whatacat.action.ErrorHandlingAction;
+import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.ServiceException;
 import com.epam.am.whatacat.service.UserService;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-public class LoginAction extends ErrorHandlingAction {
+public class LoginAction extends BaseAction {
 
     private static final Logger LOG = LoggerFactory.getLogger(LoginAction.class);
 

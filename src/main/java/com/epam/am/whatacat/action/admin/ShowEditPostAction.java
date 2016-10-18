@@ -2,7 +2,7 @@ package com.epam.am.whatacat.action.admin;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
-import com.epam.am.whatacat.action.ErrorHandlingAction;
+import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ShowEditPostAction extends ErrorHandlingAction {
+public class ShowEditPostAction extends BaseAction {
 
     private static final Logger LOG = LoggerFactory.getLogger(ShowEditPostAction.class);
 

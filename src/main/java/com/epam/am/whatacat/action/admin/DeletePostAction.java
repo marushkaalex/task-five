@@ -2,17 +2,16 @@ package com.epam.am.whatacat.action.admin;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
-import com.epam.am.whatacat.action.ErrorHandlingAction;
+import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
-import com.epam.am.whatacat.utils.ParameterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class DeletePostAction extends ErrorHandlingAction {
+public class DeletePostAction extends BaseAction {
 
     private static final Logger LOG = LoggerFactory.getLogger(DeletePostAction.class);
 

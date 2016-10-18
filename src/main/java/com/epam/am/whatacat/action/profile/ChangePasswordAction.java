@@ -2,7 +2,7 @@ package com.epam.am.whatacat.action.profile;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
-import com.epam.am.whatacat.action.ErrorHandlingAction;
+import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.action.post.CreatePostAction;
 import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.ServiceException;
@@ -18,7 +18,7 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.Random;
 
-public class ChangePasswordAction extends ErrorHandlingAction {
+public class ChangePasswordAction extends BaseAction {
     private static final Logger LOG = LoggerFactory.getLogger(CreatePostAction.class);
 
     @Override

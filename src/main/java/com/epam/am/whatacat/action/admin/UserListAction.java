@@ -2,7 +2,7 @@ package com.epam.am.whatacat.action.admin;
 
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
-import com.epam.am.whatacat.action.ErrorHandlingAction;
+import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.model.AdminTable;
 import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.ServiceException;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class UserListAction extends ErrorHandlingAction {
+public class UserListAction extends BaseAction {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserListAction.class);
 

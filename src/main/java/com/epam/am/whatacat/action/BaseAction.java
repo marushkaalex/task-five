@@ -9,7 +9,7 @@ import javax.servlet.jsp.jstl.core.Config;
 import java.util.Locale;
 import java.util.Map;
 
-public abstract class ErrorHandlingAction implements Action {
+public abstract class BaseAction implements Action {
     public static final String ATTRIBUTE_ERROR_MAP = "errorMap";
     public static final String ATTRIBUTE_ERROR_MAP_SHOWN = "errorMapShown";
 
