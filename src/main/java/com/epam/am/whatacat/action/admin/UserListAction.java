@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class UserListAction extends ErrorHandlingAction {
+
     private static final Logger LOG = LoggerFactory.getLogger(UserListAction.class);
 
     private static final int LIMIT = 2;

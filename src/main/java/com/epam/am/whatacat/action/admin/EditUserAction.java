@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public class EditUserAction extends ErrorHandlingAction {
+
     private static final Logger LOG = LoggerFactory.getLogger(EditUserAction.class);
 
     private static final String REDIRECT_URL = "/admin/edit-user?id=";

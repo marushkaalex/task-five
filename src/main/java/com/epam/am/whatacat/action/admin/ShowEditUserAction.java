@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ShowEditUserAction extends ErrorHandlingAction {
+
     private static final Logger LOG = LoggerFactory.getLogger(ShowEditUserAction.class);
 
     private static final String VIEW = "edit-user";

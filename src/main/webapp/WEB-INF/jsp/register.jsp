@@ -9,20 +9,20 @@
                    name="email"
                    labelKey="register.hint.email"
                    value="${param.email}"
-                   error="${errorMap.email}"/>
+                   error="${sessionScope.errorMap.email}"/>
     <my:form-input type="text"
                    name="nickname"
                    labelKey="register.hint.nickname"
                    value="${param.nickname}"
-                   error="${errorMap.nickname}"/>
+                   error="${sessionScope.errorMap.nickname}"/>
     <my:form-input type="password"
                    name="password"
                    labelKey="register.hint.password"
-                   error="${errorMap.password}"/>
+                   error="${sessionScope.errorMap.password}"/>
     <my:form-input type="password"
                    name="confirmPassword"
                    labelKey="register.hint.confirm-password"
-                   error="${errorMap.confirmPassword}"/>
+                   error="${sessionScope.errorMap.confirmPassword}"/>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <button type="submit" class="btn btn-success"><fmt:message key="register"/></button>

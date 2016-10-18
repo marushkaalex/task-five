@@ -15,6 +15,7 @@ public abstract class ErrorHandlingAction implements Action {
 
     protected static final String PARAMETER_ID = "id";
     protected static final long INVALID_ID = -1L;
+    protected static final String ATTRIBUTE_USER = "user";
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
@@ -35,7 +36,7 @@ public abstract class ErrorHandlingAction implements Action {
     }
 
     protected User getUser(HttpServletRequest request) {
-        return ((User) request.getSession().getAttribute("user"));
+        return ((User) request.getSession().getAttribute(ATTRIBUTE_USER));
     }
 
     protected Locale getLocale(HttpServletRequest request) {

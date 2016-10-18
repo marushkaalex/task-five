@@ -8,14 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ShowLoginAction extends ShowPageAction {
+
+    private static final String VIEW = "login";
+    private static final String REDIRECT_URI = "/";
+
     public ShowLoginAction() {
-        super("login");
+        super(VIEW);
     }
 
     @Override
     public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        if (request.getSession().getAttribute("user") != null) {
-            return new ActionResult("/", true);
+        if (getUser(request) != null) {
+            return new ActionResult(REDIRECT_URI, true);
         }
         return super.execute(request, response);
     }

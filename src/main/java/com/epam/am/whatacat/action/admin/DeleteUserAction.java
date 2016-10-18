@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class DeleteUserAction extends ErrorHandlingAction {
+
     private static final Logger LOG = LoggerFactory.getLogger(DeleteUserAction.class);
+
     private static final String REDIRECT_URL = "/admin/users";
 
     @Override

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public class EditPostAction extends ErrorHandlingAction {
+
     private static final Logger LOG = LoggerFactory.getLogger(EditPostAction.class);
 
     private static final String VALIDATOR = "post";

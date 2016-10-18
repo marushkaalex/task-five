@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class DeletePostAction extends ErrorHandlingAction {
+
     private static final Logger LOG = LoggerFactory.getLogger(DeletePostAction.class);
+
     private static final String REDIRECT_URL = "/admin/posts";
 
     @Override

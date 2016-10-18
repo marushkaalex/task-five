@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class PostListAction implements Action {
+
     private static final Logger LOG = LoggerFactory.getLogger(PostListAction.class);
 
     private static final int LIMIT = 2;

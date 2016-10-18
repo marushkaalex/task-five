@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ShowEditPostAction extends ErrorHandlingAction {
+
     private static final Logger LOG = LoggerFactory.getLogger(ShowEditPostAction.class);
 
     private static final String VIEW = "edit-post";
