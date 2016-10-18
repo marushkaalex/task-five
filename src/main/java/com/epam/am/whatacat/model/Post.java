@@ -1,8 +1,6 @@
 package com.epam.am.whatacat.model;
 
 import java.util.Date;
-import java.util.List;
-import java.util.stream.StreamSupport;
 
 public class Post extends BaseModel {
     public static final int TYPE_TEXT = 1;
@@ -123,19 +121,19 @@ public class Post extends BaseModel {
             this.titleKey = titleKey;
         }
 
+        public static Status forId(int id) {
+            for (Status status : values()) {
+                if (status.getId() == id) return status;
+            }
+            throw new IllegalArgumentException();
+        }
+
         public int getId() {
             return id;
         }
 
         public String getTitleKey() {
             return titleKey;
-        }
-
-        public static Status of(int id) {
-            for (Status status : values()) {
-                if (status.getId() == id) return status;
-            }
-            throw new IllegalArgumentException();
         }
     }
 }

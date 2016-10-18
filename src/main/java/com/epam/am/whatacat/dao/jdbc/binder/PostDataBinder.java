@@ -2,9 +2,7 @@ package com.epam.am.whatacat.dao.jdbc.binder;
 
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.dao.jdbc.DataBinder;
-import com.epam.am.whatacat.model.Gender;
 import com.epam.am.whatacat.model.Post;
-import com.epam.am.whatacat.model.Role;
 import com.epam.am.whatacat.model.User;
 
 import java.sql.ResultSet;
@@ -25,7 +23,7 @@ public class PostDataBinder implements DataBinder<Post> {
             res.setType(resultSet.getInt("post.type"));
             res.setRating(resultSet.getLong("post.rating"));
             res.setAuthorId(resultSet.getLong("post.author_id"));
-            res.setStatus(Post.Status.of(resultSet.getInt("post.status")));
+            res.setStatus(Post.Status.forId(resultSet.getInt("post.status")));
 
             User user = userDataBinder.bind(resultSet);
 

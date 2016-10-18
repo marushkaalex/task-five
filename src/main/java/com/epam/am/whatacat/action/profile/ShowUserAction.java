@@ -27,7 +27,7 @@ public class ShowUserAction implements Action {
         if (id != -1) {
             try (
                     UserService userService = new UserService();
-                    PostService postService = new PostService();
+                    PostService postService = new PostService()
             ) {
                 User user = userService.findById(id);
                 if (user == null) return new ActionResult(HttpServletResponse.SC_NOT_FOUND);

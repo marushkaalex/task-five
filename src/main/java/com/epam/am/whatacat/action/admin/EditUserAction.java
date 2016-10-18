@@ -21,42 +21,56 @@ import java.util.Map;
 public class EditUserAction extends ErrorHandlingAction {
     private static final Logger LOG = LoggerFactory.getLogger(EditUserAction.class);
 
+    private static final String REDIRECT_URL = "/admin/edit-user?id=";
+    private static final String VALIDATOR = "edit-user";
+
+    private static final String PARAMETER_GENDER = "gender";
+    private static final String PARAMETER_ROLE = "role";
+    private static final String PARAMETER_RATING = "rating";
+    private static final String PARAMETER_NICKNAME = "nickname";
+    private static final String PARAMETER_EMAIL = "email";
+    private static final String PARAMETER_SUCCESS = "success";
+    private static final String ERROR_RATING = "admin.users.error.rating";
+    private static final String ERROR_NICKNAME_ALREADY_TAKEN = "profile.error.nickname.already-taken";
+    private static final String ERROR_EMAIL_ALREADY_IN_USE = "profile.error.email-already-in-use";
+    private static final String MESSAGE_SUCCESS = "admin.users.changes-saved-successfully";
+
     @Override
     public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        long id = ParameterUtils.parseLong(request.getParameter("id"), -1L);
-        if (id == -1) {
+        long id = getIdParameter(request);
+        if (id == INVALID_ID) {
             return new ActionResult(HttpServletResponse.SC_BAD_REQUEST);
         }
 
-        Gender gender = Gender.valueOf(request.getParameter("gender"));
-        Role role = Role.valueOf(request.getParameter("role"));
+        Gender gender = Gender.valueOf(request.getParameter(PARAMETER_GENDER));
+        Role role = Role.valueOf(request.getParameter(PARAMETER_ROLE));
 
-        FormValidator validator = FormValidatorFactory.getInstance().getValidator("edit-user");
+        FormValidator validator = FormValidatorFactory.getInstance().getValidator(VALIDATOR);
         Map<String, String> errorMap = validator.validate(request.getParameterMap());
         if (!errorMap.isEmpty()) {
-            request.getSession().setAttribute("errorMap", errorMap);
-            return new ActionResult("/admin/edit-user?id=" + id, true);
+            setErrorMap(request, errorMap);
+            return new ActionResult(REDIRECT_URL + id, true);
         }
 
         try (UserService userService = new UserService()) {
             User user = userService.findById(id);
             if (user == null) {
-                return new ActionResult("/admin/edit-user?id=" + id, true); // not found
+                return new ActionResult(REDIRECT_URL + id, true); // not found
             }
 
-            long rating = ParameterUtils.parseLong(request.getParameter("rating"), Long.MIN_VALUE);
+            long rating = ParameterUtils.parseLong(request.getParameter(PARAMETER_RATING), Long.MIN_VALUE);
             if (rating == Long.MIN_VALUE) {
-                errorMap.put("rating", "admin.users.error.rating");
+                errorMap.put(PARAMETER_RATING, ERROR_RATING);
             }
 
-            String nickname = request.getParameter("nickname");
+            String nickname = request.getParameter(PARAMETER_NICKNAME);
             if (!checkNickname(userService, user.getNickname(), nickname)) {
-                errorMap.put("nickname", "profile.error.nickname.already-taken");
+                errorMap.put(PARAMETER_NICKNAME, ERROR_NICKNAME_ALREADY_TAKEN);
             }
 
-            String email = request.getParameter("email");
+            String email = request.getParameter(PARAMETER_EMAIL);
             if (!checkEmail(userService, user.getEmail(), email)) {
-                errorMap.put("email", "profile.error.email-already-in-use");
+                errorMap.put(PARAMETER_EMAIL, ERROR_EMAIL_ALREADY_IN_USE);
             }
 
             if (errorMap.isEmpty()) {
@@ -66,12 +80,14 @@ public class EditUserAction extends ErrorHandlingAction {
                 user.setRole(role);
                 user.setRating(rating);
                 userService.save(user);
-                errorMap.put("success", "admin.users.changes-saved-successfully");
+                errorMap.put(PARAMETER_SUCCESS, MESSAGE_SUCCESS);
             }
 
-            request.getSession().setAttribute("errorMap", errorMap);
+            setErrorMap(request, errorMap);
+
             LOG.info("User [{}] has been edited", id);
-            return new ActionResult("/admin/edit-user?id=" + id, true);
+
+            return new ActionResult(REDIRECT_URL + id, true);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }
