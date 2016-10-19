@@ -9,7 +9,6 @@ import com.epam.am.whatacat.action.base.LogoutAction;
 import com.epam.am.whatacat.action.comment.DeleteCommentAction;
 import com.epam.am.whatacat.action.comment.SendCommentAction;
 import com.epam.am.whatacat.action.base.ShowPageAction;
-import com.epam.am.whatacat.action.post.ShowPostAction;
 import com.epam.am.whatacat.action.moderator.ModeratePostAction;
 import com.epam.am.whatacat.action.moderator.ShowPostsToModerateAction;
 import com.epam.am.whatacat.action.post.*;

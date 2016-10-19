@@ -1,7 +1,6 @@
 package com.epam.am.whatacat.model;
 
 import java.util.Date;
-import java.util.List;
 
 public class Comment extends BaseModel {
     private User author;

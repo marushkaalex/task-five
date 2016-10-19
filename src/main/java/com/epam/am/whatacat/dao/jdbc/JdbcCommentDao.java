@@ -65,15 +65,17 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
 
     @Override
     public List<Comment> getPostComments(long postId) throws DaoException {
-        try {
-            PreparedStatement preparedStatement =
-                    getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE " + TABLE_NAME + ".post_id=?");
+        try (
+                PreparedStatement preparedStatement =
+                        getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE " + TABLE_NAME + ".post_id=?")
+        ) {
             preparedStatement.setLong(1, postId);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Comment> res = new ArrayList<>();
             while (resultSet.next()) {
                 res.add(dataBinder.bind(resultSet));
             }
+            resultSet.close();
             return res;
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -82,9 +84,9 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
 
     @Override
     public void deletePostComments(long postId) throws DaoException {
-        try {
-            PreparedStatement preparedStatement =
-                    getConnection().prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE post_id=?");
+        try (PreparedStatement preparedStatement =
+                     getConnection().prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE post_id=?")
+        ) {
             preparedStatement.setLong(1, postId);
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -94,9 +96,9 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
 
     @Override
     public void deleteUserComments(long postId) throws DaoException {
-        try {
-            PreparedStatement preparedStatement =
-                    getConnection().prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE author_id=?");
+        try (PreparedStatement preparedStatement =
+                     getConnection().prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE author_id=?")
+        ) {
             preparedStatement.setLong(1, postId);
             preparedStatement.execute();
         } catch (SQLException e) {

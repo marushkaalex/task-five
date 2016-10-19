@@ -24,7 +24,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/"><fmt:message key="base.title"/></a>
+            <a class="navbar-brand" href="<c:url value="/"/>"><fmt:message key="base.title"/></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -59,10 +59,10 @@
                         </a>
                     </c:when>
                     <c:otherwise>
-                        <a href="/login">
+                        <a href="<c:url value="/login"/>">
                             <button class="btn btn-success"><fmt:message key="base.sign-in"/></button>
                         </a>
-                        <a href="/register">
+                        <a href="<c:url value="/register"/>">
                             <button class="btn btn-success"><fmt:message key="base.sign-up"/></button>
                         </a>
                     </c:otherwise>
@@ -70,7 +70,7 @@
             </div>
             <c:if test="${sessionScope.user != null}">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a class="navbar-header" href="/profile">${sessionScope.user.nickname}</a></li>
+                    <li><a class="navbar-header" href="<c:url value="/profile"/>">${sessionScope.user.nickname}</a></li>
                 </ul>
             </c:if>
         </div>

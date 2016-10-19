@@ -17,7 +17,7 @@
     <div class="col-xs-offset-2 col-xs-10">
         <h3><c:out value="${sessionScope.user.nickname}"/></h3>
         <p><c:out value="${sessionScope.user.email}"/></p>
-        <a href="/user?id=${sessionScope.user.id}">
+        <a href="<c:url value="/user?id=${sessionScope.user.id}"/>">
             <button class="btn btn-xs btn-info">
                 <fmt:message key="profile.my-posts"/>
             </button>
@@ -29,7 +29,7 @@
         </form>
     </div>
 
-    <form method="post" action="/profile/save" class="form-horizontal">
+    <form method="post" action="<c:url value="/profile/save"/>" class="form-horizontal">
         <input type="hidden" name="id" value="${user.id}"/>
         <my:form-input type="text"
                        name="nickname"

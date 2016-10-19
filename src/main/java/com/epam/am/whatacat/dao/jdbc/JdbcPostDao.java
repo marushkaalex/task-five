@@ -21,6 +21,8 @@ import java.util.List;
 public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
 
     private static final String TABLE_NAME = "post";
+    private static final String TABLE_NAME_USER = "user";
+    private static final String TABLE_NAME_ROLE = "role";
 
     private DataBinder<Post> dataBinder = new PostDataBinder();
 
@@ -61,10 +63,12 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
 
     @Override
     public void rate(PostRating postRating) throws DaoException {
-        PreparedStatement preparedStatement = null;
-        try {
+        try (
+                PreparedStatement preparedStatement = postRating.getId() == null
+                        ? getConnection().prepareStatement("INSERT INTO post_rating(post_id, user_id, delta, date_) VALUES(?, ?, ?, ?)")
+                        : getConnection().prepareStatement("UPDATE post_rating SET post_id=?, user_id=?, delta=?, date_=? WHERE id=?")
+        ) {
             if (postRating.getId() == null) {
-                preparedStatement = getConnection().prepareStatement("INSERT INTO post_rating(post_id, user_id, delta, date_) VALUES(?, ?, ?, ?)");
                 preparedStatement.setLong(1, postRating.getPostId());
                 preparedStatement.setLong(2, postRating.getUserId());
                 preparedStatement.setInt(3, postRating.getRatingDelta());
@@ -77,7 +81,6 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 }
                 generatedKeys.close();
             } else {
-                preparedStatement = getConnection().prepareStatement("UPDATE post_rating SET post_id=?, user_id=?, delta=?, date_=? WHERE id=?");
                 preparedStatement.setLong(1, postRating.getPostId());
                 preparedStatement.setLong(2, postRating.getUserId());
                 preparedStatement.setInt(3, postRating.getRatingDelta());
@@ -88,22 +91,14 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             }
         } catch (SQLException e) {
             throw new DaoException(e);
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    throw new DaoException(e);
-                }
-            }
         }
     }
 
     @Override
     public PostRating getRating(long postId, long userId) throws DaoException {
-        PreparedStatement preparedStatement = null;
-        try {
-            preparedStatement = getConnection().prepareStatement("SELECT id, delta, date_ FROM post_rating WHERE post_id=? AND user_id=?");
+        try (
+                PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT id, delta, date_ FROM post_rating WHERE post_id=? AND user_id=?")
+        ) {
             preparedStatement.setLong(1, postId);
             preparedStatement.setLong(2, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -119,17 +114,11 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 rating.setDate(new Date(date_.getTime()));
             }
 
+            resultSet.close();
+
             return rating;
         } catch (SQLException e) {
             throw new DaoException(e);
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    throw new DaoException(e);
-                }
-            }
         }
     }
 
@@ -146,6 +135,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             long count = resultSet.getLong(1);
+            resultSet.close();
             return count;
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -169,16 +159,16 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 new TableField(TABLE_NAME, "rating"),
                 new TableField(TABLE_NAME, "author_id", "authorId"),
                 new TableField(TABLE_NAME, "status").setTypeConverter(o -> ((Post.Status) o).getId()),
-                new TableField("user", "id").setUseOnSave(false),
-                new TableField("user", "email").setUseOnSave(false),
-                new TableField("user", "nickname").setUseOnSave(false),
-                new TableField("user", "password", "hashedPassword").setUseOnSave(false),
-                new TableField("user", "role_id", "role").setTypeConverter(o -> ((Role) o).getId()).setUseOnSave(false),
-                new TableField("user", "gender").setTypeConverter(o -> ((Gender) o).getKey()).setUseOnSave(false),
-                new TableField("user", "rating").setUseOnSave(false),
-                new TableField("user", "avatar", "avatarUrl").setUseOnSave(false),
-                new TableField("user", "date", "registrationDate").setTypeConverter(o -> new java.sql.Timestamp(((Date) o).getTime())).setUseOnSave(false),
-                new TableField("role", "name").setUseOnSave(false).setUseOnSave(false)
+                new TableField(TABLE_NAME_USER, "id").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "email").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "nickname").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "password", "hashedPassword").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "role_id", "role").setTypeConverter(o -> ((Role) o).getId()).setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "gender").setTypeConverter(o -> ((Gender) o).getKey()).setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "rating").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "avatar", "avatarUrl").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "date", "registrationDate").setTypeConverter(o -> new java.sql.Timestamp(((Date) o).getTime())).setUseOnSave(false),
+                new TableField(TABLE_NAME_ROLE, "name").setUseOnSave(false).setUseOnSave(false)
         );
     }
 
@@ -201,6 +191,8 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 Post post = bindDataWithRating(resultSet);
                 res.add(post);
             }
+
+            resultSet.close();
             return res;
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -227,6 +219,8 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 Post post = getDataBinder().bind(resultSet);
                 res.add(post);
             }
+
+            resultSet.close();
             return res;
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -279,6 +273,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 Post post = getDataBinder().bind(resultSet);
                 res.add(post);
             }
+            resultSet.close();
             return res;
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -312,6 +307,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             long count = resultSet.getLong(1);
+            resultSet.close();
             return count;
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -353,6 +349,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             while (resultSet.next()) {
                 delete(resultSet.getLong("id"));
             }
+            resultSet.close();
         } catch (SQLException e) {
             throw new DaoException(e);
         }

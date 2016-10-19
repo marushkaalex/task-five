@@ -38,9 +38,10 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
 
     @Override
     public boolean isNicknameFree(String nickname) throws DaoException {
-        try {
-            PreparedStatement preparedStatement =
-                    getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE nickname=?");
+        try (
+                PreparedStatement preparedStatement =
+                        getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE nickname=?")
+        ) {
 
             preparedStatement.setString(1, nickname);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -54,10 +55,10 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
 
     @Override
     public boolean isEmailFree(String email) throws DaoException {
-        try {
-            PreparedStatement preparedStatement =
-                    getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE email=?");
-
+        try (
+                PreparedStatement preparedStatement =
+                        getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE email=?")
+        ) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             boolean res = resultSet.next();
@@ -70,10 +71,10 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
 
     @Override
     public User findByEmail(String email) throws DaoException {
-        try {
-            PreparedStatement preparedStatement =
-                    getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE email=?");
-
+        try (
+                PreparedStatement preparedStatement =
+                        getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE email=?")
+        ) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             User user = null;

@@ -4,9 +4,15 @@ import com.epam.am.whatacat.dao.BaseDao;
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.model.BaseModel;
 
-import java.beans.*;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,11 +135,12 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
             PreparedStatement preparedStatement = connection.prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE " + getTableName(true) + ".id=?;");
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+            T model = null;
             if (resultSet.next()) {
-                return getDataBinder().bind(resultSet);
-            } else {
-                return null;
+                model = getDataBinder().bind(resultSet);
             }
+            resultSet.close();
+            return model;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
@@ -197,6 +204,7 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             long count = resultSet.getLong(1);
+            resultSet.close();
             return count;
         } catch (SQLException e) {
             throw new DaoException(e);
