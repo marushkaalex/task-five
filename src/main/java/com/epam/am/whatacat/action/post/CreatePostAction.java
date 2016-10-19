@@ -1,8 +1,8 @@
 package com.epam.am.whatacat.action.post;
 
-import com.epam.am.whatacat.action.Action;
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
+import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.PostService;
@@ -16,27 +16,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-public class CreatePostAction implements Action {
+public class CreatePostAction extends BaseAction {
+
     private static final Logger LOG = LoggerFactory.getLogger(CreatePostAction.class);
 
+    private static final String VALIDATOR = "post";
+    private static final String VIEW = "create-post";
+    private static final String REDIRECT_URL = "post?id=";
+    private static final String PARAMETER_TITLE = "title";
+    private static final String PARAMETER_CONTENT = "content";
+
     @Override
-    public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        FormValidator validator = FormValidatorFactory.getInstance().getValidator("post");
+    public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
+        FormValidator validator = FormValidatorFactory.getInstance().getValidator(VALIDATOR);
         Map<String, String> errorMap = validator.validate(request.getParameterMap());
         if (!errorMap.isEmpty()) {
-            request.setAttribute("errorMap", errorMap);
-            return new ActionResult("create-post");
+            setErrorMap(request, errorMap);
+            return new ActionResult(VIEW);
         }
 
-        String title = request.getParameter("title");
-        String content = request.getParameter("content");
+        String title = request.getParameter(PARAMETER_TITLE);
+        String content = request.getParameter(PARAMETER_CONTENT);
 
         try (PostService postService = new PostService()) {
-            User user = (User) request.getSession().getAttribute("user");
+            User user = getUser(request);
             Post post = postService.createPost(Post.TYPE_TEXT, title, content, user.getId());
 
             LOG.info("Post [{}] has been created", post.getId());
-            return new ActionResult("post?id=" + post.getId(), true);
+
+            return new ActionResult(REDIRECT_URL + post.getId(), true);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }

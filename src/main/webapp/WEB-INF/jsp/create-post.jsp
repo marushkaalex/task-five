@@ -9,7 +9,7 @@
                        name="title"
                        labelKey="post.hint.title"
                        value="${param.title}"
-                       error="${errorMap.title}"/>
+                       error="${sessionScope.errorMap.title}"/>
         <div class="form-group">
             <label class="control-label col-xs-2" for="content">
                 <fmt:message key="post.hint.content"/>
@@ -17,7 +17,7 @@
             <div class="col-xs-7">
                 <textarea id="content" form="post-form" class="form-control" name="content" rows="10">${param.content}</textarea>
             </div>
-            <div class="col-xs-3"><my:print key="${errorMap.content}"/></div>
+            <div class="col-xs-3"><my:print key="${sessionScope.errorMap.content}"/></div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
@@ -25,7 +25,4 @@
             </div>
         </div>
     </form>
-    <c:forEach var="error" items="${errorList}">
-        <c:out value="${error}"/><br>
-    </c:forEach>
 </my:base>
