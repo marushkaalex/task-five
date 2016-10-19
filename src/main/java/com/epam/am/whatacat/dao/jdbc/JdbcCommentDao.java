@@ -16,7 +16,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentDao {
-    public static final String TABLE_NAME = "comment";
+    private static final String TABLE_NAME = "comment";
+    private static final String TABLE_NAME_USER = "user";
+    private static final String TABLE_NAME_ROLE = "role";
 
     private DataBinder<Comment> dataBinder = new CommentDataBinder();
 
@@ -43,16 +45,16 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
                 new TableField(TABLE_NAME, "_date", "publicationDate").setTypeConverter(new DateTypeConverter()),
                 new TableField(TABLE_NAME, "text"),
                 new TableField(TABLE_NAME, "post_id", "postId"),
-                new TableField("user", "id").setUseOnSave(false),
-                new TableField("user", "email").setUseOnSave(false),
-                new TableField("user", "nickname").setUseOnSave(false),
-                new TableField("user", "password", "hashedPassword").setUseOnSave(false),
-                new TableField("user", "role_id", "role").setTypeConverter(o -> ((Role) o).getId()).setUseOnSave(false),
-                new TableField("user", "gender").setTypeConverter(o -> ((Gender) o).getKey()).setUseOnSave(false),
-                new TableField("user", "rating").setUseOnSave(false),
-                new TableField("user", "avatar", "avatarUrl").setUseOnSave(false),
-                new TableField("user", "date", "registrationDate").setTypeConverter(new DateTypeConverter()).setUseOnSave(false),
-                new TableField("role", "name").setUseOnSave(false)
+                new TableField(TABLE_NAME_USER, "id").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "email").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "nickname").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "password", "hashedPassword").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "role_id", "role").setTypeConverter(o -> ((Role) o).getId()).setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "gender").setTypeConverter(o -> ((Gender) o).getKey()).setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "rating").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "avatar", "avatarUrl").setUseOnSave(false),
+                new TableField(TABLE_NAME_USER, "date", "registrationDate").setTypeConverter(new DateTypeConverter()).setUseOnSave(false),
+                new TableField(TABLE_NAME_ROLE, "name").setUseOnSave(false)
         );
     }
 

@@ -19,7 +19,8 @@ import java.util.Date;
 import java.util.List;
 
 public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
-    public static final String TABLE_NAME = "post";
+
+    private static final String TABLE_NAME = "post";
 
     private DataBinder<Post> dataBinder = new PostDataBinder();
 
@@ -29,7 +30,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
 
     @Override
     public String getTableName(boolean isInsert) {
-        return "post";
+        return TABLE_NAME;
     }
 
     @Override

@@ -7,11 +7,18 @@ import com.epam.am.whatacat.model.Gender;
 import com.epam.am.whatacat.model.Role;
 import com.epam.am.whatacat.model.User;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
-    public static final String TABLE_NAME = "user";
+
+    private static final String TABLE_NAME_INSERT = "user";
+    private static final String TABLE_NAME = "user, role";
+    private static final String TABLE_NAME_ROLE = "role";
 
     private DataBinder<User> dataBinder = new UserDataBinder();
 
@@ -21,7 +28,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
 
     @Override
     public String getTableName(boolean isInsert) {
-        return isInsert ? "user" : "user, role";
+        return isInsert ? TABLE_NAME_INSERT : TABLE_NAME;
     }
 
     @Override
@@ -62,7 +69,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     }
 
     @Override
-    public User findByEmail(String email) throws DaoException{
+    public User findByEmail(String email) throws DaoException {
         try {
             PreparedStatement preparedStatement =
                     getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE email=?");
@@ -83,16 +90,16 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     @Override
     protected List<TableField> getTableFields() {
         return Arrays.asList(
-                new TableField(TABLE_NAME, "id"),
-                new TableField(TABLE_NAME, "email"),
-                new TableField(TABLE_NAME, "nickname"),
-                new TableField(TABLE_NAME, "password", "hashedPassword"),
-                new TableField(TABLE_NAME, "role_id", "role").setTypeConverter(o -> ((Role) o).getId()),
-                new TableField(TABLE_NAME, "gender").setTypeConverter(o -> ((Gender) o).getKey()),
-                new TableField(TABLE_NAME, "rating"),
-                new TableField(TABLE_NAME, "avatar", "avatarUrl"),
-                new TableField(TABLE_NAME, "date", "registrationDate").setTypeConverter(new DateTypeConverter()),
-                new TableField("role", "name").setUseOnSave(false)
+                new TableField(TABLE_NAME_INSERT, "id"),
+                new TableField(TABLE_NAME_INSERT, "email"),
+                new TableField(TABLE_NAME_INSERT, "nickname"),
+                new TableField(TABLE_NAME_INSERT, "password", "hashedPassword"),
+                new TableField(TABLE_NAME_INSERT, "role_id", "role").setTypeConverter(o -> ((Role) o).getId()),
+                new TableField(TABLE_NAME_INSERT, "gender").setTypeConverter(o -> ((Gender) o).getKey()),
+                new TableField(TABLE_NAME_INSERT, "rating"),
+                new TableField(TABLE_NAME_INSERT, "avatar", "avatarUrl"),
+                new TableField(TABLE_NAME_INSERT, "date", "registrationDate").setTypeConverter(new DateTypeConverter()),
+                new TableField(TABLE_NAME_ROLE, "name").setUseOnSave(false)
         );
     }
 
