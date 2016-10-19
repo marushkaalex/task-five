@@ -30,7 +30,6 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
         PreparedStatement preparedStatement = null;
         try {
             if (model.getId() == null) {
-                // TODO
                 StringBuilder columnsSb = new StringBuilder();
                 StringBuilder valuesSb = new StringBuilder();
                 List<TableField> tableFields = getTableFields();
@@ -65,7 +64,6 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                     }
                     preparedStatement.setObject(i + 1, value);
                 }
-//                preparedStatement.setLong(tableFields.size() + 1, model.getId());
                 preparedStatement.execute();
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
