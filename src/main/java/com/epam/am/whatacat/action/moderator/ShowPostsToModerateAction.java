@@ -1,70 +1,97 @@
 package com.epam.am.whatacat.action.moderator;
 
-import com.epam.am.whatacat.action.Action;
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
+import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.model.AdminTable;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
 import com.epam.am.whatacat.utils.ParameterUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.jstl.core.Config;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ShowPostsToModerateAction implements Action {
+public class ShowPostsToModerateAction extends BaseAction {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ShowPostsToModerateAction.class);
+
+    private static final int POSTS_PER_PAGE = 2;
     private static final int COLUMN_MAX_LENGTH = 30;
-    public static final int POSTS_PER_PAGE = 2;
+
+    private static final String PARAMETER_PAGE = "page";
+    private static final String ATTRIBUTE_TABLE = "table";
+    private static final String ATTRIBUTE_TYPE = "type";
+    private static final String TYPE = "moderation";
+    private static final String VIEW = "admin";
+    private static final String REDIRECT_URL = "/post?id=";
+
+    private static final String TABLE_HEADER_TITLE = "admin.posts.header.title";
+    private static final String TABLE_HEADER_AUTHOR = "admin.posts.header.author";
+    private static final String TABLE_HEADER_DATE = "admin.posts.header.date";
+    private static final String TABLE_DATE_FORMAT = "yyyy-MM-dd";
+    private static final String TABLE_HEADER_MODERATE = "admin.posts.header.moderate";
+    private static final String TABLE_TITLE = "admin.posts";
 
     @Override
-    public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        int page = ParameterUtils.parseInt(request.getParameter("page"), 1);
+    public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
+        int page = ParameterUtils.parseInt(request.getParameter(PARAMETER_PAGE), 1);
         try (PostService postService = new PostService()) {
-            List<Post> postList = postService.getPostListByStatus(
-                    Post.Status.ON_MODERATION,
-                    null,
-                    POSTS_PER_PAGE,
-                    POSTS_PER_PAGE * (page - 1)
-            );
-            AdminTable table = new AdminTable();
-            AdminTable.Row headers = new AdminTable.Row()
-                    .addColumn("admin.posts.header.title")
-                    .addColumn("admin.posts.header.author")
-                    .addColumn("admin.posts.header.date")
-                    .addColumn("admin.posts.header.moderate");
-            table.setHeaders(headers);
-            Locale locale = (Locale) Config.get(request.getSession(), Config.FMT_LOCALE);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", locale);
-            List<AdminTable.Row> rowList = new ArrayList<>();
+            AdminTable table = createTable(postService, page, getLocale(request));
 
-            for (Post post : postList) {
-                String formattedDate = dateFormat.format(post.getPublicationDate());
-                AdminTable.Row row = new AdminTable.Row();
-                row
-                        .addColumn(cutString(post.getTitle()))
-                        .addColumn(cutString(post.getAuthor().getNickname()))
-                        .addColumn(formattedDate)
-                        .addColumn("admin.posts.header.moderate", true, "/post?id=" + post.getId());
-                rowList.add(row);
-            }
+            request.setAttribute(ATTRIBUTE_TABLE, table);
+            request.setAttribute(ATTRIBUTE_TYPE, TYPE);
 
-            double count = postService.countByStatus(Post.Status.ON_MODERATION);
-            table.setRows(rowList);
-            table.setPage(page);
-            table.setPageCount(Double.valueOf(Math.ceil(count / POSTS_PER_PAGE)).intValue());
-            table.setTitle("admin.posts");
+            LOG.info("Post list to moderate page {} has been shown", page);
 
-            request.setAttribute("table", table);
-            request.setAttribute("type", "moderation");
-            return new ActionResult("admin");
+            return new ActionResult(VIEW);
         } catch (ServiceException e) {
             throw new ActionException(e);
         }
+    }
+
+    private AdminTable createTable(PostService postService, int page, Locale locale) throws ServiceException {
+        List<Post> postList = postService.getPostListByStatus(
+                Post.Status.ON_MODERATION,
+                null,
+                POSTS_PER_PAGE,
+                POSTS_PER_PAGE * (page - 1)
+        );
+
+        AdminTable table = new AdminTable();
+        AdminTable.Row headers = new AdminTable.Row()
+                .addColumn(TABLE_HEADER_TITLE)
+                .addColumn(TABLE_HEADER_AUTHOR)
+                .addColumn(TABLE_HEADER_DATE)
+                .addColumn(TABLE_HEADER_MODERATE);
+        table.setHeaders(headers);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(TABLE_DATE_FORMAT, locale);
+        List<AdminTable.Row> rowList = new ArrayList<>();
+
+        for (Post post : postList) {
+            String formattedDate = dateFormat.format(post.getPublicationDate());
+            AdminTable.Row row = new AdminTable.Row();
+            row
+                    .addColumn(cutString(post.getTitle()))
+                    .addColumn(cutString(post.getAuthor().getNickname()))
+                    .addColumn(formattedDate)
+                    .addColumn(TABLE_HEADER_MODERATE, true, REDIRECT_URL + post.getId());
+            rowList.add(row);
+        }
+
+        double count = postService.countByStatus(Post.Status.ON_MODERATION);
+        table.setRows(rowList);
+        table.setPage(page);
+        table.setPageCount(Double.valueOf(Math.ceil(count / POSTS_PER_PAGE)).intValue());
+        table.setTitle(TABLE_TITLE);
+
+        return table;
     }
 
     private String cutString(String str) {
