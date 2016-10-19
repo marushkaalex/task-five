@@ -46,24 +46,8 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 String query = String.format("INSERT INTO %s(%s) VALUES(%s);", getTableName(true), columnsSb, valuesSb);
                 preparedStatement = connection.prepareStatement(query);
 
-                BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
-                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-                Map<String, PropertyDescriptor> descriptorMap = new HashMap<>();
-                for (PropertyDescriptor descriptor : propertyDescriptors) {
-                    descriptorMap.put(descriptor.getName(), descriptor);
-                }
-                for (int i = 0; i < tableFields.size(); i++) {
-                    TableField field = tableFields.get(i);
-                    if (!field.isUseOnSave()) continue;
-                    PropertyDescriptor descriptor = descriptorMap.get(field.getObjectFieldName());
-                    if (descriptor == null) continue;
-                    Object value = descriptor.getReadMethod().invoke(model);
-                    TableField.TypeConverter<?> typeConverter = field.getTypeConverter();
-                    if (typeConverter != null) {
-                        value = typeConverter.convert(value);
-                    }
-                    preparedStatement.setObject(i + 1, value);
-                }
+                Map<String, PropertyDescriptor> descriptorMap = getDescriptorMap();
+                bindDataToStatement(preparedStatement, tableFields, descriptorMap, model);
                 preparedStatement.execute();
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
@@ -84,26 +68,8 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 String query = String.format("UPDATE %s SET %s WHERE id=?", getTableName(true), sb);
                 preparedStatement = connection.prepareStatement(query);
 
-                BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
-                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-                Map<String, PropertyDescriptor> descriptorMap = new HashMap<>();
-                for (PropertyDescriptor descriptor : propertyDescriptors) {
-                    descriptorMap.put(descriptor.getName(), descriptor);
-                }
-                int usedCount = 0;
-                for (int i = 0; i < tableFields.size(); i++) {
-                    TableField field = tableFields.get(i);
-                    if (!field.isUseOnSave()) continue;
-                    PropertyDescriptor descriptor = descriptorMap.get(field.getObjectFieldName());
-                    if (descriptor == null) continue;
-                    Object value = descriptor.getReadMethod().invoke(model);
-                    TableField.TypeConverter<?> typeConverter = field.getTypeConverter();
-                    if (typeConverter != null) {
-                        value = typeConverter.convert(value);
-                    }
-                    preparedStatement.setObject(i + 1, value);
-                    usedCount++;
-                }
+                Map<String, PropertyDescriptor> descriptorMap = getDescriptorMap();
+                int usedCount = bindDataToStatement(preparedStatement, tableFields, descriptorMap, model);
                 preparedStatement.setLong(usedCount + 1, model.getId());
                 preparedStatement.execute();
                 return model;
@@ -119,6 +85,30 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 }
             }
         }
+    }
+
+    private int bindDataToStatement(
+            PreparedStatement preparedStatement,
+            List<TableField> tableFields,
+            Map<String, PropertyDescriptor> descriptorMap,
+            T model
+    ) throws SQLException, InvocationTargetException, IllegalAccessException {
+        int usedCount = 0;
+        for (int i = 0; i < tableFields.size(); i++) {
+            TableField field = tableFields.get(i);
+            if (!field.isUseOnSave()) continue;
+            PropertyDescriptor descriptor = descriptorMap.get(field.getObjectFieldName());
+            if (descriptor == null) continue;
+            Object value = descriptor.getReadMethod().invoke(model);
+            TableField.TypeConverter<?> typeConverter = field.getTypeConverter();
+            if (typeConverter != null) {
+                value = typeConverter.convert(value);
+            }
+            preparedStatement.setObject(i + 1, value);
+            usedCount++;
+        }
+
+        return usedCount;
     }
 
     @Override
@@ -211,5 +201,16 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    private Map<String, PropertyDescriptor> getDescriptorMap() throws IntrospectionException {
+        BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        Map<String, PropertyDescriptor> descriptorMap = new HashMap<>();
+        for (PropertyDescriptor descriptor : propertyDescriptors) {
+            descriptorMap.put(descriptor.getName(), descriptor);
+        }
+
+        return descriptorMap;
     }
 }

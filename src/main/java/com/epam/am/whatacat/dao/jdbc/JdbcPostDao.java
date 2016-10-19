@@ -33,25 +33,6 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     }
 
     @Override
-    public List<Post> getAllWithUserRating(long limit, long offset, long userId) throws DaoException {
-        String query = getSelectQuery() + ",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?" + getJoin() + getOrderBy() + " LIMIT ? OFFSET ?";
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
-            preparedStatement.setLong(1, userId);
-            preparedStatement.setLong(2, limit);
-            preparedStatement.setLong(3, offset);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List<Post> res = new ArrayList<>();
-            while (resultSet.next()) {
-                Post post = bindDataWithRating(resultSet);
-                res.add(post);
-            }
-            return res;
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
     public DataBinder<Post> getDataBinder() {
         return dataBinder;
     }
@@ -165,23 +146,6 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             resultSet.next();
             long count = resultSet.getLong(1);
             return count;
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public Post findByIdWithRating(long postId, long userId) throws DaoException {
-        String query = getSelectQuery() + ",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=? WHERE post.id=?";
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
-            preparedStatement.setLong(1, userId);
-            preparedStatement.setLong(2, postId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            Post res = new Post();
-            if (resultSet.next()) {
-                res = bindDataWithRating(resultSet);
-            }
-            return res;
         } catch (SQLException e) {
             throw new DaoException(e);
         }

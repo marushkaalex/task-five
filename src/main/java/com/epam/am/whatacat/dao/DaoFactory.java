@@ -2,7 +2,6 @@ package com.epam.am.whatacat.dao;
 
 public abstract class DaoFactory implements AutoCloseable {
     /**
-     *
      * @return new instance of preferred implementation
      * @throws DaoException
      */
@@ -24,6 +23,7 @@ public abstract class DaoFactory implements AutoCloseable {
 
     /**
      * Release all used resources
+     *
      * @throws DaoException
      */
     public void release() throws DaoException {
@@ -32,38 +32,38 @@ public abstract class DaoFactory implements AutoCloseable {
 
     /**
      * Starts transcation
+     *
      * @throws DaoException
      */
     public abstract void startTransaction() throws DaoException;
 
     /**
      * Commits started production
+     *
      * @throws DaoException
      */
     public abstract void commitTransaction() throws DaoException;
 
     /**
      * Rollbacks current transaction
+     *
      * @throws DaoException
      */
     public abstract void rollbackTransaction() throws DaoException;
 
     /**
-     *
      * @return UserDao implementation
      * @throws DaoException
      */
     public abstract UserDao getUserDao() throws DaoException;
 
     /**
-     *
      * @return PostDao implementation
      * @throws DaoException
      */
     public abstract PostDao getPostDao() throws DaoException;
 
     /**
-     *
      * @return CommentDao implementation
      * @throws DaoException
      */
