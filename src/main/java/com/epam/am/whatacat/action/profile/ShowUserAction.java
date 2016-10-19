@@ -1,8 +1,8 @@
 package com.epam.am.whatacat.action.profile;
 
-import com.epam.am.whatacat.action.Action;
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
+import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.model.AdminTable;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.model.Role;
@@ -11,33 +11,45 @@ import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
 import com.epam.am.whatacat.service.UserService;
 import com.epam.am.whatacat.utils.ParameterUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowUserAction implements Action {
-    public static final int POSTS_PER_PAGE = 2;
+public class ShowUserAction extends BaseAction {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ShowUserAction.class);
+
+    private static final int POSTS_PER_PAGE = 2;
+    private static final String PARAMETER_PAGE = "page";
+    private static final String ATTRIBUTE_USER = "user";
+    private static final String ATTRIBUTE_POST_LIST = "postList";
+    private static final String VIEW = "user";
+    private static final String TABLE_POST_URL = "/post?id=";
 
     @Override
-    public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        long id = ParameterUtils.parseLong(request.getParameter("id"), -1L);
-        int page = ParameterUtils.parseInt(request.getParameter("page"), 1);
-        if (id != -1) {
+    public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
+        long id = getIdParameter(request);
+        if (id != INVALID_ID) {
             try (
                     UserService userService = new UserService();
                     PostService postService = new PostService()
             ) {
+                int page = ParameterUtils.parseInt(request.getParameter(PARAMETER_PAGE), 1);
                 User user = userService.findById(id);
                 if (user == null) return new ActionResult(HttpServletResponse.SC_NOT_FOUND);
 
-                request.setAttribute("user", user);
+                request.setAttribute(ATTRIBUTE_USER, user);
 
                 AdminTable userPosts = getUserPosts(request, id, postService, page);
-                request.setAttribute("postList", userPosts);
+                request.setAttribute(ATTRIBUTE_POST_LIST, userPosts);
 
-                return new ActionResult("user");
+                LOG.info("User [{}] has been shown", id);
+
+                return new ActionResult(VIEW);
             } catch (ServiceException e) {
                 throw new ActionException(e);
             }
@@ -47,7 +59,7 @@ public class ShowUserAction implements Action {
     }
 
     private AdminTable getUserPosts(HttpServletRequest request, long userId, PostService postService, int page) throws ServiceException {
-        User user = (User) request.getSession().getAttribute("user");
+        User user = getUser(request);
         // only user, moderators and admins are allowed to see posts of any status
         Post.Status status = null;
         boolean showStatus = true;
@@ -70,7 +82,7 @@ public class ShowUserAction implements Action {
         for (Post post : allOfUser) {
             AdminTable.Row row = new AdminTable.Row()
                     .addColumn(String.valueOf(post.getRating()))
-                    .addColumn(post.getTitle(), "/post?id=" + post.getId());
+                    .addColumn(post.getTitle(), TABLE_POST_URL + post.getId());
 
             if (showStatus) {
                 row.addColumn(post.getStatus().getTitleKey(), true, null);
