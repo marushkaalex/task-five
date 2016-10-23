@@ -1,11 +1,15 @@
 package com.epam.am.whatacat.validation;
 
-import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class FormValidator {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FormValidator.class);
+
     private Map<String, FieldValidator> fieldValidatorsMap;
 
     public FormValidator(Map<String, FieldValidator> fieldValidatorsMap) {
@@ -27,7 +31,10 @@ public class FormValidator {
             String fieldName = entry.getKey();
             String fieldValue = entry.getValue()[0];
             FieldValidator validator = fieldValidatorsMap.get(fieldName);
-            if (validator == null) continue; // we don't need to validate this field
+            if (validator == null) {
+                LOG.debug("There is no validator for field '{}'", fieldName);
+                continue; // we don't need to validate this field
+            }
             String errorMessageKey = validator.validate(fieldValue);
             if (errorMessageKey != null) {
                 res.put(fieldName, errorMessageKey);
