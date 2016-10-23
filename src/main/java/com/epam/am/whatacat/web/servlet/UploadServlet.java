@@ -47,6 +47,8 @@ public class UploadServlet extends HttpServlet {
             throw new ServletException(e);
         }
 
+        LOG.info("File {} has been uploaded", newFile.getPath());
+
         resp.sendRedirect("/profile");
     }
 }
