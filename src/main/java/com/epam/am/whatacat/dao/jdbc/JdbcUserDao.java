@@ -19,6 +19,16 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     private static final String TABLE_NAME_INSERT = "user";
     private static final String TABLE_NAME = "user, role";
     private static final String TABLE_NAME_ROLE = "role";
+    private static final String COLUMN_NICKNAME = "nickname";
+    private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_ROLE_ID = "role_id";
+    private static final String COLUMN_GENDER = "gender";
+    private static final String COLUMN_RATING = "rating";
+    private static final String COLUMN_AVATAR = "avatar";
+    private static final String COLUMN_DATE = "date";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_ID = "id";
 
     private DataBinder<User> dataBinder = new UserDataBinder();
 
@@ -38,12 +48,12 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
 
     @Override
     public boolean isNicknameFree(String nickname) throws DaoException {
-        return !isFoundWhere("nickname", nickname);
+        return !isFoundWhere(COLUMN_NICKNAME, nickname);
     }
 
     @Override
     public boolean isEmailFree(String email) throws DaoException {
-        return !isFoundWhere("email", email);
+        return !isFoundWhere(COLUMN_EMAIL, email);
     }
 
     private boolean isFoundWhere(String columnName, String value) throws DaoException {
@@ -65,7 +75,7 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     public User findByEmail(String email) throws DaoException {
         try (
                 PreparedStatement preparedStatement =
-                        getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE email=?")
+                        getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE " + COLUMN_EMAIL + "=?")
         ) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -83,21 +93,21 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
     @Override
     protected List<TableField> getTableFields() {
         return Arrays.asList(
-                new TableField(TABLE_NAME_INSERT, "id"),
-                new TableField(TABLE_NAME_INSERT, "email"),
-                new TableField(TABLE_NAME_INSERT, "nickname"),
-                new TableField(TABLE_NAME_INSERT, "password", "hashedPassword"),
-                new TableField(TABLE_NAME_INSERT, "role_id", "role").setTypeConverter(o -> ((Role) o).getId()),
-                new TableField(TABLE_NAME_INSERT, "gender").setTypeConverter(o -> ((Gender) o).getKey()),
-                new TableField(TABLE_NAME_INSERT, "rating"),
-                new TableField(TABLE_NAME_INSERT, "avatar", "avatarUrl"),
-                new TableField(TABLE_NAME_INSERT, "date", "registrationDate").setTypeConverter(new DateTypeConverter()),
-                new TableField(TABLE_NAME_ROLE, "name").setUseOnSave(false)
+                new TableField(TABLE_NAME_INSERT, COLUMN_ID),
+                new TableField(TABLE_NAME_INSERT, COLUMN_EMAIL),
+                new TableField(TABLE_NAME_INSERT, COLUMN_NICKNAME),
+                new TableField(TABLE_NAME_INSERT, COLUMN_PASSWORD, "hashedPassword"),
+                new TableField(TABLE_NAME_INSERT, COLUMN_ROLE_ID, "role").setTypeConverter(o -> ((Role) o).getId()),
+                new TableField(TABLE_NAME_INSERT, COLUMN_GENDER).setTypeConverter(o -> ((Gender) o).getKey()),
+                new TableField(TABLE_NAME_INSERT, COLUMN_RATING),
+                new TableField(TABLE_NAME_INSERT, COLUMN_AVATAR, "avatarUrl"),
+                new TableField(TABLE_NAME_INSERT, COLUMN_DATE, "registrationDate").setTypeConverter(new DateTypeConverter()),
+                new TableField(TABLE_NAME_ROLE, COLUMN_NAME).setUseOnSave(false)
         );
     }
 
     @Override
     protected String getJoin() {
-        return " JOIN role ON user.role_id=role.id";
+        return " JOIN " + TABLE_NAME_ROLE + " ON " + makeTableField(TABLE_NAME_INSERT, COLUMN_ROLE_ID) + "=" + makeTableField(TABLE_NAME_ROLE, COLUMN_ID);
     }
 }
