@@ -3,6 +3,8 @@ package com.epam.am.whatacat.dao.jdbc;
 import com.epam.am.whatacat.dao.BaseDao;
 import com.epam.am.whatacat.dao.DaoException;
 import com.epam.am.whatacat.model.BaseModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -19,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractJdbcDao.class);
+
     private Connection connection;
     private Class<T> clazz;
 
@@ -60,6 +65,9 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                     model.setId(generatedKeys.getLong(1));
                 }
                 generatedKeys.close();
+
+                LOG.debug("Entity of {} has been inserted. Id: {}", clazz, model.getId());
+
                 return model;
             } else {
                 StringBuilder sb = new StringBuilder();
@@ -78,6 +86,9 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                 int usedCount = bindDataToStatement(preparedStatement, tableFields, descriptorMap, model);
                 preparedStatement.setLong(usedCount + 1, model.getId());
                 preparedStatement.execute();
+
+                LOG.debug("Entity of {} id [{}] has been updated", clazz, model.getId());
+
                 return model;
             }
         } catch (SQLException | IllegalAccessException | IntrospectionException | InvocationTargetException e) {
@@ -124,6 +135,8 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
                     connection.prepareStatement("DELETE FROM " + getTableName(true) + " WHERE id=?");
             preparedStatement.setLong(1, id);
             preparedStatement.execute();
+
+            LOG.debug("Entity of {} id [{}] has been deleted", clazz, id);
         } catch (SQLException e) {
             throw new DaoException(e);
         }
@@ -138,6 +151,9 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
             T model = null;
             if (resultSet.next()) {
                 model = getDataBinder().bind(resultSet);
+                LOG.debug("Entity of {} has been found by id [{}]", clazz, id);
+            } else {
+                LOG.debug("Entity of {} has not been found by id [{}]", clazz, id);
             }
             resultSet.close();
             return model;

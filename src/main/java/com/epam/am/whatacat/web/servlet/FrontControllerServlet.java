@@ -33,18 +33,22 @@ public class FrontControllerServlet extends HttpServlet {
             ActionResult actionResult = action.execute(req, resp);
             processResult(req, resp, actionResult);
         } catch (ActionException e) {
+            LOG.error("Cannot execute action", e);
             throw new ServletException("Exception while executing action", e);
         }
     }
 
     private void processResult(HttpServletRequest req, HttpServletResponse resp, ActionResult result) throws IOException, ServletException {
         if (result.isError()) {
+            LOG.debug("Action result is error: {}", result.getError());
             resp.sendError(result.getError());
         } else if (result.isRedirect()) {
             String path = req.getContextPath() + result.getView();
+            LOG.debug("Redirect path: {}", path);
             resp.sendRedirect(path);
         } else {
             String path = "/WEB-INF/jsp/" + result.getView() + ".jsp";
+            LOG.debug("Forward path: {}", path);
             req.getRequestDispatcher(path).forward(req, resp);
         }
     }

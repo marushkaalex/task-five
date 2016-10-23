@@ -28,7 +28,8 @@ public class Listener implements ServletContextListener {
             ActionFactory.init();
             LOG.info("Initialization was successful");
         } catch (IOException | ConnectionPoolException e) {
-            throw new RuntimeException("Unable to configure connection pool properties", e);
+            LOG.error("Unable to configure connection pool properties", e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -36,7 +37,8 @@ public class Listener implements ServletContextListener {
         try {
             ConnectionPool.getInstance().shutDown();
         } catch (ConnectionPoolException e) {
-            throw new RuntimeException("Unable to shutdown connection pool", e);
+            LOG.error("Unable to shutdown connection pool", e);
+            throw new RuntimeException(e);
         }
     }
 }
