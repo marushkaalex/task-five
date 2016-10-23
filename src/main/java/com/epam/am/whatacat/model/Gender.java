@@ -21,7 +21,7 @@ public enum Gender {
         return titleKey;
     }
 
-    public static Gender of(char key) {
+    public static Gender forKey(char key) {
         for (Gender gender : values()) {
             if (gender.key == key) {
                 return gender;

@@ -19,7 +19,7 @@ public class UserDataBinder implements DataBinder<User> {
             user.setEmail(resultSet.getString("user.email"));
             user.setNickname(resultSet.getString("user.nickname"));
             user.setRole(Role.valueOf(resultSet.getString("role.name")));
-            user.setGender(Gender.of(resultSet.getString("user.gender").charAt(0)));
+            user.setGender(Gender.forKey(resultSet.getString("user.gender").charAt(0)));
             user.setRating(resultSet.getLong("user.rating"));
             user.setAvatarUrl(resultSet.getString("user.avatar"));
             user.setRegistrationDate(new Date(resultSet.getTimestamp("user.date").getTime()));
