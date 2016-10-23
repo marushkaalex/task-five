@@ -21,7 +21,7 @@ public class LogoutAction extends BaseAction {
         User user = getUser(request);
         request.getSession().invalidate();
 
-        LOG.info("User {} logged out", user.getNickname());
+        LOG.info("User {} logged out", user == null ? null : user.getNickname());
 
         return new ActionResult(REDIRECT_URL, true);
     }

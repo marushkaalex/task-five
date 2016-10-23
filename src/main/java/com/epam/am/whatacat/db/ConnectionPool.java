@@ -53,13 +53,13 @@ public class ConnectionPool {
     public void releaseConnection(Connection connection) {
         connectionQueue.add(connection);
         usedConnectionQueue.remove(connection);
-        LOG.info("Connection {} was released", connection);
+        LOG.info("Connection {} has been released", connection);
     }
 
     public void shutDown() throws ConnectionPoolException {
         shutDown(connectionQueue);
         shutDown(usedConnectionQueue);
-        LOG.info("Connection pool was successfully shut down");
+        LOG.info("Connection pool has been successfully shut down");
     }
 
     private void shutDown(BlockingQueue<Connection> queue) throws ConnectionPoolException {
