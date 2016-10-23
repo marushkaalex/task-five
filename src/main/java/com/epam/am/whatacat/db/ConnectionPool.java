@@ -64,7 +64,7 @@ public class ConnectionPool {
 
     private void shutDown(BlockingQueue<Connection> queue) throws ConnectionPoolException {
         Connection connection;
-        while ((connection = connectionQueue.poll()) != null) {
+        while ((connection = queue.poll()) != null) {
             try {
                 if (connection instanceof ConnectionWrapper) {
                     ((ConnectionWrapper) connection).connection.close();

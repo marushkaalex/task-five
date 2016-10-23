@@ -23,6 +23,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     private static final String TABLE_NAME = "post";
     private static final String TABLE_NAME_USER = "user";
     private static final String TABLE_NAME_ROLE = "role";
+    private static final String TABLE_NAME_POST_RATING = "post_rating";
 
     private DataBinder<Post> dataBinder = new PostDataBinder();
 
@@ -45,11 +46,11 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             Post post = dataBinder.bind(resultSet);
 
             PostRating postRating = new PostRating();
-            postRating.setId(resultSet.getLong("post_rating.id"));
-            postRating.setUserId(resultSet.getLong("post_rating.user_id"));
-            postRating.setPostId(resultSet.getLong("post_rating.post_id"));
-            postRating.setRatingDelta(resultSet.getInt("post_rating.delta"));
-            java.sql.Timestamp date = resultSet.getTimestamp("post_rating.date_");
+            postRating.setId(resultSet.getLong(TABLE_NAME_POST_RATING + ".id"));
+            postRating.setUserId(resultSet.getLong(TABLE_NAME_POST_RATING + ".user_id"));
+            postRating.setPostId(resultSet.getLong(TABLE_NAME_POST_RATING + ".post_id"));
+            postRating.setRatingDelta(resultSet.getInt(TABLE_NAME_POST_RATING + ".delta"));
+            java.sql.Timestamp date = resultSet.getTimestamp(TABLE_NAME_POST_RATING + ".date_");
             if (date != null) {
                 postRating.setDate(new Date(date.getTime()));
             }

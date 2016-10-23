@@ -38,32 +38,24 @@ public class JdbcUserDao extends AbstractJdbcDao<User> implements UserDao {
 
     @Override
     public boolean isNicknameFree(String nickname) throws DaoException {
-        try (
-                PreparedStatement preparedStatement =
-                        getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE nickname=?")
-        ) {
-
-            preparedStatement.setString(1, nickname);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            boolean res = resultSet.next();
-            resultSet.close();
-            return !res;
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        return !isFoundWhere("nickname", nickname);
     }
 
     @Override
     public boolean isEmailFree(String email) throws DaoException {
+        return !isFoundWhere("email", email);
+    }
+
+    private boolean isFoundWhere(String columnName, String value) throws DaoException {
         try (
                 PreparedStatement preparedStatement =
-                        getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE email=?")
+                        getConnection().prepareStatement(getSelectQueryWithFrom() + getJoin() + " WHERE " + columnName + "=?")
         ) {
-            preparedStatement.setString(1, email);
+            preparedStatement.setString(1, value);
             ResultSet resultSet = preparedStatement.executeQuery();
             boolean res = resultSet.next();
             resultSet.close();
-            return !res;
+            return res;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
