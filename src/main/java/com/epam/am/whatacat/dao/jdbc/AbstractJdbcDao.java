@@ -26,10 +26,12 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
 
     private Connection connection;
     private Class<T> clazz;
+    private StringBuilder tableFieldStringBuilder;
 
     AbstractJdbcDao(Connection connection, Class<T> clazz) {
         this.connection = connection;
         this.clazz = clazz;
+        this.tableFieldStringBuilder = new StringBuilder();
     }
 
     public abstract String getTableName(boolean isInsert);
@@ -236,5 +238,10 @@ public abstract class AbstractJdbcDao<T extends BaseModel> implements BaseDao<T>
         }
 
         return descriptorMap;
+    }
+
+    protected String makeTableField(String table, String field) {
+        tableFieldStringBuilder.setLength(0);
+        return tableFieldStringBuilder.append(table).append('.').append(field).toString();
     }
 }

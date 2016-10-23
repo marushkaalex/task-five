@@ -60,7 +60,8 @@ public class JdbcCommentDao extends AbstractJdbcDao<Comment> implements CommentD
 
     @Override
     protected String getJoin() {
-        return " JOIN user ON " + TABLE_NAME + ".author_id=user.id JOIN role ON role.id=user.role_id";
+        return " JOIN user ON " + TABLE_NAME + ".author_id=" + TABLE_NAME_USER + ".id JOIN role ON "
+                + TABLE_NAME_ROLE + ".id=user.role_id";
     }
 
     @Override

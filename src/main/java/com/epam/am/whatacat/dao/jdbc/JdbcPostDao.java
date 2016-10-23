@@ -23,6 +23,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     private static final String TABLE_NAME = "post";
     private static final String TABLE_NAME_USER = "user";
     private static final String TABLE_NAME_ROLE = "role";
+    private static final String TABLE_NAME_POST = "post";
     private static final String TABLE_NAME_POST_RATING = "post_rating";
 
     private DataBinder<Post> dataBinder = new PostDataBinder();
@@ -46,11 +47,11 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
             Post post = dataBinder.bind(resultSet);
 
             PostRating postRating = new PostRating();
-            postRating.setId(resultSet.getLong(TABLE_NAME_POST_RATING + ".id"));
-            postRating.setUserId(resultSet.getLong(TABLE_NAME_POST_RATING + ".user_id"));
-            postRating.setPostId(resultSet.getLong(TABLE_NAME_POST_RATING + ".post_id"));
-            postRating.setRatingDelta(resultSet.getInt(TABLE_NAME_POST_RATING + ".delta"));
-            java.sql.Timestamp date = resultSet.getTimestamp(TABLE_NAME_POST_RATING + ".date_");
+            postRating.setId(resultSet.getLong(makeTableField(TABLE_NAME_POST_RATING, "id")));
+            postRating.setUserId(resultSet.getLong(makeTableField(TABLE_NAME_POST_RATING, "user_id")));
+            postRating.setPostId(resultSet.getLong(makeTableField(TABLE_NAME_POST_RATING, "post_id")));
+            postRating.setRatingDelta(resultSet.getInt(makeTableField(TABLE_NAME_POST_RATING, "delta")));
+            java.sql.Timestamp date = resultSet.getTimestamp(makeTableField(TABLE_NAME_POST_RATING, "date_"));
             if (date != null) {
                 postRating.setDate(new Date(date.getTime()));
             }
@@ -66,8 +67,8 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     public void rate(PostRating postRating) throws DaoException {
         try (
                 PreparedStatement preparedStatement = postRating.getId() == null
-                        ? getConnection().prepareStatement("INSERT INTO post_rating(post_id, user_id, delta, date_) VALUES(?, ?, ?, ?)")
-                        : getConnection().prepareStatement("UPDATE post_rating SET post_id=?, user_id=?, delta=?, date_=? WHERE id=?")
+                        ? getConnection().prepareStatement("INSERT INTO " + TABLE_NAME_POST_RATING + "(" + "post_id" + "," + "user_id" + "," + "delta" + "," + "date_" + ") VALUES(?, ?, ?, ?)")
+                        : getConnection().prepareStatement("UPDATE " + TABLE_NAME_POST_RATING + " SET " + "post_id" + "=?," + "user_id" + "=?," + "delta" + "=?," + "date_" + "=? WHERE " + "id" + "=?")
         ) {
             if (postRating.getId() == null) {
                 preparedStatement.setLong(1, postRating.getPostId());
@@ -125,7 +126,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
 
     @Override
     protected String getOrderBy() {
-        return " ORDER BY post.date DESC";
+        return " ORDER BY " + makeTableField(TABLE_NAME_POST, "date") + " DESC";
     }
 
     @Override
@@ -145,7 +146,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
 
     @Override
     protected String getJoin() {
-        return " JOIN user ON post.author_id=user.id JOIN role ON user.role_id=role.id";
+        return " JOIN "+ TABLE_NAME_USER + " ON " + makeTableField(TABLE_NAME_POST, "author_id") + "=" + makeTableField(TABLE_NAME_USER, "id") + " JOIN " + TABLE_NAME_ROLE + " ON " + makeTableField(TABLE_NAME_USER, "role_id") + "=" + makeTableField(TABLE_NAME_ROLE, "id");
     }
 
     @Override
@@ -176,11 +177,35 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     public List<Post> getByStatusWithUserPostRating(int status, long userId, long limit, long offset) throws DaoException {
         StringBuilder query = new StringBuilder()
                 .append(getSelectQuery())
-                .append(",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?")
+//                .append(",post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=?")
+                .append(',')
+                .append(makeTableField(TABLE_NAME_POST_RATING, "id"))
+                .append(',')
+                .append(makeTableField(TABLE_NAME_POST_RATING, "post_id"))
+                .append(',')
+                .append(makeTableField(TABLE_NAME_POST_RATING, "user_id"))
+                .append(',')
+                .append(makeTableField(TABLE_NAME_POST_RATING, "delta"))
+                .append(',')
+                .append(makeTableField(TABLE_NAME_POST_RATING, "date_"))
+                .append(" FROM ")
+                .append(TABLE_NAME_POST)
+                .append(" LEFT JOIN ")
+                .append(TABLE_NAME_POST_RATING)
+                .append(" ON ")
+                .append(makeTableField(TABLE_NAME_POST, "id"))
+                .append('=')
+                .append(makeTableField(TABLE_NAME_POST_RATING, "post_id"))
+                .append(" AND ")
+                .append(makeTableField(TABLE_NAME_POST_RATING, "user_id"))
+                .append("=?")
                 .append(getJoin())
                 .append(" WHERE post.status=?")
                 .append(getOrderBy())
                 .append("  LIMIT ? OFFSET ?");
+
+        // iw will be something like:
+        // SELECT post.id,post.title,post.type,post.content,post.date,post.rating,post.author_id,post.status,user.id,user.email,user.nickname,user.password,user.role_id,user.gender,user.rating,user.avatar,user.date,role.name,post_rating.id,post_rating.post_id,post_rating.user_id,post_rating.delta,post_rating.date_ FROM post LEFT JOIN post_rating ON post.id=post_rating.post_id AND post_rating.user_id=? JOIN user ON post.author_id=user.id JOIN role ON user.role_id=role.id WHERE post.status=? ORDER BY post.date DESC  LIMIT ? OFFSET ?
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString())) {
             preparedStatement.setLong(1, userId);
             preparedStatement.setLong(2, status);
@@ -205,8 +230,8 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 .append(getSelectQueryWithFrom())
                 .append(getJoin())
                 .append(" WHERE ")
-                .append(TABLE_NAME)
-                .append(".status=?")
+                .append(makeTableField(TABLE_NAME, "status"))
+                .append("=?")
                 .append(getOrderBy())
                 .append(" LIMIT ? OFFSET ?");
 
@@ -243,14 +268,14 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                 .append(getSelectQueryWithFrom())
                 .append(getJoin())
                 .append(" WHERE ")
-                .append(TABLE_NAME)
-                .append(".author_id=?");
+                .append(makeTableField(TABLE_NAME, "author_id"))
+                .append("=?");
 
         if (status != null) {
             query
                     .append("AND ")
-                    .append(TABLE_NAME)
-                    .append(".status=?");
+                    .append(makeTableField(TABLE_NAME, "status"))
+                    .append("=?");
         }
 
         query
@@ -288,14 +313,14 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
                     .append("SELECT COUNT(1) FROM ")
                     .append(TABLE_NAME)
                     .append(" WHERE ")
-                    .append(TABLE_NAME)
-                    .append(".author_id=?");
+                    .append(makeTableField(TABLE_NAME, "author_id"))
+                    .append("=?");
 
             if (status != null) {
                 query
                         .append(" AND ")
-                        .append(TABLE_NAME)
-                        .append(".status=?");
+                        .append(makeTableField(TABLE_NAME, "status"))
+                        .append("=?");
             }
 
             PreparedStatement preparedStatement = getConnection().prepareStatement(query.toString());
@@ -320,7 +345,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
         Connection connection = getConnection();
         try {
             connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM post_rating WHERE post_id=?");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + TABLE_NAME_POST_RATING + " WHERE " + "post_id" + "=?");
             preparedStatement.setLong(1, id);
             preparedStatement.execute();
 
@@ -343,7 +368,7 @@ public class JdbcPostDao extends AbstractJdbcDao<Post> implements PostDao {
     public void deleteUserPosts(long userId) throws DaoException {
         try {
             PreparedStatement preparedStatement =
-                    getConnection().prepareStatement("SELECT id FROM " + TABLE_NAME + " WHERE author_id=?");
+                    getConnection().prepareStatement("SELECT id FROM " + TABLE_NAME + " WHERE " + "author_id" + "=?");
             preparedStatement.setLong(1, userId);
 
             ResultSet resultSet = preparedStatement.executeQuery();
