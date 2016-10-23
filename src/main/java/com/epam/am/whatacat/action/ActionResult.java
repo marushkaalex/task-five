@@ -1,6 +1,8 @@
 package com.epam.am.whatacat.action;
 
 public class ActionResult {
+    private static final int NO_ERROR = -1;
+
     private final String view;
     private final boolean isRedirect;
     private final int error;
@@ -16,11 +18,11 @@ public class ActionResult {
     }
 
     public ActionResult(String view) {
-        this(view, false, -1);
+        this(view, false, NO_ERROR);
     }
 
     public ActionResult(String view, boolean isRedirect) {
-        this(view, isRedirect, -1);
+        this(view, isRedirect, NO_ERROR);
     }
 
     public String getView() {
@@ -36,6 +38,6 @@ public class ActionResult {
     }
 
     public boolean isError() {
-        return error != -1;
+        return error != NO_ERROR;
     }
 }
