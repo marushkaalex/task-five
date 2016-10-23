@@ -7,7 +7,6 @@ import com.epam.am.whatacat.model.AdminTable;
 import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.ServiceException;
 import com.epam.am.whatacat.service.UserService;
-import com.epam.am.whatacat.utils.ParameterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +46,7 @@ public class UserListAction extends BaseAction {
     public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         try (UserService userService = new UserService()) {
 
-            int page = ParameterUtils.parseInt(request.getParameter(PARAMETER_PAGE), 1);
+            int page = getIntParameter(request, PARAMETER_PAGE, 1);
             List<User> all = userService.getAll(LIMIT, LIMIT * (page - 1));
 
             Locale locale = getLocale(request);

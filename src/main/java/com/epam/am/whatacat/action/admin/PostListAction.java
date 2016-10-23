@@ -1,13 +1,12 @@
 package com.epam.am.whatacat.action.admin;
 
-import com.epam.am.whatacat.action.Action;
 import com.epam.am.whatacat.action.ActionException;
 import com.epam.am.whatacat.action.ActionResult;
+import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.model.AdminTable;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
-import com.epam.am.whatacat.utils.ParameterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PostListAction implements Action {
+public class PostListAction extends BaseAction {
 
     private static final Logger LOG = LoggerFactory.getLogger(PostListAction.class);
 
@@ -45,9 +44,9 @@ public class PostListAction implements Action {
     private static final String TABLE_EDIT_POST_URL = "/admin/edit-post?id=";
 
     @Override
-    public ActionResult execute(HttpServletRequest request, HttpServletResponse response) throws ActionException {
+    public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
         try (PostService postService = new PostService()) {
-            int page = ParameterUtils.parseInt(request.getParameter(PARAMETER_PAGE), 1);
+            int page = getIntParameter(request, PARAMETER_PAGE, 1);
             List<Post> all = postService.getAll(LIMIT, LIMIT * (page - 1));
 
             Locale locale = (Locale) Config.get(request.getSession(), Config.FMT_LOCALE);

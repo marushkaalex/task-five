@@ -6,7 +6,6 @@ import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
-import com.epam.am.whatacat.utils.ParameterUtils;
 import com.epam.am.whatacat.validation.FormValidator;
 import com.epam.am.whatacat.validation.FormValidatorFactory;
 import org.slf4j.Logger;
@@ -44,7 +43,7 @@ public class EditPostAction extends BaseAction {
         FormValidator validator = FormValidatorFactory.getInstance().getValidator(VALIDATOR);
         Map<String, String> errorMap = validator.validate(request.getParameterMap());
 
-        long rating = ParameterUtils.parseLong(request.getParameter(PARAMETER_RATING), Long.MIN_VALUE);
+        long rating = getLongParameter(request, PARAMETER_RATING, Long.MIN_VALUE);
         if (rating == Long.MIN_VALUE) {
             errorMap.put(PARAMETER_RATING, ERROR_RATING);
         }

@@ -1,7 +1,6 @@
 package com.epam.am.whatacat.action;
 
 import com.epam.am.whatacat.model.User;
-import com.epam.am.whatacat.utils.ParameterUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +31,7 @@ public abstract class BaseAction implements Action {
     }
 
     protected long getIdParameter(HttpServletRequest request) {
-        return ParameterUtils.parseLong(request.getParameter(PARAMETER_ID), INVALID_ID);
+        return getLongParameter(request, PARAMETER_ID, INVALID_ID);
     }
 
     protected User getUser(HttpServletRequest request) {
@@ -41,6 +40,22 @@ public abstract class BaseAction implements Action {
 
     protected Locale getLocale(HttpServletRequest request) {
         return (Locale) Config.get(request.getSession(), Config.FMT_LOCALE);
+    }
+
+    protected Long getLongParameter(HttpServletRequest request, String parameter, Long defaultValue) {
+        try {
+            return Long.parseLong(request.getParameter(parameter));
+        } catch (NumberFormatException ignored) {
+            return defaultValue;
+        }
+    }
+
+    protected Integer getIntParameter(HttpServletRequest request, String parameter, Integer defaultValue) {
+        try {
+            return Integer.parseInt(request.getParameter(parameter));
+        } catch (NumberFormatException ignored) {
+            return defaultValue;
+        }
     }
 
     public abstract ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException;

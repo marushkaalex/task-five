@@ -7,7 +7,6 @@ import com.epam.am.whatacat.model.Comment;
 import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.CommentService;
 import com.epam.am.whatacat.service.ServiceException;
-import com.epam.am.whatacat.utils.ParameterUtils;
 import com.epam.am.whatacat.validation.FormValidator;
 import com.epam.am.whatacat.validation.FormValidatorFactory;
 import org.slf4j.Logger;
@@ -31,7 +30,7 @@ public class SendCommentAction extends BaseAction {
 
     @Override
     public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        long postId = ParameterUtils.parseLong(request.getParameter(PARAMETER_POST_ID), INVALID_ID);
+        long postId = getLongParameter(request, PARAMETER_POST_ID, INVALID_ID);
         if (postId == INVALID_ID) {
             return new ActionResult(HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -50,7 +49,7 @@ public class SendCommentAction extends BaseAction {
 
         Comment comment = new Comment();
         comment.setAuthorId(user.getId());
-        comment.setParentId(ParameterUtils.parseLong(request.getParameter(PARAMETER_PARENT_ID), null));
+        comment.setParentId(getLongParameter(request, PARAMETER_PARENT_ID, null));
         comment.setPostId(postId);
         comment.setText(request.getParameter(PARAMETER_TEXT));
         comment.setPublicationDate(new Date());

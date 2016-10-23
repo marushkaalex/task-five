@@ -10,7 +10,6 @@ import com.epam.am.whatacat.model.User;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
 import com.epam.am.whatacat.service.UserService;
-import com.epam.am.whatacat.utils.ParameterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,7 @@ public class ShowUserAction extends BaseAction {
                     UserService userService = new UserService();
                     PostService postService = new PostService()
             ) {
-                int page = ParameterUtils.parseInt(request.getParameter(PARAMETER_PAGE), 1);
+                int page = getIntParameter(request, PARAMETER_PAGE, 1);
                 User user = userService.findById(id);
                 if (user == null) return new ActionResult(HttpServletResponse.SC_NOT_FOUND);
 

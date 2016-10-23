@@ -7,7 +7,6 @@ import com.epam.am.whatacat.model.AdminTable;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
-import com.epam.am.whatacat.utils.ParameterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +40,7 @@ public class ShowPostsToModerateAction extends BaseAction {
 
     @Override
     public ActionResult handle(HttpServletRequest request, HttpServletResponse response) throws ActionException {
-        int page = ParameterUtils.parseInt(request.getParameter(PARAMETER_PAGE), 1);
+        int page = getIntParameter(request, PARAMETER_PAGE, 1);
         try (PostService postService = new PostService()) {
             AdminTable table = createTable(postService, page, getLocale(request));
 

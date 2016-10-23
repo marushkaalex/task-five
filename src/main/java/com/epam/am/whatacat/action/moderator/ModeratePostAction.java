@@ -6,7 +6,6 @@ import com.epam.am.whatacat.action.BaseAction;
 import com.epam.am.whatacat.model.Post;
 import com.epam.am.whatacat.service.PostService;
 import com.epam.am.whatacat.service.ServiceException;
-import com.epam.am.whatacat.utils.ParameterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
